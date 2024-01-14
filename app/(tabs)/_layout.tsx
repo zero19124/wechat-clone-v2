@@ -43,6 +43,7 @@ const Layout = () => {
         }}
       ></Tabs.Screen>
       <Tabs.Screen
+      
         name="contacts"
         options={{
           tabBarLabel: "Contacts",

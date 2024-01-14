@@ -3,7 +3,7 @@ import { parseThemeColors, parseThemeText, parseThemeBorder } from './utils'
 
 export const themeColor = {
   primary: '#07C160',
-  fillColor:'#F6F6F6',
+  fillColor:'rgb(237,237,237)',
   color: '#34AC9D',
   brandLight: '#DEFAF5',
   brand1: '#EDFAF8',

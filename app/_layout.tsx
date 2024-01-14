@@ -2,6 +2,7 @@ import { Stack, useRouter } from "expo-router";
 import { Text } from "react-native";
 import ThreeDot from "../assets/icon/three-dot.svg";
 import CirclePlus from "../assets/icon/circle-plus.svg";
+import * as light from "../theme/light";
 
 import Test from "../view/about/test";
 const Layout = () => {
@@ -12,9 +13,9 @@ const Layout = () => {
     <Stack
       screenOptions={{
         headerStyle: {
-          backgroundColor: "#F6F6F6",
+          backgroundColor: light.themeColor.fillColor,
         },
-        headerTintColor: "#fff",
+        // headerTintColor: "#fff",
         headerTitleStyle: {
           fontWeight: "bold",
         },
@@ -23,8 +24,7 @@ const Layout = () => {
       <Stack.Screen
         name="(tabs)"
         options={{
-          headerShown:false,
-         
+          headerShown: false,
         }}
       />
       <Stack.Screen
@@ -33,6 +33,13 @@ const Layout = () => {
           headerLeft: () => <ThreeDot />,
           headerTitle: () => <Text>Wei3xin(3)</Text>,
           headerRight: () => <CirclePlus />,
+        }}
+      />
+      <Stack.Screen
+        name="individual-payment"
+        options={{
+          headerShadowVisible: false,
+          title: "Payment",
         }}
       />
       {/* <Stack.Screen
