@@ -17,8 +17,9 @@ import { FontAwesome } from "@expo/vector-icons";
 import React from "react";
 import InputKeyboard from "./InputKeyboard";
 import { useNavigation } from "expo-router";
+import { RootSiblingParent } from "react-native-root-siblings";
 const Page = () => {
-  const [amountValue, setAmountValue] = useState("3");
+  const [amountValue, setAmountValue] = useState("");
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({ headerShadowVisible: false, title: "Payment" });
@@ -58,6 +59,7 @@ const Page = () => {
       setImageSource(manipResult);
     }
   };
+  // 剪切图片
   const multiPickImage = async (imageUri: string) => {
     return manipulateAsync(
       imageUri,
@@ -104,91 +106,92 @@ const Page = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(amountValue, "amountValue");
-  }, [amountValue]);
   return (
-    <View style={{ backgroundColor: "#FFF", flex: 1 }}>
-      <TouchableWithoutFeedback
-        onPress={() => {
-          pickImageAsync();
-        }}
-      >
-        <Animated.Image
-          sharedTransitionTag="poster"
-          resizeMode="stretch"
-          style={{
-            // backgroundColor: "red",
-            width: "100%",
-            height: 70,
-          }}
-          source={imageSource}
-        ></Animated.Image>
-      </TouchableWithoutFeedback>
-      <View style={{ backgroundColor: light.themeColor.fillColor, flex: 1 }}>
-        <View
-          style={{
-            backgroundColor: "#fff",
-            marginTop: 8,
-            flex: 1,
-            borderRadius: 24,
+    <>
+      <View style={{ backgroundColor: "#FFF", flex: 1 }}>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            pickImageAsync();
           }}
         >
-          {/* 输入框 */}
-          <View style={{ padding: 24 }}>
-            <Text style={{ fontWeight: "bold", paddingBottom: 16 }}>
-              Amount
-            </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                borderBottomColor: light.themeColor.fillColor,
-                borderBottomWidth: StyleSheet.hairlineWidth,
-                paddingBottom: 4,
-              }}
-            >
-              <FontAwesome name="rmb" size={32} color="black" />
-
-              <TextInput
-                showSoftInputOnFocus={false}
-                autoFocus={true}
-                value={amountValue}
-                selectionColor={light.themeColor.primary}
-                placeholderTextColor="red"
+          <Animated.Image
+            sharedTransitionTag="poster"
+            resizeMode="stretch"
+            style={{
+              // backgroundColor: "red",
+              width: "100%",
+              height: 70,
+            }}
+            source={imageSource}
+          ></Animated.Image>
+        </TouchableWithoutFeedback>
+        <View style={{ backgroundColor: light.themeColor.fillColor, flex: 1 }}>
+          <View
+            style={{
+              backgroundColor: "#fff",
+              marginTop: 8,
+              flex: 1,
+              borderRadius: 24,
+            }}
+          >
+            {/* 输入框 */}
+            <View style={{ padding: 24 }}>
+              <Text style={{ fontWeight: "bold", paddingBottom: 16 }}>
+                Amount
+              </Text>
+              <View
                 style={{
-                  marginLeft: 16,
-                  flex: 1,
-                  height: 60,
-                  fontSize: 52,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  borderBottomColor: light.themeColor.fillColor,
+                  borderBottomWidth: StyleSheet.hairlineWidth,
+                  paddingBottom: 4,
+                }}
+              >
+                <FontAwesome name="rmb" size={32} color="black" />
+
+                <TextInput
+                  showSoftInputOnFocus={false}
+                  autoFocus={true}
+                  value={amountValue}
+                  selectionColor={light.themeColor.primary}
+                  placeholderTextColor="red"
+                  style={{
+                    marginLeft: 16,
+                    flex: 1,
+                    height: 60,
+                    fontSize: 52,
+                  }}
+                />
+              </View>
+              <Text
+                style={{
+                  marginTop: 18,
+                  color: "rgb(94,107,148)",
+                  fontWeight: "bold",
+                }}
+              >
+                Add Note
+              </Text>
+            </View>
+            {/* 九宫格 */}
+            <View
+              style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}
+            >
+              <InputKeyboard
+                onDelete={() => {
+                  setAmountValue((preV) => preV.slice(0, -1));
+                }}
+                onChange={(val: number) => {
+                  setAmountValue((preV) => preV + val);
+                  console.log(val, "val");
                 }}
               />
             </View>
-            <Text
-              style={{
-                marginTop: 18,
-                color: "rgb(94,107,148)",
-                fontWeight: "bold",
-              }}
-            >
-              Add Note
-            </Text>
-          </View>
-          {/* 九宫格 */}
-          <View style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}>
-            <InputKeyboard
-              onDelete={() => {
-                setAmountValue((preV) => preV.slice(0, -1));
-              }}
-              onChange={(val: number) => {
-                setAmountValue((preV) => preV + val);
-                console.log(val, "val");
-              }}
-            />
           </View>
         </View>
       </View>
-    </View>
+    </>
   );
 };
 export default Page;

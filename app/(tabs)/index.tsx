@@ -62,7 +62,8 @@ const Page = () => {
   // launchImageLibrary({ mediaType: "photo" }, (response) => {
 
   return (
-    <RootSiblingParent>
+    // <RootSiblingParent>
+      
       <View style={{ backgroundColor: "#FFF", flex: 1 }}>
         <Button
           title="topay"
@@ -83,7 +84,7 @@ const Page = () => {
           source={imageSource}
         ></Image>
       </View>
-    </RootSiblingParent>
+    // </RootSiblingParent>
   );
 };
 export default Page;

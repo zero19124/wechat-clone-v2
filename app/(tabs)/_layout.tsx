@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Text } from "react-native";
 import * as light from "../../theme/light";
 import ChatIcon from "../../assets/icon/chats.svg";
@@ -12,9 +12,9 @@ import MeActiveIcon from "../../assets/icon/me-active.svg";
 import MeIcon from "../../assets/icon/me.svg";
 import ThreeDot from "../../assets/icon/three-dot.svg";
 import CirclePlus from "../../assets/icon/circle-plus.svg";
-import { RootSiblingParent } from 'react-native-root-siblings';
+import { RootSiblingParent } from "react-native-root-siblings";
+import Toast from "react-native-root-toast";
 const Layout = () => {
-  console.log("layoout2");
   return (
     <RootSiblingParent>
       <Tabs
@@ -84,6 +84,7 @@ const Layout = () => {
           }}
         ></Tabs.Screen>
       </Tabs>
+      <Toast />
     </RootSiblingParent>
   );
 };
