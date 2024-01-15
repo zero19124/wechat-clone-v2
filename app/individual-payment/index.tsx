@@ -1,6 +1,6 @@
 import {
+  Animated,
   AppState,
-  Image,
   StyleSheet,
   Text,
   TextInput,
@@ -13,7 +13,7 @@ import * as ImagePicker from "expo-image-picker";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import { useEffect, useLayoutEffect, useState } from "react";
 import * as light from "../../theme/light";
-import { FontAwesome5, FontAwesome } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 import React from "react";
 import InputKeyboard from "./InputKeyboard";
 import { useNavigation } from "expo-router";
@@ -114,15 +114,16 @@ const Page = () => {
           pickImageAsync();
         }}
       >
-        <Image
+        <Animated.Image
+          sharedTransitionTag="poster"
           resizeMode="stretch"
           style={{
-            backgroundColor: "red",
+            // backgroundColor: "red",
             width: "100%",
             height: 70,
           }}
           source={imageSource}
-        ></Image>
+        ></Animated.Image>
       </TouchableWithoutFeedback>
       <View style={{ backgroundColor: light.themeColor.fillColor, flex: 1 }}>
         <View
@@ -148,18 +149,18 @@ const Page = () => {
               }}
             >
               <FontAwesome name="rmb" size={32} color="black" />
+
               <TextInput
+                showSoftInputOnFocus={false}
+                autoFocus={true}
                 value={amountValue}
                 selectionColor={light.themeColor.primary}
                 placeholderTextColor="red"
-                inputMode="decimal"
                 style={{
                   marginLeft: 16,
                   flex: 1,
-                  // backgroundColor: "red",
                   height: 60,
                   fontSize: 52,
-                  // fontWeight: "bold",
                 }}
               />
             </View>
