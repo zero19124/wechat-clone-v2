@@ -14,6 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ImageManipulator } from "expo-image-crop";
 import { useState } from "react";
 import { router } from "expo-router";
+import { RootSiblingParent } from "react-native-root-siblings";
 
 const Page = () => {
   const [imageSource, setImageSource] = useState(null);
@@ -61,26 +62,28 @@ const Page = () => {
   // launchImageLibrary({ mediaType: "photo" }, (response) => {
 
   return (
-    <View style={{ backgroundColor: "#FFF", flex: 1 }}>
+    <RootSiblingParent>
+      <View style={{ backgroundColor: "#FFF", flex: 1 }}>
         <Button
-        title="topay"
-        onPress={() => {
-          router.push('individual-payment')
-        }}
-      ></Button>
-      <Text style={{}}>tab i1ndex {Dimensions.get("window").width}</Text>
-      <Button
-        title="picker-image"
-        onPress={() => {
-          pickImageAsync();
-        }}
-      ></Button>
-      <Image
-        resizeMode="stretch"
-        style={{ backgroundColor: "red", width: "100%", height: 70 }}
-        source={imageSource}
-      ></Image>
-    </View>
+          title="topay"
+          onPress={() => {
+            router.push("individual-payment");
+          }}
+        ></Button>
+        <Text style={{}}>tab i1ndex {Dimensions.get("window").width}</Text>
+        <Button
+          title="picker-image"
+          onPress={() => {
+            pickImageAsync();
+          }}
+        ></Button>
+        <Image
+          resizeMode="stretch"
+          style={{ backgroundColor: "red", width: "100%", height: 70 }}
+          source={imageSource}
+        ></Image>
+      </View>
+    </RootSiblingParent>
   );
 };
 export default Page;

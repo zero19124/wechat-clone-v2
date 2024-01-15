@@ -12,78 +12,79 @@ import MeActiveIcon from "../../assets/icon/me-active.svg";
 import MeIcon from "../../assets/icon/me.svg";
 import ThreeDot from "../../assets/icon/three-dot.svg";
 import CirclePlus from "../../assets/icon/circle-plus.svg";
-
+import { RootSiblingParent } from 'react-native-root-siblings';
 const Layout = () => {
   console.log("layoout2");
   return (
-    <Tabs
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: light.themeColor.fillColor,
-        },
-        tabBarActiveTintColor: light.themeColor.primary,
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          // headerShown: false,
-          tabBarLabel: "Chats",
-          headerLeft: () => <ThreeDot />,
-          headerLeftContainerStyle: { paddingLeft: 12 },
-          headerTitle: "Weixin(3)",
-          headerRight: () => <CirclePlus />,
-          headerRightContainerStyle: { paddingRight: 12 },
-          tabBarIcon: ({ size, color, focused }) => {
-            if (focused) {
-              return <ChatActiveIcon />;
-            }
-            return <ChatIcon />;
+    <RootSiblingParent>
+      <Tabs
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: light.themeColor.fillColor,
           },
+          tabBarActiveTintColor: light.themeColor.primary,
         }}
-      ></Tabs.Screen>
-      <Tabs.Screen
-      
-        name="contacts"
-        options={{
-          tabBarLabel: "Contacts",
-          headerTitle: "Contacts",
-          tabBarIcon: ({ size, color, focused }) => {
-            if (focused) {
-              return <ContactsActiveIcon />;
-            }
-            return <ContactsIcon />;
-          },
-        }}
-      ></Tabs.Screen>
-      <Tabs.Screen
-        name="discover"
-        options={{
-          tabBarLabel: "Discover",
-          headerTitle: "Discover",
-          tabBarIcon: ({ size, color, focused }) => {
-            if (focused) {
-              return <DiscoverActiveIcon />;
-            }
-            return <DiscoverIcon />;
-          },
-        }}
-      ></Tabs.Screen>
-      <Tabs.Screen
-        name="me"
-        options={{
-          headerShown: false,
-          headerTitle: () => <Text>ind1ex</Text>,
-          tabBarLabel: "Me",
-          tabBarIcon: ({ size, color, focused }) => {
-            if (focused) {
-              return <MeActiveIcon />;
-            }
-            return <MeIcon />;
-          },
-        }}
-      ></Tabs.Screen>
-    </Tabs>
+      >
+        <Tabs.Screen
+          name="index"
+          options={{
+            // headerShown: false,
+            tabBarLabel: "Chats",
+            headerLeft: () => <ThreeDot />,
+            headerLeftContainerStyle: { paddingLeft: 12 },
+            headerTitle: "Weixin(3)",
+            headerRight: () => <CirclePlus />,
+            headerRightContainerStyle: { paddingRight: 12 },
+            tabBarIcon: ({ size, color, focused }) => {
+              if (focused) {
+                return <ChatActiveIcon />;
+              }
+              return <ChatIcon />;
+            },
+          }}
+        ></Tabs.Screen>
+        <Tabs.Screen
+          name="contacts"
+          options={{
+            tabBarLabel: "Contacts",
+            headerTitle: "Contacts",
+            tabBarIcon: ({ size, color, focused }) => {
+              if (focused) {
+                return <ContactsActiveIcon />;
+              }
+              return <ContactsIcon />;
+            },
+          }}
+        ></Tabs.Screen>
+        <Tabs.Screen
+          name="discover"
+          options={{
+            tabBarLabel: "Discover",
+            headerTitle: "Discover",
+            tabBarIcon: ({ size, color, focused }) => {
+              if (focused) {
+                return <DiscoverActiveIcon />;
+              }
+              return <DiscoverIcon />;
+            },
+          }}
+        ></Tabs.Screen>
+        <Tabs.Screen
+          name="me"
+          options={{
+            headerShown: false,
+            headerTitle: () => <Text>ind1ex</Text>,
+            tabBarLabel: "Me",
+            tabBarIcon: ({ size, color, focused }) => {
+              if (focused) {
+                return <MeActiveIcon />;
+              }
+              return <MeIcon />;
+            },
+          }}
+        ></Tabs.Screen>
+      </Tabs>
+    </RootSiblingParent>
   );
 };
 export default Layout;
