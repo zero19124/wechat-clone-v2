@@ -89,7 +89,7 @@ const Page = () => {
       await MediaLibrary.getAlbumsAsync({
         includeSmartAlbums: true,
       })
-    ).find((item) => item.title === "Recents");
+    ).find((item) => item.title === "Screenshots");
 
     if (albums) {
       const photos = await MediaLibrary.getAssetsAsync({

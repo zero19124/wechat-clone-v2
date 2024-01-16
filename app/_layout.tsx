@@ -1,15 +1,12 @@
 import { Stack, useRouter } from "expo-router";
 import { Text } from "react-native";
-import ThreeDot from "../assets/icon/three-dot.svg";
-import CirclePlus from "../assets/icon/circle-plus.svg";
-import * as light from "../theme/light";
+import ThreeDot from "@/icons/three-dot.svg";
+import CirclePlus from "@/icons/circle-plus.svg";
+import * as light from "@/theme/light";
 
-import Test from "../view/about/test";
 import { RootSiblingParent } from "react-native-root-siblings";
 import Toast from "react-native-root-toast";
 const Layout = () => {
-  const router = useRouter();
-  // router.push('/(tabs)')
   console.log("layoout1");
   return (
     <>
@@ -45,6 +42,12 @@ const Layout = () => {
             title: "Payment",
           }}
         />
+        <Stack.Screen
+          name="pages/chats/msg-chats/index"
+          options={{
+            title: "msg-chats",
+          }}
+        />
         {/* <Stack.Screen
         name="contacts"
         options={{
@@ -70,7 +73,7 @@ const Layout = () => {
         }}
       /> */}
         {/* <Stack.Screen name="test" options={{ title: "Tooo" }}></Stack.Screen> */}
-        <Stack.Screen
+        {/* <Stack.Screen
           name="about/test"
           options={{
             headerLeft: () => {
@@ -80,7 +83,7 @@ const Layout = () => {
             headerTitle: "formSheet",
             presentation: "modal",
           }}
-        />
+        /> */}
       </Stack>
       <Toast />
     </>

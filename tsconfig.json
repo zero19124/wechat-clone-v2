@@ -1,11 +1,20 @@
 {
   "compilerOptions": {
     "skipLibCheck": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true, // 允许默认导出的 SVG 文件作为模块导入
+    "resolveJsonModule": true, // 允许导入 JSON 文件作为模块
+    "jsx": "react-jsx",
+    "strict": true,
     "baseUrl": ".",
-    "jsx": "react-native",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["/*"],
+      "@/icons/*": ["/assets/icon/*"],
+      "@/pages/*": ["/app/pages/*"],
+      "@/theme/*": ["theme/*"],
+      "@/assets/*": ["assets/*"]
     }
   },
-  "extends": "expo/tsconfig.base"
+  "extends": "expo/tsconfig.base",
+  "tscFilesIncludes": ["/@types/"]
 }

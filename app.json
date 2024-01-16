@@ -1,8 +1,12 @@
 {
   "scheme": "your-app-scheme",
+
   "expo": {
-    "name": "my-app",
-    "slug": "my-app",
+    "experiments": {
+      "tsconfigPaths": true
+    },
+    "name": "wechat-clone",
+    "slug": "wechat-clone",
     "scheme": "your-app-scheme",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,9 +17,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {

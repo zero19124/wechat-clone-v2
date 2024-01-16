@@ -1,17 +1,14 @@
 import { Tabs } from "expo-router";
-import { useEffect, useRef, useState } from "react";
 import { Text } from "react-native";
-import * as light from "../../theme/light";
-import ChatIcon from "../../assets/icon/chats.svg";
-import ChatActiveIcon from "../../assets/icon/chats-active.svg";
-import ContactsIcon from "../../assets/icon/contacts.svg";
-import ContactsActiveIcon from "../../assets/icon/contacts-active.svg";
-import DiscoverActiveIcon from "../../assets/icon/discover.svg";
-import DiscoverIcon from "../../assets/icon/discover-active.svg";
-import MeActiveIcon from "../../assets/icon/me-active.svg";
-import MeIcon from "../../assets/icon/me.svg";
-import ThreeDot from "../../assets/icon/three-dot.svg";
-import CirclePlus from "../../assets/icon/circle-plus.svg";
+import * as light from "@/theme/light";
+
+import ContactsIcon from "@/icons/tabs/contacts.svg";
+import ContactsActiveIcon from "@/icons/tabs/contacts-active.svg";
+import DiscoverActiveIcon from "@/icons/tabs/discover.svg";
+import DiscoverIcon from "@/icons/tabs/discover-active.svg";
+import MeActiveIcon from "@/icons/tabs/me-active.svg";
+import MeIcon from "@/icons/tabs/me.svg";
+
 import { RootSiblingParent } from "react-native-root-siblings";
 import Toast from "react-native-root-toast";
 const Layout = () => {
@@ -30,17 +27,6 @@ const Layout = () => {
           options={{
             // headerShown: false,
             tabBarLabel: "Chats",
-            headerLeft: () => <ThreeDot />,
-            headerLeftContainerStyle: { paddingLeft: 12 },
-            headerTitle: "Weixin(3)",
-            headerRight: () => <CirclePlus />,
-            headerRightContainerStyle: { paddingRight: 12 },
-            tabBarIcon: ({ size, color, focused }) => {
-              if (focused) {
-                return <ChatActiveIcon />;
-              }
-              return <ChatIcon />;
-            },
           }}
         ></Tabs.Screen>
         <Tabs.Screen
