@@ -9,7 +9,7 @@ import Toast from "react-native-root-toast";
 const Layout = () => {
   console.log("layoout1");
   return (
-    <>
+    <RootSiblingParent>
       <Stack
         screenOptions={{
           headerStyle: {
@@ -86,7 +86,7 @@ const Layout = () => {
         /> */}
       </Stack>
       <Toast />
-    </>
+    </RootSiblingParent>
   );
 };
 export default Layout;

@@ -4,6 +4,7 @@ import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import { useState } from "react";
 import { router } from "expo-router";
 import Chats from "@/pages/chats/index";
+import { RootSiblingParent } from "react-native-root-siblings";
 const Page = () => {
   const [imageSource, setImageSource] = useState(null);
   const pickImageAsync = async () => {
@@ -43,7 +44,11 @@ const Page = () => {
       alert("You did not select any image.");
     }
   };
-  return <Chats />;
+  return (
+    <RootSiblingParent>
+      <Chats />
+    </RootSiblingParent>
+  );
   return (
     // <RootSiblingParent>
 
