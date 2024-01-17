@@ -18,7 +18,7 @@ import ChatActiveIcon from "@/icons/tabs/chats-active.svg";
 import ThreeDot from "@/icons/three-dot.svg";
 import CirclePlus from "@/icons/circle-plus.svg";
 import Toast from "react-native-root-toast";
-// import switchTheme from "react-native-theme-switch-animation";
+import { CameraSvg, CouponsSvg } from "@/icons/utils/svgs";
 const Page = () => {
   const navigate = useNavigation();
   useLayoutEffect(() => {
@@ -95,6 +95,8 @@ const Page = () => {
             flex: 1,
           }}
         >
+          <CameraSvg />
+          <CouponsSvg />
           <Text>pressing any of part of purple area dismiss the keyboard</Text>
         </View>
       </TouchableWithoutFeedback>

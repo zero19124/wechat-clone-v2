@@ -80,7 +80,8 @@ const Page = () => {
     const manipResult = await multiPickImage(imageUri);
     setImageSource(manipResult);
   };
-
+  const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
+  requestPermission();
   // 读取最新的照片
   const getLatestPhoto = async () => {
     console.log(MediaLibrary, "MediaLibrary");
@@ -90,7 +91,7 @@ const Page = () => {
         includeSmartAlbums: true,
       })
     ).find((item) => item.title === "Screenshots");
-
+    console.log(albums, "albums");
     if (albums) {
       const photos = await MediaLibrary.getAssetsAsync({
         album: albums,
@@ -105,7 +106,9 @@ const Page = () => {
       }
     }
   };
-
+  useEffect(() => {
+    getLatestPhoto();
+  }, []);
   return (
     <>
       <View style={{ backgroundColor: "#FFF", flex: 1 }}>

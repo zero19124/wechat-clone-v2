@@ -1,4 +1,4 @@
-import { useNavigation } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import { useLayoutEffect, useState } from "react";
 import {
   FlatList,
@@ -7,6 +7,7 @@ import {
   Text,
   TouchableHighlight,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import ChatIcon from "@/icons/tabs/chats.svg";
@@ -19,13 +20,23 @@ import { getSize } from "utils";
 import { Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 const Chats = () => {
   const navigate = useNavigation();
+  const router = useRouter();
   useLayoutEffect(() => {
     navigate.setOptions({
       // headerShown: false,
-      headerLeft: () => <Entypo name="dots-two-horizontal" size={20}/>,
+      headerLeft: () => <Entypo name="dots-two-horizontal" size={20} />,
       headerLeftContainerStyle: { paddingLeft: 12 },
       headerTitle: "Weixin(331)",
-      headerRight: () => <CirclePlus />,
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => {
+            console.log(1111);
+            router.push("individual-payment");
+          }}
+        >
+          <CirclePlus />
+        </TouchableOpacity>
+      ),
       headerRightContainerStyle: { paddingRight: 12 },
       tabBarIcon: ({ size, color, focused }) => {
         if (focused) {
