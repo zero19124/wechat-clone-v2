@@ -33,6 +33,7 @@
     "react-native-screens": "~3.22.0",
     "react-native-simple-toast": "^3.2.0",
     "react-native-svg-transformer": "^1.3.0",
+    "react-native-swiper-flatlist": "^3.2.3",
     "react-native-theme-switch-animation": "^0.6.0",
     "react-native-vector-icons": "^10.0.3",
     "react-native-walkthrough-tooltip": "^1.6.0",

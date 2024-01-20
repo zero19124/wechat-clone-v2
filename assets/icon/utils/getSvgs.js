@@ -25,28 +25,30 @@ readSvgs()
   .then((data) => {
     let svgFiles = data.filter((item) => item.indexOf(".svg") != -1); //去除.DS_Store
     let exportFile = "import React, { Component } from 'react';\n";
+    const names = [];
     svgFiles.map((item) => {
       //组建名为图标名称首字母大写
       let name = item.replace(".svg", "");
       name = name.charAt(0).toUpperCase() + name.slice(1);
-      if(name.includes('-')) {
-        name = name.split('-').map(item => item.charAt(0).toUpperCase() + item.slice(1)).join('');
+
+      if (name.includes("-")) {
+        name = name
+          .split("-")
+          .map((item) => item.charAt(0).toUpperCase() + item.slice(1))
+          .join("");
       }
+      names.push(name);
+
       //svg所在的路径
       exportFile += `
-                import ${name} from '../keyboard-panel/${item}';
-                export class ${name}Svg extends Component {
-                    render() {
-                        return (
-                            <${name} style={this.props.style} />
-                        );
-                    }
-                }
+                import ${name + "P"} from '../keyboard-panel/${item}';
+                const ${name} =()=> <${name + "P"} />;
             `;
     });
+    exportFile += `export default {${names.join(",")}}`;
     //生成的文件名及其路径
     fs.writeFile(
-      path.resolve(__dirname, "./svgs.js"),
+      path.resolve(__dirname, "./svgs.tsx"),
       exportFile,
       function (err) {
         if (err) throw new Error(err);

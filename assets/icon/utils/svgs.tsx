@@ -1,146 +1,67 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-                import Camera from '../keyboard-panel/camera.svg';
-                export class CameraSvg extends Component {
-                    render() {
-                        return (
-                            <Camera style={this.props.style} />
-                        );
-                    }
-                }
-            
-                import ContactCard from '../keyboard-panel/contact-card.svg';
-                export class ContactCardSvg extends Component {
-                    render() {
-                        return (
-                            <ContactCard style={this.props.style} />
-                        );
-                    }
-                }
-            
-                import Coupons from '../keyboard-panel/coupons.svg';
-                export class CouponsSvg extends Component {
-                    render() {
-                        return (
-                            <Coupons style={this.props.style} />
-                        );
-                    }
-                }
-            
-                import EmojiIcon from '../keyboard-panel/emoji-icon.svg';
-                export class EmojiIconSvg extends Component {
-                    render() {
-                        return (
-                            <EmojiIcon style={this.props.style} />
-                        );
-                    }
-                }
-            
-                import Favorites from '../keyboard-panel/favorites.svg';
-                export class FavoritesSvg extends Component {
-                    render() {
-                        return (
-                            <Favorites style={this.props.style} />
-                        );
-                    }
-                }
-            
-                import File from '../keyboard-panel/file.svg';
-                export class FileSvg extends Component {
-                    render() {
-                        return (
-                            <File style={this.props.style} />
-                        );
-                    }
-                }
-            
-                import ImgPicker from '../keyboard-panel/img-picker.svg';
-                export class ImgPickerSvg extends Component {
-                    render() {
-                        return (
-                            <ImgPicker style={this.props.style} />
-                        );
-                    }
-                }
-            
-                import Keyboard from '../keyboard-panel/keyboard.svg';
-                export class KeyboardSvg extends Component {
-                    render() {
-                        return (
-                            <Keyboard style={this.props.style} />
-                        );
-                    }
-                }
-            
-                import Location from '../keyboard-panel/location.svg';
-                export class LocationSvg extends Component {
-                    render() {
-                        return (
-                            <Location style={this.props.style} />
-                        );
-                    }
-                }
-            
-                import Music from '../keyboard-panel/music.svg';
-                export class MusicSvg extends Component {
-                    render() {
-                        return (
-                            <Music style={this.props.style} />
-                        );
-                    }
-                }
-            
-                import PlusQuareDot from '../keyboard-panel/plus-quare-dot.svg';
-                export class PlusQuareDotSvg extends Component {
-                    render() {
-                        return (
-                            <PlusQuareDot style={this.props.style} />
-                        );
-                    }
-                }
-            
-                import RedPacket from '../keyboard-panel/red-packet.svg';
-                export class RedPacketSvg extends Component {
-                    render() {
-                        return (
-                            <RedPacket style={this.props.style} />
-                        );
-                    }
-                }
-            
-                import Transfer from '../keyboard-panel/transfer.svg';
-                export class TransferSvg extends Component {
-                    render() {
-                        return (
-                            <Transfer style={this.props.style} />
-                        );
-                    }
-                }
-            
-                import Video from '../keyboard-panel/video.svg';
-                export class VideoSvg extends Component {
-                    render() {
-                        return (
-                            <Video style={this.props.style} />
-                        );
-                    }
-                }
-            
-                import VoiceInput from '../keyboard-panel/voice-input.svg';
-                export class VoiceInputSvg extends Component {
-                    render() {
-                        return (
-                            <VoiceInput style={this.props.style} />
-                        );
-                    }
-                }
-            
-                import VoiceRecored from '../keyboard-panel/voice-recored.svg';
-                export class VoiceRecoredSvg extends Component {
-                    render() {
-                        return (
-                            <VoiceRecored style={this.props.style} />
-                        );
-                    }
-                }
-            
+import CameraP from "../keyboard-panel/camera.svg";
+const Camera = (props) => <CameraP {...props} />;
+
+import ContactCardP from "../keyboard-panel/contact-card.svg";
+const ContactCard = () => <ContactCardP />;
+
+import CouponsP from "../keyboard-panel/coupons.svg";
+const Coupons = () => <CouponsP />;
+
+import EmojiIconP from "../keyboard-panel/emoji-icon.svg";
+const EmojiIcon = () => <EmojiIconP />;
+
+import FavoritesP from "../keyboard-panel/favorites.svg";
+const Favorites = () => <FavoritesP />;
+
+import FileP from "../keyboard-panel/file.svg";
+const File = () => <FileP />;
+
+import ImgPickerP from "../keyboard-panel/img-picker.svg";
+const ImgPicker = () => <ImgPickerP />;
+
+import KeyboardP from "../keyboard-panel/keyboard.svg";
+const Keyboard = () => <KeyboardP />;
+
+import LocationP from "../keyboard-panel/location.svg";
+const Location = () => <LocationP />;
+
+import MusicP from "../keyboard-panel/music.svg";
+const Music = () => <MusicP />;
+
+import PlusQuareDotP from "../keyboard-panel/plus-quare-dot.svg";
+const PlusQuareDot = () => <PlusQuareDotP />;
+
+import RedPacketP from "../keyboard-panel/red-packet.svg";
+const RedPacket = () => <RedPacketP />;
+
+import TransferP from "../keyboard-panel/transfer.svg";
+const Transfer = () => <TransferP />;
+
+import VideoP from "../keyboard-panel/video.svg";
+const Video = () => <VideoP />;
+
+import VoiceInputP from "../keyboard-panel/voice-input.svg";
+const VoiceInput = () => <VoiceInputP />;
+
+import VoiceRecoredP from "../keyboard-panel/voice-recored.svg";
+const VoiceRecored = () => <VoiceRecoredP />;
+export default {
+  Camera,
+  ContactCard,
+  Coupons,
+  EmojiIcon,
+  Favorites,
+  File,
+  ImgPicker,
+  Keyboard,
+  Location,
+  Music,
+  PlusQuareDot,
+  RedPacket,
+  Transfer,
+  Video,
+  VoiceInput,
+  VoiceRecored,
+};
