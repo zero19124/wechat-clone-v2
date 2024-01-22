@@ -19,7 +19,9 @@ export const themeColor = {
   text5: "#1D2129",
 
   brand1: "#07C160",
-  brand2: "#07C160",
+  // msg
+  brand2: "#94ea68",
+
   brand3: "#9BE0D5",
   brand4: "#72D4C3",
   brand5: "#45BFB0",
