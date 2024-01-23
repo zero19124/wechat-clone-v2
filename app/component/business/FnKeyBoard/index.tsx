@@ -52,6 +52,10 @@ const FnKeyBoard = ({ heightValue }: { heightValue: number }) => {
         console.log(222);
         router.push("/individual-payment");
         break;
+      case "ImgPicker":
+        console.log(222);
+        router.push("/pages/socket-test");
+        break;
     }
   };
   return (
@@ -63,7 +67,7 @@ const FnKeyBoard = ({ heightValue }: { heightValue: number }) => {
         bottom: 0,
       }}
     >
-      <SwiperFlatList showPagination>
+      <SwiperFlatList showPagination={false}>
         <View style={[styles.child, styles.touchItemWrapper]}>
           {iconOrderOne.map((iconName, index) => {
             const Svg = PanelSvgs[iconName];

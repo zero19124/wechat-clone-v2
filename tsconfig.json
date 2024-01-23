@@ -13,7 +13,8 @@
       "@/pages/*": ["/app/pages/*"],
       "@/component/*": ["/app/component/*"],
       "@/theme/*": ["theme/*"],
-      "@/assets/*": ["assets/*"]
+      "@/assets/*": ["assets/*"],
+      "@/mocks/*": ["mocks/*"]
     }
   },
   "extends": "expo/tsconfig.base",

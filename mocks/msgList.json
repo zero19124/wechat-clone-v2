@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "isSticky": false,
+    "avatar": "@/assets/avatar.png",
+    "userName": "Bella",
+    "unReadCount": 1,
+    "latestMessage": "latestMessagelatestMessagelatestMessagelatestMessage",
+    "time": "00:00"
+  },
+  {
+    "id": 2,
+    "isSticky": false,
+    "avatar": "@/assets/avatar.png",
+    "userName": "Bella",
+    "unReadCount": 1,
+    "latestMessage": "latestMessage",
+    "time": "00:00"
+  },
+  {
+    "id": 3,
+    "isSticky": false,
+    "avatar": "@/assets/avatar.png",
+    "userName": "Bella",
+    "unReadCount": 1,
+    "latestMessage": "latestMessagelatestMessagelatestMessagelatestMessagelatestMessagelatestMessagelatestMessagelatestMessage",
+    "time": "00:00"
+  },
+  {
+    "id": 4,
+    "isSticky": false,
+    "avatar": "@/assets/avatar.png",
+    "userName": "Bella",
+    "unReadCount": 1,
+    "latestMessage": "latestMessage",
+    "time": "00:00"
+  }
+]

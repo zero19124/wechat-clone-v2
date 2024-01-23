@@ -1,6 +1,8 @@
 import {
   Animated,
   Button,
+  FlatList,
+  Image,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -14,20 +16,17 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import * as light from "@/theme/light";
 import { router, useNavigation } from "expo-router";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import ChatIcon from "@/icons/tabs/chats.svg";
-import ChatActiveIcon from "@/icons/tabs/chats-active.svg";
 import ThreeDot from "@/icons/three-dot.svg";
-import CirclePlus from "@/icons/circle-plus.svg";
 import GoBack from "@/icons/common/go-back.svg";
-import Emoji from "@/icons/keyboard-panel/emoji-icon.svg";
-import Toast from "react-native-root-toast";
-import { CameraSvg, CouponsSvg } from "@/icons/utils/svgs";
 import FnKeyBoard from "@/component/business/FnKeyBoard";
+import PrivateChatList from "./component/ChatList";
+import ChatInput from "./component/ChatInput";
 const Page = () => {
   const navigate = useNavigation();
   useLayoutEffect(() => {
     navigate.setOptions({
       // headerShown: false,
+      headerShadowVisible: false,
       headerRight: () => <ThreeDot />,
       headerLeftContainerStyle: { paddingLeft: 12 },
       headerTitle: "Bella",
@@ -62,7 +61,7 @@ const Page = () => {
 
   const [theme, setTheme] = useState("light");
   const [height, setHeight] = useState(10);
-  const [mgs, setMsg] = useState("");
+  const [msg, setMsg] = useState("");
   const heightValue = useRef(new Animated.Value(10)).current;
   const cH = useRef(0);
   const startAnimation = (toValue) => {
@@ -90,83 +89,54 @@ const Page = () => {
   useEffect(() => {
     console.log(heightValue, "heightValue._value");
   });
+
   return (
-    <KeyboardAvoidingView
-      style={{
-        backgroundColor: "yellow",
-        flex: 1,
-        justifyContent: "flex-end",
-      }}
-      keyboardVerticalOffset={100}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    <SafeAreaView
+      style={{ backgroundColor: light.themeColor.fillColor, flex: 1 }}
+      edges={["bottom"]}
     >
-      <TouchableWithoutFeedback
+      <KeyboardAvoidingView
         style={{
-          backgroundColor: "purple",
+          // backgroundColor: "yellow",
+          flex: 1,
         }}
-        onPress={() => {
-          startAnimation(0);
-          cH.current = 0;
-          Keyboard.dismiss();
-        }}
+        keyboardVerticalOffset={100}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <View
+        {/* 聊天content  */}
+        <TouchableWithoutFeedback
           style={{
-            backgroundColor: light.themeColor.fillColor,
-            justifyContent: "center",
-            alignItems: "center",
-            flex: 1,
+            backgroundColor: "purple",
           }}
-        >
-          {/* <CameraSvg /> */}
-          {/* <CouponsSvg /> */}
-          <Text>pressing any of part of purple area dismiss the keyboard</Text>
-        </View>
-      </TouchableWithoutFeedback>
-
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          columnGap: 4,
-          padding: 8,
-          paddingBottom: 0,
-        }}
-      >
-        <TouchableOpacity>
-          <ChatIcon />
-        </TouchableOpacity>
-        <TextInput
-          value={mgs}
-          onChangeText={(text) => {
-            setMsg(text);
-          }}
-          style={{
-            borderRadius: 4,
-            // position: "absolute",
-            // bottom: -410,
-            paddingLeft: 4,
-            paddingVertical: 8,
-            flex: 1,
-            // fontSize: 22,
-            backgroundColor: light.themeColor.white,
-          }}
-        ></TextInput>
-        <TouchableOpacity>
-          <Emoji />
-        </TouchableOpacity>
-        <TouchableOpacity
           onPress={() => {
-            setH();
+            startAnimation(0);
+            cH.current = 0;
+            Keyboard.dismiss();
           }}
         >
-          <CirclePlus />
-        </TouchableOpacity>
-      </View>
+          <PrivateChatList />
+        </TouchableWithoutFeedback>
+        {/* keyboard 内容 */}
+        <ChatInput
+          value={msg}
+          onChangeText={(val: string) => {
+            setMsg(val);
+          }}
+          chatPress={() => {
+            console.log("c");
+          }}
+          emojiPress={() => {
+            console.log("e");
+          }}
+          plusPress={() => {
+            console.log("p");
+            setH(0);
+          }}
+        />
 
-      {heightValue !== 0 && <FnKeyBoard heightValue={heightValue} />}
-    </KeyboardAvoidingView>
+        {heightValue !== 0 && <FnKeyBoard heightValue={heightValue} />}
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 export default Page;

@@ -18,7 +18,8 @@ import * as light from "@/theme/light";
 import Tooltip from "react-native-walkthrough-tooltip";
 import { getSize } from "utils";
 import { Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
-import MsgWrapper from "app/component/business/MsgWrapper";
+import MsgSender from "app/component/business/MsgSender";
+import MsgReceiver from "app/component/business/MsgReceiver";
 const Chats = () => {
   const navigate = useNavigation();
   const router = useRouter();
@@ -204,7 +205,7 @@ const Chats = () => {
           <Text>Press me</Text>
         </TouchableHighlight>
       </Tooltip> */}
-      <MsgWrapper />
+
       <FlatList
         data={data}
         keyExtractor={(item) => item.id + ""}

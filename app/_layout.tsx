@@ -49,6 +49,12 @@ const Layout = () => {
           }}
         />
         {/* <Stack.Screen
+          name="pages/socket-test"
+          options={{
+            title: "socket-test",
+          }}
+        /> */}
+        {/* <Stack.Screen
         name="contacts"
         options={{
           headerLeft: () => <ThreeDot />,
