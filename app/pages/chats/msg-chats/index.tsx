@@ -60,10 +60,9 @@ const Page = () => {
   }, []);
 
   const [theme, setTheme] = useState("light");
-  const [height, setHeight] = useState(10);
   const [msg, setMsg] = useState("");
   const heightValue = useRef(new Animated.Value(10)).current;
-  const cH = useRef(0);
+  const height = useRef(0);
   const startAnimation = (toValue) => {
     Animated.timing(heightValue, {
       toValue,
@@ -73,18 +72,18 @@ const Page = () => {
   };
   Keyboard.addListener("keyboardWillShow", () => {
     startAnimation(0);
-    cH.current = 0;
   });
+  const _270 = 220;
   const setH = () => {
-    console.log(cH.current, "cH.current");
+    console.log(heightValue, "cH.current");
     Keyboard.dismiss();
-    if (cH.current === 270) {
+    if (height.current === _270) {
       startAnimation(0);
-      cH.current = 0;
+      height.current = 0;
       return;
     }
-    cH.current = 270;
-    startAnimation(270);
+    height.current = _270;
+    startAnimation(_270);
   };
   useEffect(() => {
     console.log(heightValue, "heightValue._value");
@@ -100,7 +99,7 @@ const Page = () => {
           // backgroundColor: "yellow",
           flex: 1,
         }}
-        keyboardVerticalOffset={100}
+        keyboardVerticalOffset={90}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         {/* 聊天content  */}
@@ -110,7 +109,7 @@ const Page = () => {
           }}
           onPress={() => {
             startAnimation(0);
-            cH.current = 0;
+            setH();
             Keyboard.dismiss();
           }}
         >
@@ -130,11 +129,11 @@ const Page = () => {
           }}
           plusPress={() => {
             console.log("p");
-            setH(0);
+            setH();
           }}
         />
 
-        {heightValue !== 0 && <FnKeyBoard heightValue={heightValue} />}
+        {<FnKeyBoard heightValue={heightValue} />}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

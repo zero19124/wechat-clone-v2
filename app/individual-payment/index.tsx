@@ -1,6 +1,7 @@
 import {
   Animated,
   AppState,
+  Button,
   StyleSheet,
   Text,
   TextInput,
@@ -11,13 +12,22 @@ import {
 import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
-import { useEffect, useLayoutEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import * as light from "../../theme/light";
 import { FontAwesome } from "@expo/vector-icons";
 import React from "react";
 import InputKeyboard from "./InputKeyboard";
 import { useNavigation } from "expo-router";
 import { RootSiblingParent } from "react-native-root-siblings";
+import { useActionSheet } from "@expo/react-native-action-sheet";
+import BottomSheet from "@gorhom/bottom-sheet";
 const Page = () => {
   const [amountValue, setAmountValue] = useState("");
   const navigation = useNavigation();
@@ -81,9 +91,10 @@ const Page = () => {
     setImageSource(manipResult);
   };
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
-  requestPermission();
+
   // 读取最新的照片
   const getLatestPhoto = async () => {
+    requestPermission();
     console.log(MediaLibrary, "MediaLibrary");
     // await getPermissionAsync(); // 获取相册访问权限
     const albums = (
@@ -106,8 +117,57 @@ const Page = () => {
       }
     }
   };
+  const onAmountDelete = useCallback(() => {
+    setAmountValue((preV) => preV.slice(0, -1));
+  }, []);
+  const onAmountChange = useCallback((val: number) => {
+    setAmountValue((preV) => preV + val);
+    console.log(val, "val");
+  }, []);
   useEffect(() => {
     getLatestPhoto();
+  }, []);
+  console.log("individual-payment", new Date().getTime());
+  const { showActionSheetWithOptions } = useActionSheet();
+
+  const onPress = () => {
+    const options = ["Delete", "Save", "Cancel"];
+    const destructiveButtonIndex = 0;
+    const cancelButtonIndex = 2;
+    console.log(showActionSheetWithOptions, "showActionSheetWithOptions");
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex: number) => {
+        switch (selectedIndex) {
+          case 1:
+            // Save
+            break;
+
+          case destructiveButtonIndex:
+            // Delete
+            break;
+
+          case cancelButtonIndex:
+          // Canceled
+        }
+      }
+    );
+  };
+
+  // ref
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  // variables
+  const snapPoints = useMemo(() => ["25%", "50%"], []);
+
+  // callbacks
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log("handleSheetChanges", index);
   }, []);
   return (
     <>
@@ -181,14 +241,22 @@ const Page = () => {
             <View
               style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}
             >
+              <View style={styles.container}>
+                <BottomSheet
+                  ref={bottomSheetRef}
+                  index={1}
+                  snapPoints={snapPoints}
+                  onChange={handleSheetChanges}
+                >
+                  <View style={styles.contentContainer}>
+                    <Text>Awesome 🎉</Text>
+                  </View>
+                </BottomSheet>
+              </View>
+              <Button title="Menu" onPress={onPress} />
               <InputKeyboard
-                onDelete={() => {
-                  setAmountValue((preV) => preV.slice(0, -1));
-                }}
-                onChange={(val: number) => {
-                  setAmountValue((preV) => preV + val);
-                  console.log(val, "val");
-                }}
+                onDelete={onAmountDelete}
+                onChange={onAmountChange}
               />
             </View>
           </View>
@@ -197,4 +265,19 @@ const Page = () => {
     </>
   );
 };
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 24,
+    backgroundColor: "grey",
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: "center",
+  },
+});
+// const Page = () => {
+//   console.log("individual-payment", new Date().getTime());
+//   return <Text>3</Text>;
+// };
 export default Page;

@@ -1,4 +1,4 @@
-import { TextInput, TouchableOpacity, View } from "react-native";
+import { TextInput, TouchableOpacity, View, StyleSheet } from "react-native";
 import ChatIcon from "@/icons/tabs/chats.svg";
 import { themeColor } from "@/theme/light";
 import Emoji from "@/icons/keyboard-panel/emoji-icon.svg";
@@ -15,20 +15,19 @@ const ChatInput = ({
   return (
     <View
       style={{
-        // paddingTop: 20, // 适当调整以留出阴影空间
-        // backgroundColor: "white",
         // shadowColor: "#000",
-        // shadowOffset: { width: 0, height: 1 },
-        // shadowOpacity: 0.8,
+        // shadowOffset: { width: 1, height: 1 },
+        // shadowOpacity: 0.4,
         // shadowRadius: 3,
         // elevation: 5,
 
+        borderTopColor: themeColor.fill5,
+        borderTopWidth: StyleSheet.hairlineWidth,
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
         columnGap: 4,
         padding: 8,
-        paddingBottom: 0,
       }}
     >
       <TouchableOpacity

@@ -8,14 +8,14 @@ import {
   StyleSheet,
 } from "react-native";
 import PanelSvgs from "@/icons/utils/svgs";
-import { getSize } from "utils";
+import { convertCamelCaseToNormal, getSize } from "utils";
 import * as light from "@/theme/light";
 import { SwiperFlatList } from "react-native-swiper-flatlist";
 import { useNavigation, useRouter } from "expo-router";
 const iconOrderOne = [
-  "ImgPicker",
+  "Album",
   "Camera",
-  "Video",
+  "VideoCall",
   "Location",
   "RedPacket",
   "Transfer",
@@ -24,19 +24,22 @@ const iconOrderOne = [
 ];
 const iconOrderTwo = ["ContactCard", "File", "Coupons", "Music"];
 const FnKeyBoard = ({ heightValue }: { heightValue: number }) => {
-  console.log(PanelSvgs, "PanelSvgs");
+  console.log("FnKeyBoard", heightValue);
   const { width } = Dimensions.get("window");
   const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: "white" },
+    container: {
+      flex: 1,
+      // backgroundColor: "white"
+    },
     child: { width, justifyContent: "center" },
     text: { fontSize: width * 0.5, textAlign: "center" },
     touchItemWrapper: {
-      backgroundColor: "tomato",
+      // backgroundColor: "tomato",
       flexDirection: "row",
       flexWrap: "wrap",
     },
     touchItem: {
-      margin: 16,
+      marginHorizontal: 16,
       justifyContent: "center",
       alignItems: "center",
       borderRadius: 16,
@@ -58,28 +61,57 @@ const FnKeyBoard = ({ heightValue }: { heightValue: number }) => {
         break;
     }
   };
+  const SvgText = ({ children }) => (
+    <Text
+      style={{
+        fontSize: 11,
+        marginVertical: 8,
+        color: light.themeColor.text4,
+        textAlign: "center",
+      }}
+    >
+      {convertCamelCaseToNormal(children)}
+    </Text>
+  );
   return (
     <Animated.View
       style={{
-        backgroundColor: "blue",
+        // backgroundColor: "blue",
+        borderTopColor: light.themeColor.fill5,
+        borderTopWidth: StyleSheet.hairlineWidth,
         height: heightValue,
+        paddingTop: 12,
         width: "100%",
         bottom: 0,
       }}
     >
-      <SwiperFlatList showPagination={false}>
+      <SwiperFlatList
+        paginationStyleItem={{
+          width: 8,
+          height: 8,
+          marginHorizontal: 4,
+        }}
+        keyExtractor={(item) => item}
+        paginationStyle={{ bottom: -12, zIndex: -1 }}
+        showPagination={true}
+        paginationActiveColor={light.themeColor.bg4}
+        paginationDefaultColor={light.themeColor.text1}
+      >
         <View style={[styles.child, styles.touchItemWrapper]}>
           {iconOrderOne.map((iconName, index) => {
             const Svg = PanelSvgs[iconName];
             return (
-              <TouchableOpacity
-                style={styles.touchItem}
-                onPress={() => {
-                  svgHandler(iconName);
-                }}
-              >
-                <Svg style={{ height: 52 }} />
-              </TouchableOpacity>
+              <View key={index}>
+                <TouchableOpacity
+                  style={styles.touchItem}
+                  onPress={() => {
+                    svgHandler(iconName);
+                  }}
+                >
+                  <Svg width={32} height={32} />
+                </TouchableOpacity>
+                <SvgText>{iconName}</SvgText>
+              </View>
             );
           })}
         </View>
@@ -87,22 +119,22 @@ const FnKeyBoard = ({ heightValue }: { heightValue: number }) => {
           style={[
             styles.child,
             styles.touchItemWrapper,
-            { backgroundColor: "thistle" },
+            // { backgroundColor: "thistle" },
           ]}
         >
           {iconOrderTwo.map((iconName, index) => {
+            const Svg = PanelSvgs[iconName];
             return (
-              <TouchableOpacity style={styles.touchItem}>
-                {PanelSvgs[iconName]()}
-              </TouchableOpacity>
+              <View key={index}>
+                <TouchableOpacity style={styles.touchItem}>
+                  <Svg width={32} height={32} />
+                </TouchableOpacity>
+                <SvgText>{iconName}</SvgText>
+              </View>
             );
           })}
         </View>
       </SwiperFlatList>
-      <Animated.ScrollView
-        horizontal
-        style={{ flexDirection: "column" }}
-      ></Animated.ScrollView>
     </Animated.View>
   );
 };
