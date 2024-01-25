@@ -16,10 +16,11 @@ const PaymentKeyBoard = ({
     if (num === 10) {
       return <Text></Text>;
     }
+
     if (num === 12) {
       return <FontAwesome5 name="backspace" size={24} color="black" />;
     }
-    return <Text style={{ fontSize: 24 }}>{num}</Text>;
+    return <Text style={{ fontSize: 24 }}>{num === 11 ? 0 : num}</Text>;
   };
   const getBackgroundColor = (num: number) => {
     if (num === 10) {
@@ -36,7 +37,6 @@ const PaymentKeyBoard = ({
         flexDirection: "row",
         flexWrap: "wrap",
         backgroundColor: themeColor.fillColor,
-       
         flex: 1,
       }}
     >
