@@ -178,7 +178,7 @@ const InputKeyboard = (props) => {
         {/* keyboard  */}
         <PaymentKeyBoard
           onChange={(num: number) => {
-            if (psw.length >= 6) {
+            if (psw.length === 6) {
               dismiss();
               // todo why push cannot find the page?
               navigator.navigate("component/business/PayDone/index", {

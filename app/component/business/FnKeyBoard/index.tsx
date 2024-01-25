@@ -12,6 +12,7 @@ import { convertCamelCaseToNormal, getSize } from "utils";
 import * as light from "@/theme/light";
 import { SwiperFlatList } from "react-native-swiper-flatlist";
 import { useNavigation, useRouter } from "expo-router";
+import { useEffect, useMemo, useState } from "react";
 const iconOrderOne = [
   "Album",
   "Camera",
@@ -22,32 +23,50 @@ const iconOrderOne = [
   "VoiceInput",
   "Favorites",
 ];
+const { width } = Dimensions.get("window");
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    // backgroundColor: "white"
+  },
+  child: { width, justifyContent: "center" },
+  text: { fontSize: width * 0.5, textAlign: "center" },
+  touchItemWrapper: {
+    // backgroundColor: "tomato",
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  touchItem: {
+    marginHorizontal: 16,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 16,
+    backgroundColor: light.themeColor.white,
+    width: getSize(60),
+    height: getSize(60),
+  },
+});
 const iconOrderTwo = ["ContactCard", "File", "Coupons", "Music"];
+
 const FnKeyBoard = ({ heightValue }: { heightValue: number }) => {
   console.log("FnKeyBoard", heightValue);
-  const { width } = Dimensions.get("window");
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      // backgroundColor: "white"
-    },
-    child: { width, justifyContent: "center" },
-    text: { fontSize: width * 0.5, textAlign: "center" },
-    touchItemWrapper: {
-      // backgroundColor: "tomato",
-      flexDirection: "row",
-      flexWrap: "wrap",
-    },
-    touchItem: {
-      marginHorizontal: 16,
-      justifyContent: "center",
-      alignItems: "center",
-      borderRadius: 16,
-      backgroundColor: light.themeColor.white,
-      width: getSize(60),
-      height: getSize(60),
-    },
-  });
+  const [heightValueMemo, setHeightValueMemo] = useState(0);
+
+  useEffect(() => {
+    heightValue?.addListener((value) => {
+      if (value === 220) {
+        console.log("当前值为：", value);
+        setHeightValueMemo(0);
+        return;
+      }
+      if (value === 0) {
+        console.log("当前值为：", value);
+        setHeightValueMemo(220);
+        return;
+      }
+    });
+  }, []);
+
   const router = useRouter();
   const svgHandler = (name: string) => {
     switch (name) {
@@ -73,6 +92,9 @@ const FnKeyBoard = ({ heightValue }: { heightValue: number }) => {
       {convertCamelCaseToNormal(children)}
     </Text>
   );
+  useEffect(() => {
+    console.log(heightValueMemo, "heightValueMemo");
+  }, [heightValueMemo]);
   return (
     <Animated.View
       style={{
@@ -91,9 +113,10 @@ const FnKeyBoard = ({ heightValue }: { heightValue: number }) => {
           height: 8,
           marginHorizontal: 4,
         }}
-        keyExtractor={(item) => item}
-        paginationStyle={{ bottom: -12, zIndex: -1 }}
-        showPagination={true}
+        // keyExtractor={(item) => item + Math.random()}
+        paginationStyle={{ bottom: -12 }}
+        showPagination={heightValueMemo < 10}
+        // showPagination={true}
         paginationActiveColor={light.themeColor.bg4}
         paginationDefaultColor={light.themeColor.text1}
       >

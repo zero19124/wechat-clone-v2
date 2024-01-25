@@ -15,7 +15,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as light from "@/theme/light";
 import { router, useNavigation } from "expo-router";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import ThreeDot from "@/icons/three-dot.svg";
 import GoBack from "@/icons/common/go-back.svg";
 import FnKeyBoard from "@/component/business/FnKeyBoard";
@@ -91,7 +91,10 @@ const Page = () => {
 
   return (
     <SafeAreaView
-      style={{ backgroundColor: light.themeColor.fillColor, flex: 1 }}
+      style={{
+        backgroundColor: light.themeColor.fillColor,
+        flex: 1,
+      }}
       edges={["bottom"]}
     >
       <KeyboardAvoidingView
