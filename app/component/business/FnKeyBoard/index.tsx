@@ -101,7 +101,7 @@ const FnKeyBoard = ({ heightValue }: { heightValue: number }) => {
           {iconOrderOne.map((iconName, index) => {
             const Svg = PanelSvgs[iconName];
             return (
-              <View key={index}>
+              <View key={index + iconName}>
                 <TouchableOpacity
                   style={styles.touchItem}
                   onPress={() => {
@@ -125,7 +125,7 @@ const FnKeyBoard = ({ heightValue }: { heightValue: number }) => {
           {iconOrderTwo.map((iconName, index) => {
             const Svg = PanelSvgs[iconName];
             return (
-              <View key={index}>
+              <View key={index + iconName}>
                 <TouchableOpacity style={styles.touchItem}>
                   <Svg width={32} height={32} />
                 </TouchableOpacity>

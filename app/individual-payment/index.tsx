@@ -2,6 +2,7 @@ import {
   Animated,
   AppState,
   Button,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
@@ -24,7 +25,7 @@ import * as light from "../../theme/light";
 import { FontAwesome } from "@expo/vector-icons";
 import React from "react";
 import InputKeyboard from "./InputKeyboard";
-import { useNavigation } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import BottomSheet, {
@@ -32,11 +33,26 @@ import BottomSheet, {
   BottomSheetModal,
   useBottomSheetModal,
 } from "@gorhom/bottom-sheet";
+import GoBack from "@/icons/common/go-back.svg";
+
 const Page = () => {
   const [amountValue, setAmountValue] = useState("");
   const navigation = useNavigation();
+  const router = useRouter();
   useLayoutEffect(() => {
-    navigation.setOptions({ headerShadowVisible: false, title: "Payment" });
+    navigation.setOptions({
+      headerShadowVisible: false,
+      title: "Payment",
+      headerLeft: () => (
+        <Pressable
+          onPress={() => {
+            router.back();
+          }}
+        >
+          <GoBack />
+        </Pressable>
+      ),
+    });
   });
   useEffect(() => {
     const handleAppStateChange = (nextAppState) => {
@@ -132,45 +148,6 @@ const Page = () => {
     getLatestPhoto();
   }, []);
   console.log("individual-payment", new Date().getTime());
-  const { showActionSheetWithOptions } = useActionSheet();
-
-  const onPress = () => {
-    const options = ["Delete", "Save", "Cancel"];
-    const destructiveButtonIndex = 0;
-    const cancelButtonIndex = 2;
-    console.log(showActionSheetWithOptions, "showActionSheetWithOptions");
-
-    showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex,
-        destructiveButtonIndex,
-      },
-      (selectedIndex: number) => {
-        switch (selectedIndex) {
-          case 1:
-            // Save
-            break;
-
-          case destructiveButtonIndex:
-            // Delete
-            break;
-
-          case cancelButtonIndex:
-          // Canceled
-        }
-      }
-    );
-  };
-
-  // ref
-
-  // variables
-
-  // callbacks
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
-  }, []);
 
   return (
     <>
@@ -245,6 +222,7 @@ const Page = () => {
               style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}
             >
               <InputKeyboard
+                amount={amountValue}
                 onDelete={onAmountDelete}
                 onChange={onAmountChange}
               />

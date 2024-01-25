@@ -4,37 +4,38 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
-  TouchableWithoutFeedback,
-  SafeAreaView,
+  Pressable,
 } from "react-native";
 import Toast from "react-native-root-toast";
-import Clipboard from "@react-native-community/clipboard";
+import * as Clipboard from "expo-clipboard";
 import * as light from "../../theme/light";
 import { getSize } from "../../utils";
 import CloseIcon from "@/icons/common/close.svg";
 import CoinIcon from "@/icons/common/coin.svg";
-import React, { useCallback, useMemo, useRef, useState } from "react";
-import { ActionSheetProvider } from "@expo/react-native-action-sheet";
-import { RootSiblingParent } from "react-native-root-siblings";
-import { Link, useRouter } from "expo-router";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { useNavigation } from "expo-router";
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
   useBottomSheetModal,
 } from "@gorhom/bottom-sheet";
 import PaymentKeyBoard from "./component/PaymentInput";
+import AmountText from "app/component/complex/AmountText";
+const defaultPayTo = "Pay to Bella (***)";
 const InputKeyboard = (props) => {
   console.log("InputKeyboard", new Date().getTime());
-  const { onChange, onDelete } = props;
-  const [payTo, setPayTo] = useState("Pay to Bella (*了)");
+  const { onChange, onDelete, amount } = props;
+  const [payTo, setPayTo] = useState(defaultPayTo);
   const [psw, setPsw] = useState("");
+  const navigator = useNavigation();
   const numberList = Array.from({ length: 9 }, (_, i) => i + 1); // [1, 2, 3, 4, 5, 6, 7, 8, 9]
   numberList.push(0);
   numberList.push(".");
-  const router = useRouter();
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
   const openModal = () => {
+    setPsw("");
+    setPayTo(defaultPayTo);
     bottomSheetRef.current?.present();
   };
   const snapPoints = useMemo(() => ["65%"], []);
@@ -106,27 +107,27 @@ const InputKeyboard = (props) => {
             // marginBottom: 12,
           }}
         >
-          <CloseIcon />
+          <Pressable
+            style={{
+              width: 30,
+            }}
+            onPress={() => {
+              dismiss();
+            }}
+          >
+            <CloseIcon />
+          </Pressable>
           <View style={{ alignItems: "center" }}>
-            <TouchableWithoutFeedback
+            <Pressable
               onPress={async () => {
-                const content = await Clipboard.getString();
+                const content = await Clipboard.getStringAsync();
                 console.log(content, "content");
-                setPayTo(content);
+                setPayTo(content || defaultPayTo);
               }}
             >
               <Text style={{ fontSize: 16, marginBottom: 8 }}>{payTo}</Text>
-            </TouchableWithoutFeedback>
-            <View
-              style={{
-                flexDirection: "row",
-                // justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <FontAwesome name="rmb" size={24} color="black" />
-              <Text style={{ fontSize: 48 }}> 1000.00</Text>
-            </View>
+            </Pressable>
+            <AmountText amount={amount} />
           </View>
           {/* paymethod  */}
           <View
@@ -177,7 +178,14 @@ const InputKeyboard = (props) => {
         {/* keyboard  */}
         <PaymentKeyBoard
           onChange={(num: number) => {
-            if (psw.length >= 6) return;
+            if (psw.length >= 6) {
+              dismiss();
+              // todo why push cannot find the page?
+              navigator.navigate("component/business/PayDone/index", {
+                amount,
+              });
+              return;
+            }
             setPsw((val) => val + num);
           }}
           onDelete={() => {

@@ -52,6 +52,12 @@ const Layout = () => {
                 title: "msg-chats",
               }}
             />
+            <Stack.Screen
+              name="component/business/PayDone/index"
+              options={{
+                headerShown: false,
+              }}
+            />
             {/* <Stack.Screen
             name="individual-payment/pay-modal"
             options={{
