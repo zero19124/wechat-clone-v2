@@ -13,6 +13,7 @@
     "@expo/vector-icons": "^13.0.0",
     "@gorhom/bottom-sheet": "^4.6.0",
     "@react-native-camera-roll/camera-roll": "^7.3.0",
+    "@react-native-community/clipboard": "^1.5.1",
     "@react-native-community/image-editor": "^3.0.0",
     "@react-native-community/netinfo": "^11.2.1",
     "@types/react": "~18.2.14",

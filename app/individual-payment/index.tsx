@@ -27,7 +27,11 @@ import InputKeyboard from "./InputKeyboard";
 import { useNavigation } from "expo-router";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import BottomSheet from "@gorhom/bottom-sheet";
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  useBottomSheetModal,
+} from "@gorhom/bottom-sheet";
 const Page = () => {
   const [amountValue, setAmountValue] = useState("");
   const navigation = useNavigation();
@@ -160,15 +164,14 @@ const Page = () => {
   };
 
   // ref
-  const bottomSheetRef = useRef<BottomSheet>(null);
 
   // variables
-  const snapPoints = useMemo(() => ["25%", "50%"], []);
 
   // callbacks
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index);
   }, []);
+
   return (
     <>
       <View style={{ backgroundColor: "#FFF", flex: 1 }}>
@@ -241,19 +244,6 @@ const Page = () => {
             <View
               style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}
             >
-              <View style={styles.container}>
-                <BottomSheet
-                  ref={bottomSheetRef}
-                  index={1}
-                  snapPoints={snapPoints}
-                  onChange={handleSheetChanges}
-                >
-                  <View style={styles.contentContainer}>
-                    <Text>Awesome 🎉</Text>
-                  </View>
-                </BottomSheet>
-              </View>
-              <Button title="Menu" onPress={onPress} />
               <InputKeyboard
                 onDelete={onAmountDelete}
                 onChange={onAmountChange}
