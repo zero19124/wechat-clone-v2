@@ -11,10 +11,19 @@ import MeIcon from "@/icons/tabs/me.svg";
 
 import { RootSiblingParent } from "react-native-root-siblings";
 import Toast from "react-native-root-toast";
+
+// import Slot from "expo-router/Slot";
+
+// Import your global CSS file
+import '../../global.css'
+
+// export default Slot
+
 const Layout = () => {
   return (
     <RootSiblingParent>
       <Tabs
+        initialRouteName="contacts"
         screenOptions={{
           headerStyle: {
             backgroundColor: light.themeColor.fillColor,

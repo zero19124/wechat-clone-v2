@@ -10,12 +10,14 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
+    "@pingtou/rn-vant": "^1.0.0",
     "@react-native-camera-roll/camera-roll": "^7.3.0",
     "@react-native-community/image-editor": "^3.0.0",
     "@react-native-community/netinfo": "^11.2.1",
     "@types/react": "~18.2.14",
     "expo": "~49.0.15",
     "expo-constants": "~14.4.2",
+    "expo-dev-client": "~2.4.12",
     "expo-image-crop": "^1.0.4",
     "expo-image-manipulator": "~11.3.0",
     "expo-image-picker": "~14.3.2",
@@ -24,11 +26,14 @@
     "expo-router": "^2.0.0",
     "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "~1.6.0",
+    "nativewind": "^4.0.1",
+    "pod-install": "^0.2.0",
     "react": "18.2.0",
     "react-native": "0.72.6",
     "react-native-easy-toast": "^2.3.0",
     "react-native-gesture-handler": "^2.14.1",
     "react-native-i18n": "^2.0.15",
+    "react-native-reanimated": "~3.3.0",
     "react-native-root-siblings": "^5.0.1",
     "react-native-root-toast": "^3.5.1",
     "react-native-safe-area-context": "4.6.3",
@@ -41,8 +46,8 @@
     "react-native-theme-switch-animation": "^0.6.0",
     "react-native-vector-icons": "^10.0.3",
     "react-native-walkthrough-tooltip": "^1.6.0",
-    "typescript": "^5.1.3",
-    "expo-dev-client": "~2.4.12"
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.1.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

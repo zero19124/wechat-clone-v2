@@ -1,5 +1,5 @@
 import { Text } from "react-native";
 const Chats = () => {
-  <Text>discover</Text>;
+  <Text>di1scover</Text>;
 };
 export default Chats;

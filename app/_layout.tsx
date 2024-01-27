@@ -28,7 +28,7 @@ const Layout = () => {
           }}
         />
         <Stack.Screen
-          name="contacts"
+          name="contacts/index"
           options={{
             headerLeft: () => <ThreeDot />,
             headerTitle: () => <Text>Wei3xin(3)</Text>,
@@ -36,7 +36,7 @@ const Layout = () => {
           }}
         />
         <Stack.Screen
-          name="individual-payment"
+          name="individual-payment/index"
           options={{
             headerShadowVisible: false,
             title: "Payment",
