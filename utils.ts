@@ -17,3 +17,6 @@ export const getSize = (px: number): number => {
   // RN采用设计稿宽度适配布局
   return (px * DeviceWidth) / uiWidth;
 };
+export function convertCamelCaseToNormal(text: string) {
+  return text.replace(/([a-z])([A-Z])/g, "$1 $2");
+}

@@ -42,7 +42,7 @@ readSvgs()
       //svg所在的路径
       exportFile += `
                 import ${name + "P"} from '../keyboard-panel/${item}';
-                const ${name} =()=> <${name + "P"} />;
+                const ${name} =(props)=> <  ${name + "P"} {...props} />;
             `;
     });
     exportFile += `export default {${names.join(",")}}`;

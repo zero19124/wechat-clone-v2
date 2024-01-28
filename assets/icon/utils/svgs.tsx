@@ -1,67 +1,71 @@
 import React, { Component } from "react";
 
+import AlbumP from "../keyboard-panel/album.svg";
+const Album = (props) => <AlbumP {...props} />;
+
 import CameraP from "../keyboard-panel/camera.svg";
 const Camera = (props) => <CameraP {...props} />;
 
 import ContactCardP from "../keyboard-panel/contact-card.svg";
-const ContactCard = () => <ContactCardP />;
+const ContactCard = (props) => <ContactCardP {...props} />;
 
 import CouponsP from "../keyboard-panel/coupons.svg";
-const Coupons = () => <CouponsP />;
+const Coupons = (props) => <CouponsP {...props} />;
 
 import EmojiIconP from "../keyboard-panel/emoji-icon.svg";
-const EmojiIcon = () => <EmojiIconP />;
+const EmojiIcon = (props) => <EmojiIconP {...props} />;
 
 import FavoritesP from "../keyboard-panel/favorites.svg";
-const Favorites = () => <FavoritesP />;
+const Favorites = (props) => <FavoritesP {...props} />;
 
 import FileP from "../keyboard-panel/file.svg";
-const File = () => <FileP />;
-
-import ImgPickerP from "../keyboard-panel/img-picker.svg";
-const ImgPicker = () => <ImgPickerP />;
+const File = (props) => <FileP {...props} />;
 
 import KeyboardP from "../keyboard-panel/keyboard.svg";
-const Keyboard = () => <KeyboardP />;
+const Keyboard = (props) => <KeyboardP {...props} />;
 
 import LocationP from "../keyboard-panel/location.svg";
-const Location = () => <LocationP />;
+const Location = (props) => <LocationP {...props} />;
 
 import MusicP from "../keyboard-panel/music.svg";
-const Music = () => <MusicP />;
+const Music = (props) => <MusicP {...props} />;
 
 import PlusQuareDotP from "../keyboard-panel/plus-quare-dot.svg";
-const PlusQuareDot = () => <PlusQuareDotP />;
+const PlusQuareDot = (props) => <PlusQuareDotP {...props} />;
 
 import RedPacketP from "../keyboard-panel/red-packet.svg";
-const RedPacket = () => <RedPacketP />;
+const RedPacket = (props) => <RedPacketP {...props} />;
 
 import TransferP from "../keyboard-panel/transfer.svg";
-const Transfer = () => <TransferP />;
+const Transfer = (props) => <TransferP {...props} />;
 
-import VideoP from "../keyboard-panel/video.svg";
-const Video = () => <VideoP />;
+import VideoCallP from "../keyboard-panel/video-call.svg";
+const VideoCall = (props) => <VideoCallP {...props} />;
 
 import VoiceInputP from "../keyboard-panel/voice-input.svg";
-const VoiceInput = () => <VoiceInputP />;
+const VoiceInput = (props) => <VoiceInputP {...props} />;
+
+import VoiceRecordP from "../keyboard-panel/voice-record.svg";
+const VoiceRecord = (props) => <VoiceRecordP {...props} />;
 
 import VoiceRecoredP from "../keyboard-panel/voice-recored.svg";
-const VoiceRecored = () => <VoiceRecoredP />;
+const VoiceRecored = (props) => <VoiceRecoredP {...props} />;
 export default {
+  Album,
   Camera,
   ContactCard,
   Coupons,
   EmojiIcon,
   Favorites,
   File,
-  ImgPicker,
   Keyboard,
   Location,
   Music,
   PlusQuareDot,
   RedPacket,
   Transfer,
-  Video,
+  VideoCall,
   VoiceInput,
+  VoiceRecord,
   VoiceRecored,
 };

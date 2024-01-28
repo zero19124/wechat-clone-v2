@@ -1,6 +1,8 @@
 import {
   Animated,
   AppState,
+  Button,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
@@ -11,18 +13,46 @@ import {
 import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
-import { useEffect, useLayoutEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import * as light from "../../theme/light";
 import { FontAwesome } from "@expo/vector-icons";
 import React from "react";
 import InputKeyboard from "./InputKeyboard";
-import { useNavigation } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import { RootSiblingParent } from "react-native-root-siblings";
+import { useActionSheet } from "@expo/react-native-action-sheet";
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  useBottomSheetModal,
+} from "@gorhom/bottom-sheet";
+import GoBack from "@/icons/common/go-back.svg";
+
 const Page = () => {
   const [amountValue, setAmountValue] = useState("");
   const navigation = useNavigation();
+  const router = useRouter();
   useLayoutEffect(() => {
-    navigation.setOptions({ headerShadowVisible: false, title: "Payment" });
+    navigation.setOptions({
+      headerShadowVisible: false,
+      title: "Payment",
+      headerLeft: () => (
+        <Pressable
+          onPress={() => {
+            router.back();
+          }}
+        >
+          <GoBack />
+        </Pressable>
+      ),
+    });
   });
   useEffect(() => {
     const handleAppStateChange = (nextAppState) => {
@@ -81,9 +111,10 @@ const Page = () => {
     setImageSource(manipResult);
   };
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
-  requestPermission();
+
   // 读取最新的照片
   const getLatestPhoto = async () => {
+    requestPermission();
     console.log(MediaLibrary, "MediaLibrary");
     // await getPermissionAsync(); // 获取相册访问权限
     const albums = (
@@ -106,9 +137,18 @@ const Page = () => {
       }
     }
   };
+  const onAmountDelete = useCallback(() => {
+    setAmountValue((preV) => preV.slice(0, -1));
+  }, []);
+  const onAmountChange = useCallback((val: number) => {
+    setAmountValue((preV) => preV + val);
+    console.log(val, "val");
+  }, []);
   useEffect(() => {
     getLatestPhoto();
   }, []);
+  console.log("individual-payment", new Date().getTime());
+
   return (
     <>
       <View style={{ backgroundColor: "#FFF", flex: 1 }}>
@@ -182,13 +222,9 @@ const Page = () => {
               style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}
             >
               <InputKeyboard
-                onDelete={() => {
-                  setAmountValue((preV) => preV.slice(0, -1));
-                }}
-                onChange={(val: number) => {
-                  setAmountValue((preV) => preV + val);
-                  console.log(val, "val");
-                }}
+                amount={amountValue}
+                onDelete={onAmountDelete}
+                onChange={onAmountChange}
               />
             </View>
           </View>
@@ -197,4 +233,19 @@ const Page = () => {
     </>
   );
 };
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 24,
+    backgroundColor: "grey",
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: "center",
+  },
+});
+// const Page = () => {
+//   console.log("individual-payment", new Date().getTime());
+//   return <Text>3</Text>;
+// };
 export default Page;
