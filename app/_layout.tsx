@@ -7,76 +7,78 @@ import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { RootSiblingParent } from "react-native-root-siblings";
 import Toast from "react-native-root-toast";
 import "react-native-gesture-handler";
+import { ToastProvider } from "react-native-toast-notifications";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 const Layout = () => {
   console.log(" top-level component");
   return (
-    <BottomSheetModalProvider>
-      <ActionSheetProvider>
-        <RootSiblingParent>
-          <Stack
-            screenOptions={{
-              headerStyle: {
-                backgroundColor: light.themeColor.fillColor,
-              },
-              // headerTintColor: "#fff",
-              headerTitleStyle: {
-                fontWeight: "bold",
-              },
-            }}
-          >
-            <Stack.Screen
-              name="(tabs)"
-              options={{
-                headerShown: false,
+    <ToastProvider>
+      <BottomSheetModalProvider>
+        <ActionSheetProvider>
+          <RootSiblingParent>
+            <Stack
+              screenOptions={{
+                headerStyle: {
+                  backgroundColor: light.themeColor.fillColor,
+                },
+                // headerTintColor: "#fff",
+                headerTitleStyle: {
+                  fontWeight: "bold",
+                },
               }}
-            />
-            <Stack.Screen
-              name="contacts"
-              options={{
-                headerLeft: () => <ThreeDot />,
-                headerTitle: () => <Text>Wei3xin(3)</Text>,
-                headerRight: () => <CirclePlus />,
-              }}
-            />
-            <Stack.Screen
-              name="individual-payment"
-              options={{
-                headerShadowVisible: false,
-                title: "Payment",
-              }}
-            />
-            <Stack.Screen
-              name="pages/chats/msg-chats/index"
-              options={{
-                title: "msg-chats",
-              }}
-            />
-            <Stack.Screen
-              name="component/business/PayDone/index"
-              options={{
-                headerShown: false,
-              }}
-            />
-            {/* <Stack.Screen
+            >
+              <Stack.Screen
+                name="(tabs)"
+                options={{
+                  headerShown: false,
+                }}
+              />
+              <Stack.Screen
+                name="contacts"
+                options={{
+                  headerLeft: () => <ThreeDot />,
+                  headerTitle: () => <Text>Wei3xin(3)</Text>,
+                  headerRight: () => <CirclePlus />,
+                }}
+              />
+              <Stack.Screen
+                name="individual-payment"
+                options={{
+                  headerShadowVisible: false,
+                  title: "Payment",
+                }}
+              />
+              <Stack.Screen
+                name="pages/chats/msg-chats/index"
+                options={{
+                  title: "msg-chats",
+                }}
+              />
+              <Stack.Screen
+                name="component/business/PayDone/index"
+                options={{
+                  headerShown: false,
+                }}
+              />
+              {/* <Stack.Screen
             name="individual-payment/pay-modal"
             options={{
               presentation: "modal",
             }}
           /> */}
-            <Stack.Screen
-              name="modal"
-              options={{
-                presentation: "modal",
-              }}
-            />
-            {/* <Stack.Screen
+              <Stack.Screen
+                name="modal"
+                options={{
+                  presentation: "modal",
+                }}
+              />
+              {/* <Stack.Screen
           name="pages/socket-test"
           options={{
             title: "socket-test",
           }}
         /> */}
-            {/* <Stack.Screen
+              {/* <Stack.Screen
         name="contacts"
         options={{
           headerLeft: () => <ThreeDot />,
@@ -100,8 +102,8 @@ const Layout = () => {
           headerRight: () => <CirclePlus />,
         }}
       /> */}
-            {/* <Stack.Screen name="test" options={{ title: "Tooo" }}></Stack.Screen> */}
-            {/* <Stack.Screen
+              {/* <Stack.Screen name="test" options={{ title: "Tooo" }}></Stack.Screen> */}
+              {/* <Stack.Screen
           name="about/test"
           options={{
             headerLeft: () => {
@@ -112,11 +114,12 @@ const Layout = () => {
             presentation: "modal",
           }}
         /> */}
-          </Stack>
-          <Toast />
-        </RootSiblingParent>
-      </ActionSheetProvider>
-    </BottomSheetModalProvider>
+            </Stack>
+            <Toast />
+          </RootSiblingParent>
+        </ActionSheetProvider>
+      </BottomSheetModalProvider>
+    </ToastProvider>
   );
 };
 export default Layout;
