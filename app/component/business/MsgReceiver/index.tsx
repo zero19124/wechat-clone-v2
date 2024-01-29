@@ -4,6 +4,7 @@ import { getSize } from "utils";
 const msgTypeMap: Record<string, StyleProp<ViewStyle>> = {
   itemRightWrapper: {
     backgroundColor: light.themeColor.brand2,
+    marginRight: 4,
   },
   itemRight: {
     position: "absolute",
@@ -25,6 +26,7 @@ const msgTypeMap: Record<string, StyleProp<ViewStyle>> = {
     ],
   },
   itemLeftWrapper: {
+    marginLeft:4,
     backgroundColor: light.themeColor.white,
   },
   itemLeft: {

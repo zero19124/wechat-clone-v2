@@ -13,26 +13,12 @@ import {
 import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import * as light from "../../theme/light";
 import { FontAwesome } from "@expo/vector-icons";
-import React from "react";
 import InputKeyboard from "./InputKeyboard";
 import { useNavigation, useRouter } from "expo-router";
-import { RootSiblingParent } from "react-native-root-siblings";
-import { useActionSheet } from "@expo/react-native-action-sheet";
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetModal,
-  useBottomSheetModal,
-} from "@gorhom/bottom-sheet";
+
 import GoBack from "@/icons/common/go-back.svg";
 
 const Page = () => {

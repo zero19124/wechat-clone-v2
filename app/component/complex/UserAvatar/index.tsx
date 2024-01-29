@@ -16,7 +16,7 @@ const UserAvatar = ({
 }) => {
   return (
     <Image
-      source={source || require("@/assets/avatar.png")}
+      source={source || require("@/assets/bella.png")}
       style={[style, avatarStyle.itemContainerAvatar]}
     />
   );

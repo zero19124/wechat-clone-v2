@@ -23,7 +23,7 @@ const Layout = () => {
   return (
     <RootSiblingParent>
       <Tabs
-        initialRouteName="contacts"
+        initialRouteName="me"
         screenOptions={{
           headerStyle: {
             backgroundColor: light.themeColor.fillColor,

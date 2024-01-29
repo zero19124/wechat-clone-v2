@@ -43,6 +43,7 @@ const PaymentKeyBoard = ({
       {keyNumbers.map((num) => {
         return (
           <TouchableOpacity
+            key={num}
             onPress={() => {
               if (num === 12) {
                 onDelete();

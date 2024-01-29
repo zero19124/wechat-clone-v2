@@ -72,7 +72,7 @@ const Discover = () => {
         };
         const visibleBoderFields = ["Channels", "Scan", "Top Stories"];
         return (
-          <>
+          <View key={card.text}>
             <Divider />
             <ItemCard
               borderVisible={visibleBoderFields.includes(card.text)}
@@ -103,7 +103,7 @@ const Discover = () => {
               }}
               text={card.text}
             />
-          </>
+          </View>
         );
       })}
     </SafeAreaView>
