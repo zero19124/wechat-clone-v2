@@ -1,3 +1,5 @@
-import Contacts from "app/pages/contacts";
+import Contacts from "@/pages/contacts";
 
-export default Contacts;
+export default () => {
+  return <Contacts />;
+};

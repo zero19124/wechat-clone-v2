@@ -9,9 +9,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["/*"],
-      "@/icons/*": ["/assets/icon/*"],
-      "@/pages/*": ["/app/pages/*"],
-      "@/component/*": ["/app/component/*"],
+      "@/icons/*": ["assets/icon/*"],
+      "@/pages/*": ["app/pages/*"],
+      "@/component/*": ["app/component/*"],
       "@/theme/*": ["theme/*"],
       "@/assets/*": ["assets/*"],
       "@/mocks/*": ["mocks/*"]

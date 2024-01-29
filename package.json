@@ -12,6 +12,7 @@
     "@expo/react-native-action-sheet": "^4.0.1",
     "@expo/vector-icons": "^13.0.0",
     "@gorhom/bottom-sheet": "^4.6.0",
+    "@pingtou/rn-vant": "^1.0.0",
     "@react-native-camera-roll/camera-roll": "^7.3.0",
     "@react-native-community/clipboard": "^1.5.1",
     "@react-native-community/image-editor": "^3.0.0",
@@ -29,6 +30,9 @@
     "expo-router": "^2.0.0",
     "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "~1.6.0",
+    "lodash-es": "^4.17.21",
+    "nativewind": "^4.0.1",
+    "pod-install": "^0.2.0",
     "react": "18.2.0",
     "react-native": "0.72.6",
     "react-native-actions-sheet": "^0.9.0-alpha.24",
@@ -49,6 +53,7 @@
     "react-native-toast-notifications": "^3.4.0",
     "react-native-vector-icons": "^10.0.3",
     "react-native-walkthrough-tooltip": "^1.6.0",
+    "tailwindcss": "^3.4.1",
     "typescript": "^5.1.3"
   },
   "devDependencies": {

@@ -1,6 +1,5 @@
 {
   "scheme": "your-app-scheme",
-
   "expo": {
     "experiments": {
       "tsconfigPaths": true
@@ -17,7 +16,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -51,6 +52,14 @@
           "isAccessMediaLocationEnabled": true
         }
       ]
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "a4bad71e-b2bf-48c5-9494-1a19ada37d39"
+      }
+    }
   }
 }

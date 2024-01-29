@@ -61,6 +61,28 @@ const Layout = () => {
                 }}
               />
               {/* <Stack.Screen
+            />
+
+            {/* <Stack.Screen
+              name="individual-payment"
+              options={{
+                headerShadowVisible: false,
+                title: "Payment",
+              }}
+            /> */}
+            <Stack.Screen
+              name="pages/chats/msg-chats/index"
+              options={{
+                title: "msg-chats",
+              }}
+            />
+            <Stack.Screen
+              name="component/business/PayDone/index"
+              options={{
+                headerShown: false,
+              }}
+            />
+            {/* <Stack.Screen
             name="individual-payment/pay-modal"
             options={{
               presentation: "modal",
