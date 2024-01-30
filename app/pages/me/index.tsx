@@ -2,13 +2,44 @@ import { themeColor } from "@/theme/light";
 import QrCodeIcon from "@/icons/qr-code.svg";
 import ArrowRightIcon from "@/icons/common/arrow-right.svg";
 import PlusIcon from "@/icons/common/plus.svg";
-import { SafeAreaView, Text, View, Image } from "react-native";
+import PaySuccessOutlineIcon from "@/icons/me/pay-success-outline.svg";
+import SettingIcon from "@/icons/common/setting-outline.svg";
+import AlbumIcon from "@/icons/me/album-outline.svg";
+import CardsOffersIcon from "@/icons/me/cards-offers.svg";
+import Favorites from "@/icons/me/favorites.svg";
+import Sticker from "@/icons/keyboard-panel/emoji-icon.svg";
+import * as Haptics from "expo-haptics";
+import { SafeAreaView, Text, View, Image, StyleProp } from "react-native";
 import RedDot from "@/component/complex/RedDot";
+import Divider from "@/component/complex/Divider";
+import ItemCard from "@/component/complex/ItemCard";
+import { ViewProps } from "react-native-svg/lib/typescript/fabric/utils";
 const Me = () => {
   const avatars = [
+    require("@/assets/bella.png"),
     require("@/assets/me.png"),
-    require("@/assets/me.png"),
-    require("@/assets/me.png"),
+    require("@/assets/avatar.png"),
+  ];
+
+  const serviceList = [
+    {
+      text: "Favorites",
+      icon: <Favorites width={24} height={24} fill={themeColor.primary} />,
+    },
+    {
+      text: "Album",
+      icon: <AlbumIcon width={24} height={24} fill={themeColor.iconBlue} />,
+    },
+    {
+      text: "Cards & Offres",
+      icon: (
+        <CardsOffersIcon width={24} height={24} fill={themeColor.primary} />
+      ),
+    },
+    {
+      text: "Stiker Gallery",
+      icon: <Sticker width={24} height={24} fill={themeColor.iconYellow} />,
+    },
   ];
   return (
     <SafeAreaView style={{ backgroundColor: themeColor.white }}>
@@ -76,6 +107,7 @@ const Me = () => {
               {avatars.map((avatar, index) => {
                 return (
                   <Image
+                    key={index}
                     style={{
                       width: 16,
                       marginLeft: index ? -(2 + index * 1.5) : 0,
@@ -84,7 +116,7 @@ const Me = () => {
                       borderWidth: 1,
                       borderRadius: "50%",
                     }}
-                    source={require("@/assets/me.png")}
+                    source={avatar}
                   />
                 );
               })}
@@ -102,6 +134,62 @@ const Me = () => {
           </View>
         </View>
       </View>
+      <Divider />
+      <ItemCard
+        onPress={() =>
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+        }
+        borderVisible={false}
+        leftComp={() => {
+          return (
+            <PaySuccessOutlineIcon
+              style={{ marginLeft: 24 }}
+              width={24}
+              height={24}
+              fill={themeColor.primary}
+            />
+          );
+        }}
+        text={"Services"}
+      />
+
+      <Divider />
+      {serviceList.map((service) => {
+        return (
+          <ItemCard
+            onPress={() =>
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+            }
+            key={service.text}
+            leftComp={() => {
+              return <View style={{ marginLeft: 24 }}>{service.icon}</View>;
+            }}
+            text={service.text}
+          />
+        );
+      })}
+      <Divider />
+      <ItemCard
+        onPress={() => {
+          Haptics.notificationAsync(
+            Haptics.NotificationFeedbackType.Error
+          )
+          // Haptics.selectionAsync();
+          console.log("haptics");
+        }}
+        borderVisible={false}
+        leftComp={() => {
+          return (
+            <SettingIcon
+              style={{ marginLeft: 24 }}
+              width={24}
+              height={24}
+              fill={themeColor.iconBlue}
+            />
+          );
+        }}
+        text={"Setting"}
+      />
     </SafeAreaView>
   );
 };

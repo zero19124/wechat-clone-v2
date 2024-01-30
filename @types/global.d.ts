@@ -1,12 +1,16 @@
-
-
-declare module '*.svg' {
-  import React from 'react';
-  import { SvgProps } from 'react-native-svg';
+import type { ThemeVarType } from "../theme/styles/index";
+declare module "*.svg" {
+  import React from "react";
+  import { SvgProps } from "react-native-svg";
   const content: React.FC<SvgProps>;
   export default content;
 }
-
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace DiceUI {
+    type Theme = ThemeVarType;
+  }
+}
 // declare module '*.png';
 // declare module 'numeral';
 // declare module 'echarts/lib/coord/geo/geoSourceManager';

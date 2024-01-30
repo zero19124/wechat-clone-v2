@@ -1,18 +1,19 @@
 import {
   Text,
-  Image,
-  ImageSourcePropType,
-  ImageStyle,
-  StyleProp,
   StyleSheet,
   View,
   Pressable,
+  TouchableOpacityBase,
+  TouchableOpacity,
 } from "react-native";
-import { getSize } from "utils";
+import ArrowRightIcon from "@/icons/common/arrow-right.svg";
+
 import { themeColor } from "@/theme/light";
 const ItemCard = (props: any) => {
   const {
+    onPress = null,
     borderVisible = true,
+    showRightComp = true,
     leftComp = null,
     textComp = null,
     rightComp = null,
@@ -42,14 +43,18 @@ const ItemCard = (props: any) => {
         ]}
       >
         {textComp?.() || <Text style={{ fontSize: 16 }}>{text}</Text>}
-        {rightComp?.()}
+        {showRightComp &&
+          (rightComp?.() || (
+            <ArrowRightIcon fill={themeColor.bg4} style={{ marginRight: 24 }} />
+          ))}
       </View>
     );
   };
 
   return (
-    <Pressable
+    <TouchableOpacity
       onPress={() => {
+        onPress?.();
         console.log("press");
       }}
     >
@@ -66,7 +71,7 @@ const ItemCard = (props: any) => {
         {leftComp?.() || renderLeft()}
         {renderRight()}
       </View>
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 

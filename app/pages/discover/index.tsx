@@ -1,3 +1,4 @@
+import Divider from "@/component/complex/Divider";
 import ItemCard from "@/component/complex/ItemCard";
 import ArrowRightIcon from "@/icons/common/arrow-right.svg";
 import { themeColor } from "@/theme/light";
@@ -48,7 +49,7 @@ const Discover = () => {
   return (
     <SafeAreaView>
       {cardList.map((card) => {
-        const Divider = () => {
+        const getDivider = () => {
           const gapFields = [
             "Channels",
             "Scan",
@@ -58,22 +59,14 @@ const Discover = () => {
             "Mini Programs",
           ];
           if (gapFields.includes(card.text)) {
-            console.log(2222, card.text);
-            return (
-              <View
-                style={{
-                  backgroundColor: themeColor.fillColor,
-                  height: 8,
-                }}
-              ></View>
-            );
+            return <Divider />;
           }
           return null;
         };
         const visibleBoderFields = ["Channels", "Scan", "Top Stories"];
         return (
           <View key={card.text}>
-            <Divider />
+            {getDivider()}
             <ItemCard
               borderVisible={visibleBoderFields.includes(card.text)}
               key={card.text}
@@ -91,14 +84,6 @@ const Discover = () => {
                       source={card.url}
                     />
                   </View>
-                );
-              }}
-              rightComp={() => {
-                return (
-                  <ArrowRightIcon
-                    fill={themeColor.bg4}
-                    style={{ marginRight: 24 }}
-                  />
                 );
               }}
               text={card.text}

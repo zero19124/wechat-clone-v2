@@ -32,6 +32,8 @@ export const themeColor = {
   brand10: "#004D44",
   color: "#34AC9D",
   brandLight: "#DEFAF5",
+  iconBlue: "#4d89d4",
+  iconYellow: "#eac653",
   // text1: "#FFFFFF",
 
   line1: "#F2F3F5",

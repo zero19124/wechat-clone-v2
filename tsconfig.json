@@ -11,6 +11,8 @@
       "@/*": ["/*"],
       "@/icons/*": ["assets/icon/*"],
       "@/pages/*": ["app/pages/*"],
+      "@/hooks/*": ["app/hooks/*"],
+      "@/utils/*": ["app/utils/*"],
       "@/component/*": ["app/component/*"],
       "@/theme/*": ["theme/*"],
       "@/assets/*": ["assets/*"],
