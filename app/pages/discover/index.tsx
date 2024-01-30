@@ -59,7 +59,7 @@ const Discover = () => {
             "Mini Programs",
           ];
           if (gapFields.includes(card.text)) {
-            return <Divider />;
+            return <Divider key={card.text} />;
           }
           return null;
         };

@@ -16,6 +16,7 @@ import {
   PanResponder,
   TouchableOpacity,
   Dimensions,
+  Animated,
 } from "react-native";
 import * as Haptics from "expo-haptics";
 import { useHeaderHeight } from "@react-navigation/elements";
@@ -66,6 +67,9 @@ const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref) => {
   console.log(indexList, "indexList");
   const headerHeight = useHeaderHeight();
   const theme = useTheme();
+  const fadeAmimation = useRef(new Animated.Value(0)).current;
+  const transYAmimation = useRef(new Animated.ValueXY()).current;
+  const [showIndicator, setShowInicator] = useState(false);
   const { styles } = useThemeFactory((theme) => {
     return createStyle(theme, headerHeight);
   });
@@ -169,15 +173,37 @@ const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref) => {
       PanResponder.create({
         onMoveShouldSetPanResponder: () => true,
         onPanResponderGrant: (e, s) => {
-          // console.log(111, e, s);
+          console.log(111, e, s);
+          Animated.timing(fadeAmimation, {
+            useNativeDriver: true,
+            toValue: 1,
+            duration: 200,
+          }).start();
+        },
+        onPanResponderRelease: (e, s) => {
+          console.log(333, s.dy);
+          Animated.timing(fadeAmimation, {
+            useNativeDriver: true,
+            toValue: 0,
+            duration: 200,
+          }).start();
         },
         onPanResponderMove: (e, s) => {
-          const curTop = Dimensions.get("screen").height / 2 - 8.5 * 26;
+          const navigatorHeight = 8.5 * 26;
+          const curTop = Dimensions.get("screen").height / 2 - navigatorHeight;
           // s.moveY 包含了header的高度 但是curtop没有
           const moveY = s.moveY - headerHeight;
           const index = Math.round((moveY - curTop) / 8.5);
-          const jumpTo = indexList[Math.round(index / 2)];
-
+          const jumpTo = indexList[Math.round(index / 1.5)];
+          //  如果高于或者低于则不执行 不然会超出导航自身高度
+          const textPosition = moveY - curTop;
+          if (curTop < moveY && textPosition + navigatorHeight < moveY) {
+            Animated.timing(transYAmimation, {
+              useNativeDriver: true,
+              toValue: textPosition,
+              duration: 50,
+            }).start();
+          }
           console.log(
             curTop,
             "curTop",
@@ -202,9 +228,6 @@ const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref) => {
             scrollTo(jumpTo);
           }
         },
-        onPanResponderRelease: (e, s) => {
-          console.log(333, s.dy);
-        },
       })
     ).current;
     return (
@@ -212,6 +235,18 @@ const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref) => {
         //  {...panResponderA.panHandlers}
         style={[styles.sidebar, { backgroundColor: "blue" }]}
       >
+        <Animated.Text
+          style={{
+            position: "absolute",
+            zIndex: 2,
+            top: 0,
+            right: 50,
+            opacity: fadeAmimation,
+            transform: [{ translateY: transYAmimation.y }],
+          }}
+        >
+          {activeAnchor}
+        </Animated.Text>
         {indexList?.map((index) => {
           const active = index === activeAnchor;
           const highlightStyle = highlightColor

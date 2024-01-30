@@ -157,14 +157,13 @@ const Contacts = () => {
     // item.pinyinArrStr = pinyinArrStr;
   });
 
-  console.log(listMap.get("g"), "groupedAndMapped");
   return (
     <>
       <View style={{ backgroundColor: light.themeColor.white }}>
         <IndexBar highlightColor={light.themeColor.white} sticky={false}>
           <View className="bg-white flex-1">
             <SearchBar />
-            <View
+            {/* <View
               style={{
                 zIndex: 12,
                 position: "absolute",
@@ -175,9 +174,8 @@ const Contacts = () => {
                 width: 100,
                 height: 11,
               }}
-            ></View>
+            ></View> */}
             {cardList.map((card) => {
-              console.log(card.text);
               return (
                 <ItemCard
                   showRightComp={false}
@@ -200,22 +198,6 @@ const Contacts = () => {
                 />
               );
             })}
-
-            {/* <View className="flex-row gap-20 flex-wrap">
-      <Button type="primary">主要按钮</Button>
-      <Button type="success">成功按钮</Button>
-      <Button type="default">默认按钮</Button>
-      <Button type="warning">警告按钮</Button>
-      <Button type="danger">危险按钮</Button>
-    </View> */}
-            {/* <Image
-      width={100}
-      resizeMode="center"
-      height={106}
-      source={{ uri: urls[1] }}
-    />
-
-    <Image width={100} height={100} source={{ uri: urls[0] }} /> */}
           </View>
           <View style={{ paddingTop: 12 }}></View>
           {indexList.map((item, index) => {
