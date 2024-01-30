@@ -15,6 +15,7 @@ import {
   findNodeHandle,
   PanResponder,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import * as Haptics from "expo-haptics";
 import { useHeaderHeight } from "@react-navigation/elements";
@@ -30,10 +31,15 @@ import type {
   IndexAnchorInstance,
   LayoutRectangle,
 } from "./types";
+import { Vars } from "@/theme/styles/index";
+
 import IndexBarContext from "./IndexBarContext";
 import { INDEX_ANCHORE_KEY } from "./IndexAnchor";
 import { createStyle } from "./style";
 import { useNavigation } from "expo-router";
+import { getSize } from "utils";
+import { themeColor } from "@/theme/light";
+import { useTheme } from "@/component/base/Theme";
 
 const genAlphabet = () => {
   const indexList = [];
@@ -57,8 +63,9 @@ const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref) => {
     onSelect,
     ...rest
   } = props;
+  console.log(indexList, "indexList");
   const headerHeight = useHeaderHeight();
-
+  const theme = useTheme();
   const { styles } = useThemeFactory((theme) => {
     return createStyle(theme, headerHeight);
   });
@@ -131,7 +138,7 @@ const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref) => {
   useEffect(() => {
     activeAnchor && onChange?.(activeAnchor);
     console.log("highlight changed");
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
   }, [activeAnchor]);
 
   const handleMapChildren = ($children: ReactNode): any => {
@@ -165,11 +172,34 @@ const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref) => {
           // console.log(111, e, s);
         },
         onPanResponderMove: (e, s) => {
-          console.log(2222, s.dy);
-          const ddd = indexList[Math.abs(String(s.dy).slice(0, 1))];
-          console.log(ddd, "ddd");
-          if (ddd) {
-            scrollTo(ddd);
+          const curTop = Dimensions.get("screen").height / 2 - 8.5 * 26;
+          // s.moveY 包含了header的高度 但是curtop没有
+          const moveY = s.moveY - headerHeight;
+          const index = Math.round((moveY - curTop) / 8.5);
+          const jumpTo = indexList[Math.round(index / 2)];
+
+          console.log(
+            curTop,
+            "curTop",
+            moveY,
+            "moveY",
+            index,
+            "alphbet",
+            jumpTo
+          );
+          console.log(
+            "s.dy  第一次直到松手的距离",
+
+            s.dy,
+            "s.y0 第一次按的位置",
+
+            s.y0,
+            "s.moveY 松手",
+            s.moveY
+          );
+
+          if (jumpTo) {
+            scrollTo(jumpTo);
           }
         },
         onPanResponderRelease: (e, s) => {
@@ -180,16 +210,19 @@ const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref) => {
     return (
       <View
         //  {...panResponderA.panHandlers}
-        style={styles.sidebar}
+        style={[styles.sidebar, { backgroundColor: "blue" }]}
       >
         {indexList?.map((index) => {
           const active = index === activeAnchor;
           const highlightStyle = highlightColor
-            ? { color: highlightColor }
+            ? { color: highlightColor, backgroundColor: themeColor.primary }
             : null;
 
           return (
-            <View {...panResponder.panHandlers}>
+            <View
+              {...panResponder.panHandlers}
+              style={{ backgroundColor: "red" }}
+            >
               <Text
                 key={index}
                 suppressHighlighting
@@ -199,7 +232,7 @@ const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref) => {
                 }}
                 style={[
                   styles.index,
-                  { top: offsetTop },
+                  // { top: offsetTop },
                   active && styles.indexActive,
                   active && highlightStyle,
                 ]}
@@ -217,6 +250,7 @@ const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref) => {
     <IndexBarContext.Provider value={{ zIndex, highlightColor, sticky }}>
       <ScrollView
         {...rest}
+        showsVerticalScrollIndicator={false}
         ref={scrollViewRef}
         style={[styles.wrapper, rest.style]}
         scrollEventThrottle={16}

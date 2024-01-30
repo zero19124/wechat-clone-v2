@@ -25,7 +25,10 @@ interface Styles {
   indexActive: TextStyle;
 }
 
-export const createStyle = (theme: DiceUI.Theme,headerHeight:number): Styles => {
+export const createStyle = (
+  theme: DiceUI.Theme,
+  headerHeight: number
+): Styles => {
   return StyleSheet.create<Styles>({
     index: {
       color: theme.index_bar_sidebar_text_color,
@@ -43,7 +46,13 @@ export const createStyle = (theme: DiceUI.Theme,headerHeight:number): Styles => 
       position: "absolute",
       right: 0,
       // 布局不算全部 去掉了headder
-      top: -headerHeight,
+      top: "50%",
+      transform: [
+        {
+          translateY:
+            -(theme.index_bar_index_line_height * 26 - headerHeight) / 2,
+        },
+      ],
       textAlign: "center",
     },
     // scrollview

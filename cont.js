@@ -1,4 +1,4 @@
-const list1 = [
+export const list1 = [
   {
     subcompanyid1span: "香港总部",
     jobGroupId: "",
@@ -5800,7 +5800,7 @@ const list1 = [
     dsporder: "227.0",
   },
 ];
-const list2 = [
+export const list2 = [
   {
     "subcompanyid1span": "中国投资管理公司",
     "jobGroupId": "",
@@ -11602,7 +11602,7 @@ const list2 = [
     "dsporder": "468.0"
   }
 ]
-const list3 = [
+export const list3 = [
   {
     "subcompanyid1span": "中国投资管理公司",
     "jobGroupId": "",
@@ -17404,7 +17404,7 @@ const list3 = [
     "dsporder": "633.0"
   }
 ]
-const list4 = [
+export const list4 = [
   {
     "subcompanyid1span": "中国投资管理公司",
     "jobGroupId": "",
@@ -23206,7 +23206,7 @@ const list4 = [
     "dsporder": "793.0"
   }
 ]
-const list5 = [
+export const list5 = [
   {
     "subcompanyid1span": "中国投资管理公司",
     "jobGroupId": "",
