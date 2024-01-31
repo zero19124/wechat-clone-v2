@@ -1,4 +1,4 @@
-import { StyleSheet, TextStyle, ViewStyle } from "react-native";
+import { Dimensions, StyleSheet, TextStyle, ViewStyle } from "react-native";
 import type { Vars } from "@/theme/styles/index";
 export const indexBarDefaultVars = (vars: Vars) => ({
   index_bar_sidebar_z_index: 2,
@@ -24,33 +24,39 @@ interface Styles {
   index: TextStyle;
   indexActive: TextStyle;
 }
-
+export const tempLineHeight = 16;
+export const tempNavigatorCount = 26;
 export const createStyle = (
   theme: DiceUI.Theme,
   headerHeight: number
 ): Styles => {
+  const halfHeaderHeight = headerHeight / 2;
+  const screenHalfHeight = Dimensions.get("screen").height / 2;
   return StyleSheet.create<Styles>({
     index: {
+      paddingHorizontal: 4,
+      textAlign: "center",
       color: theme.index_bar_sidebar_text_color,
       fontSize: theme.index_bar_index_font_size,
       fontWeight: theme.font_weight_bold,
-      lineHeight: theme.index_bar_index_line_height,
-      paddingLeft: theme.padding_md,
-      paddingRight: theme.padding_xs,
-      paddingVertical: 0,
+      width: tempLineHeight,
+      height: tempLineHeight,
+      lineHeight: tempLineHeight,
     },
     indexActive: {
       color: theme.index_bar_index_active_color,
     },
     sidebar: {
       position: "absolute",
-      right: 0,
-      // 布局不算全部 去掉了headder
-      top: "50%",
+      right: 2,
+      zIndex: 4,
+      // 布局不算全部 add headder /2
+      top: screenHalfHeight - halfHeaderHeight,
       transform: [
         {
           translateY:
-            -(theme.index_bar_index_line_height * 26 - headerHeight) / 2,
+            // 自身的一半加上header的一半就是中间
+            (-tempLineHeight * tempNavigatorCount) / 2 - halfHeaderHeight,
         },
       ],
       textAlign: "center",

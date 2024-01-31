@@ -33,6 +33,7 @@
     "expo-router": "^2.0.0",
     "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "~1.6.0",
+    "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "nativewind": "^4.0.1",
     "pinyin": "^4.0.0-alpha.0",

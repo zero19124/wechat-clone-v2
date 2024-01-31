@@ -23,6 +23,7 @@ const iconOrderOne = [
   "VoiceInput",
   "Favorites",
 ];
+
 const { width } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {

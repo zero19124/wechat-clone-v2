@@ -1,4 +1,4 @@
-import { Image, ScrollView, Text, View } from "react-native";
+import { Image, ScrollView, Text, View, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as light from "@/theme/light";
 import Button from "@/component/base/Button/Button";
@@ -11,6 +11,7 @@ import IndexBar from "@/component/business/IndexBar";
 import { list1 } from "@/cont.js";
 import pinyin from "pinyin";
 import { PortalHost } from "@/component/business/Portal";
+import { tempNavigatorCount } from "@/component/business/IndexBar/style";
 const Contacts = () => {
   const navigate = useNavigation();
   useLayoutEffect(() => {
@@ -75,7 +76,7 @@ const Contacts = () => {
   const customIndexList = [1, 2, 3, 4, 5, 6, 8, 9, 10];
   const charCodeOfA = "A".charCodeAt(0);
   // const headerHeight = useHeaderHeight();
-  for (let i = 0; i < 26; i += 1) {
+  for (let i = 0; i < tempNavigatorCount; i += 1) {
     indexList.push(String.fromCharCode(charCodeOfA + i));
   }
   const _ = require("lodash");
@@ -159,17 +160,22 @@ const Contacts = () => {
 
   return (
     <>
-      <View style={{ backgroundColor: light.themeColor.white }}>
+      <View
+        style={{
+          backgroundColor: light.themeColor.white,
+        }}
+      >
         <IndexBar highlightColor={light.themeColor.white} sticky={false}>
           <View className="bg-white flex-1">
             <SearchBar />
+
             {/* <View
               style={{
                 zIndex: 12,
                 position: "absolute",
                 backgroundColor: "blue",
                 // top: 844 / 2 - 8.5 * 26,
-                top: 201,
+                top: 124,
                 right: 0,
                 width: 100,
                 height: 11,

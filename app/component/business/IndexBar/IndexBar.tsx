@@ -5,7 +5,9 @@ import React, {
   useRef,
   useImperativeHandle,
   useEffect,
+  useCallback,
 } from "react";
+// import fv from "lodash.debounce";
 import type { ReactNode, ReactElement } from "react";
 import {
   View,
@@ -36,17 +38,28 @@ import { Vars } from "@/theme/styles/index";
 
 import IndexBarContext from "./IndexBarContext";
 import { INDEX_ANCHORE_KEY } from "./IndexAnchor";
-import { createStyle } from "./style";
+import { createStyle, tempLineHeight, tempNavigatorCount } from "./style";
 import { useNavigation } from "expo-router";
 import { getSize } from "utils";
 import { themeColor } from "@/theme/light";
 import { useTheme } from "@/component/base/Theme";
-
+import Magnifier from "../Magnifier/Magnifier";
+function debounce(func, delay) {
+  let timerId;
+  return function () {
+    const context = this;
+    const args = arguments;
+    clearTimeout(timerId);
+    timerId = setTimeout(() => {
+      func.apply(context, args);
+    }, delay);
+  };
+}
 const genAlphabet = () => {
   const indexList = [];
   const charCodeOfA = "A".charCodeAt(0);
 
-  for (let i = 0; i < 26; i += 1) {
+  for (let i = 0; i < tempNavigatorCount; i += 1) {
     indexList.push(String.fromCharCode(charCodeOfA + i));
   }
 
@@ -91,19 +104,24 @@ const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref) => {
 
   const getActiveAnchor = (scrollViewTop: number, rects: LayoutRectangle[]) => {
     const relativeTops = rects.map((it) => it.pageY - scrollViewTop);
+    console.log(relativeTops, "relativeTops", scrollViewTop);
     return relativeTops.filter((it) => it < 0).length - 1;
   };
+
+  const setActive = (val: string) => setActiveAnchor(val);
 
   const getAnchorRects = () =>
     Promise.all(Object.values(refs).map((anchor) => anchor.getRect()));
 
   const onScroll: ScrollViewProps["onScroll"] = async () => {
+    if (isPanResponderMoving.current) return;
+
     const rects = await getAnchorRects();
     const { top: scrollViewTop, left: scrollViewLeft } =
       await getScrollViewOffset();
 
     const active = getActiveAnchor(scrollViewTop, rects);
-    setActiveAnchor(indexList[active]);
+    setActive(indexList[active]);
 
     if (sticky) {
       Object.values(refs).forEach((item, index) => {
@@ -163,79 +181,120 @@ const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref) => {
         return child;
       });
   };
-
+  const isPanResponderMoving = useRef(false);
   const memoChildren = useMemo(() => handleMapChildren(children), [children]);
+  const panResponder = useMemo(() => {
+    return PanResponder.create({
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderGrant: (e, s) => {
+        console.log(111, e, s);
+        isPanResponderMoving.current = true;
+        Animated.timing(fadeAmimation, {
+          useNativeDriver: true,
+          toValue: 1,
+          duration: 200,
+        }).start();
+      },
+      onPanResponderRelease: (e, s) => {
+        console.log(333, s.dy);
+        isPanResponderMoving.current = false;
+        Animated.timing(fadeAmimation, {
+          useNativeDriver: true,
+          toValue: 0,
+          duration: 200,
+        }).start();
+      },
+      onPanResponderMove: (e, s) => {
+        const navigatorHeight = tempLineHeight * tempNavigatorCount;
+        // 屏幕的一般加上导航的一半等到导航器和top之间距离 422（-91） - 208 =214
+        //  377
+        const actualTop =
+          Dimensions.get("screen").height / 2 - headerHeight / 2;
+        //  这个不包含header
+        // 377 - 208 - 45 = 124
+        const curTop = actualTop - navigatorHeight / 2 - headerHeight / 2;
+        // s.moveY  在导航器里移动了多少
+        const moveY = s.moveY - curTop - headerHeight;
+        const index = Math.round(moveY / tempLineHeight);
+        const jumpTo = indexList[index];
+        //  如果高于或者低于则不执行 不然会超出导航自身高度
+        const textPosition = (index - 1) * tempLineHeight;
+        if (jumpTo) {
+          setActive(jumpTo);
+          console.log(jumpTo, "jumpTo", activeAnchor, "activeAnchor");
+          Animated.timing(transYAmimation.y, {
+            useNativeDriver: true,
+            duration: 20,
+            toValue: textPosition,
+          }).start();
+          // if (
+          //   // 限制不能高于导航条
+          //   textPosition < 0
+          //   // 不能低于导航条
+          // ) {
+          //   Animated.timing(transYAmimation.y, {
+          //     useNativeDriver: true,
+          //     duration: 20,
+          //     toValue: 0,
+          //   }).start();
+          // } else if (moveY > navigatorHeight) {
+          //   Animated.timing(transYAmimation.y, {
+          //     useNativeDriver: true,
+          //     duration: 20,
+          //     toValue: navigatorHeight,
+          //   }).start();
+          // } else {
+          //   Animated.timing(transYAmimation.y, {
+          //     useNativeDriver: true,
+          //     duration: 20,
+          //     toValue: textPosition,
+          //   }).start();
+          // }
+        }
 
+        console.log(
+          textPosition,
+          "textPosition",
+          curTop,
+          "curTop",
+          moveY,
+          "moveY",
+          index,
+          "alphbet",
+          jumpTo
+        );
+        console.log(
+          "s.dy  第一次直到松手的距离",
+
+          s.dy,
+          "s.y0 第一次按的位置",
+
+          s.y0,
+          "s.moveY 松手",
+          s.moveY
+        );
+
+        if (jumpTo) {
+          scrollTo(jumpTo);
+        }
+      },
+    });
+  }, [activeAnchor]);
   const renderSidebar = () => {
     const sidebarHeight = styles.index.lineHeight! * indexList.length;
     const offsetTop = (constants.screenHeight - sidebarHeight) / 2;
-    const panResponder = useRef(
-      PanResponder.create({
-        onMoveShouldSetPanResponder: () => true,
-        onPanResponderGrant: (e, s) => {
-          console.log(111, e, s);
-          Animated.timing(fadeAmimation, {
-            useNativeDriver: true,
-            toValue: 1,
-            duration: 200,
-          }).start();
-        },
-        onPanResponderRelease: (e, s) => {
-          console.log(333, s.dy);
-          Animated.timing(fadeAmimation, {
-            useNativeDriver: true,
-            toValue: 0,
-            duration: 200,
-          }).start();
-        },
-        onPanResponderMove: (e, s) => {
-          const navigatorHeight = 8.5 * 26;
-          const curTop = Dimensions.get("screen").height / 2 - navigatorHeight;
-          // s.moveY 包含了header的高度 但是curtop没有
-          const moveY = s.moveY - headerHeight;
-          const index = Math.round((moveY - curTop) / 8.5);
-          const jumpTo = indexList[Math.round(index / 1.5)];
-          //  如果高于或者低于则不执行 不然会超出导航自身高度
-          const textPosition = moveY - curTop;
-          if (curTop < moveY && textPosition + navigatorHeight < moveY) {
-            Animated.timing(transYAmimation, {
-              useNativeDriver: true,
-              toValue: textPosition,
-              duration: 50,
-            }).start();
-          }
-          console.log(
-            curTop,
-            "curTop",
-            moveY,
-            "moveY",
-            index,
-            "alphbet",
-            jumpTo
-          );
-          console.log(
-            "s.dy  第一次直到松手的距离",
 
-            s.dy,
-            "s.y0 第一次按的位置",
-
-            s.y0,
-            "s.moveY 松手",
-            s.moveY
-          );
-
-          if (jumpTo) {
-            scrollTo(jumpTo);
-          }
-        },
-      })
-    ).current;
     return (
       <View
         //  {...panResponderA.panHandlers}
-        style={[styles.sidebar, { backgroundColor: "blue" }]}
+        style={[
+          styles.sidebar,
+          {
+            //  backgroundColor: "blue"
+          },
+        ]}
       >
-        <Animated.Text
+        <Animated.View
           style={{
             position: "absolute",
             zIndex: 2,
@@ -245,18 +304,25 @@ const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref) => {
             transform: [{ translateY: transYAmimation.y }],
           }}
         >
-          {activeAnchor}
-        </Animated.Text>
+          <Magnifier> {activeAnchor}</Magnifier>
+        </Animated.View>
         {indexList?.map((index) => {
           const active = index === activeAnchor;
           const highlightStyle = highlightColor
-            ? { color: highlightColor, backgroundColor: themeColor.primary }
+            ? {
+                color: highlightColor,
+                backgroundColor: themeColor.primary,
+              }
             : null;
 
           return (
             <View
               {...panResponder.panHandlers}
-              style={{ backgroundColor: "red" }}
+              style={{
+                // backgroundColor: "red",
+                borderRadius: tempLineHeight / 2,
+                overflow: "hidden",
+              }}
             >
               <Text
                 key={index}
@@ -268,7 +334,7 @@ const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref) => {
                 style={[
                   styles.index,
                   // { top: offsetTop },
-                  active && styles.indexActive,
+                  // active && styles.indexActive,
                   active && highlightStyle,
                 ]}
               >
