@@ -23,6 +23,7 @@ const ThemeContext = createContext({} as ThemeContextInterface);
 // Provider to be used in index/App/or top of any parent
 export const ThemeProvider = ({ children }: any): JSX.Element => {
   const [theme, setTheme] = useState(light);
+  console.log("ThemeProvider");
   return (
     <ThemeContext.Provider value={{ ...theme, setTheme }}>
       {children}
@@ -39,7 +40,7 @@ export const useTheme = () => {
   const toggleTheme = (theme: TThemeName) => {
     setThemeName(theme);
     setTheme(theme === "light" ? light : dark);
-  console.log(state, "state");
+    console.log(themeName, "state", themes.themeColor.white);
   };
   return { ...themes, themeName, toggleTheme };
 };

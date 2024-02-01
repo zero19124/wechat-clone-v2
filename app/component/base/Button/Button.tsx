@@ -1,21 +1,21 @@
-import React, { FC, memo } from 'react';
-import { View, ViewStyle, StyleSheet, Text, TextStyle } from 'react-native';
-import TouchableOpacity from '../TouchableOpacity';
-import { useThemeFactory } from '../Theme';
+import React, { FC, memo } from "react";
+import { View, ViewStyle, StyleSheet, Text, TextStyle } from "react-native";
+import TouchableOpacity from "../TouchableOpacity";
+import { useThemeFactory } from "../Theme";
 // import Loading from '../Loading';
-import createStyle from './style';
-import type { ButtonProps } from './type';
+import createStyle from "./style";
+import type { ButtonProps } from "./type";
 
-const Button: FC<ButtonProps> = memo(props => {
+const Button: FC<ButtonProps> = memo((props) => {
   const {
-    type = 'default',
-    size = 'normal',
+    type = "default",
+    size = "normal",
     loading,
     loadingText,
     loadingType,
     loadingSize,
     icon,
-    iconPosition = 'left',
+    iconPosition = "left",
     color,
     plain,
     square,
@@ -30,18 +30,18 @@ const Button: FC<ButtonProps> = memo(props => {
 
   const textFlattenStyle = StyleSheet.flatten<TextStyle>([
     styles.text,
-    !!color && { color: plain ? color : 'white' },
+    !!color && { color: plain ? color : "white" },
     textStyle,
   ]);
 
   const renderIcon = () => {
     const defaultIconSize = textFlattenStyle.fontSize;
-    const iconColor = color ?? (textFlattenStyle.color as string);
+    const iconColor = color ?? textFlattenStyle.color;
     let marginStyles: ViewStyle;
 
     if (!text) {
       marginStyles = {};
-    } else if (iconPosition === 'left') {
+    } else if (iconPosition === "left") {
       marginStyles = { marginRight: 4 };
     } else {
       marginStyles = { marginLeft: 4 };
@@ -97,9 +97,9 @@ const Button: FC<ButtonProps> = memo(props => {
         !!color && !plain && { backgroundColor: color },
       ]}
     >
-      {iconPosition === 'left' && renderIcon()}
+      {iconPosition === "left" && renderIcon()}
       {renderText()}
-      {iconPosition === 'right' && renderIcon()}
+      {iconPosition === "right" && renderIcon()}
     </TouchableOpacity>
   );
 });
