@@ -20,7 +20,10 @@ import { getSize } from "utils";
 import { Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 import MsgSender from "app/component/business/MsgSender";
 import MsgReceiver from "app/component/business/MsgReceiver";
+import { useTheme } from "@/theme/useTheme";
 const Chats = () => {
+  const { toggleTheme, themeColor, themeName } = useTheme();
+
   const navigate = useNavigation();
   const router = useRouter();
   useLayoutEffect(() => {
@@ -79,6 +82,34 @@ const Chats = () => {
       time: "12:00",
     },
   ];
+  const style = StyleSheet.create({
+    itemContainer: {
+      backgroundColor: "#FFF",
+      flexDirection: "row",
+      margin: 12,
+      marginBottom: 0,
+      marginRight: 0,
+    },
+    itemContainerLeft: { flexDirection: "row" },
+    itemContainerRight: {
+      // backgroundColor: "red",
+      paddingBottom: 16,
+      // alignItems: "center",
+      justifyContent: "space-between",
+      // flexDirection: "row",
+      flex: 1,
+      borderBottomColor: themeColor.fillColor,
+      borderBottomWidth: 1,
+    },
+    itemContainerAvatar: {
+      borderRadius: 4,
+      borderColor: themeColor.fillColor,
+      borderWidth: 1,
+      width: getSize(50),
+      height: getSize(50),
+      marginRight: 12,
+    },
+  });
   const renderItem = ({ item }: { item: (typeof data)[0] }) => {
     {
       /* 头像 */
@@ -106,7 +137,7 @@ const Chats = () => {
           >
             <Text
               style={{
-                color: light.themeColor.white,
+                color: themeColor.white,
                 fontSize: 10,
                 fontWeight: "bold",
                 textAlign: "center",
@@ -150,7 +181,7 @@ const Chats = () => {
             style={{
               width: getSize(50),
               fontSize: 12,
-              color: light.themeColor.text1,
+              color: themeColor.text1,
             }}
           >
             {item.time}
@@ -164,12 +195,10 @@ const Chats = () => {
             paddingRight: 16,
           }}
         >
-          <Text style={{ color: light.themeColor.text1 }}>
-            {item.latestMessage}
-          </Text>
+          <Text style={{ color: themeColor.text1 }}>{item.latestMessage}</Text>
           <MaterialCommunityIcons
             size={16}
-            color={light.themeColor.text1}
+            color={themeColor.text1}
             name="bell-off-outline"
           />
         </View>
@@ -189,7 +218,7 @@ const Chats = () => {
     );
   };
   return (
-    <View style={{ backgroundColor: light.themeColor.white, flex: 1 }}>
+    <View style={{ backgroundColor: themeColor.white, flex: 1 }}>
       {/* <Image
         style={{ width: 50, height: 50 }}
         source={require("@/assets/avatar.png")}
@@ -214,32 +243,5 @@ const Chats = () => {
     </View>
   );
 };
-const style = StyleSheet.create({
-  itemContainer: {
-    backgroundColor: "#FFF",
-    flexDirection: "row",
-    margin: 12,
-    marginBottom: 0,
-    marginRight: 0,
-  },
-  itemContainerLeft: { flexDirection: "row" },
-  itemContainerRight: {
-    // backgroundColor: "red",
-    paddingBottom: 16,
-    // alignItems: "center",
-    justifyContent: "space-between",
-    // flexDirection: "row",
-    flex: 1,
-    borderBottomColor: light.themeColor.fillColor,
-    borderBottomWidth: 1,
-  },
-  itemContainerAvatar: {
-    borderRadius: 4,
-    borderColor: light.themeColor.fillColor,
-    borderWidth: 1,
-    width: getSize(50),
-    height: getSize(50),
-    marginRight: 12,
-  },
-});
+
 export default Chats;

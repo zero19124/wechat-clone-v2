@@ -25,6 +25,7 @@ const Magnifier = ({ children }: { children: any }) => {
       <Text
         style={[
           {
+            color: themeColor.white,
             fontSize: 30,
             fontWeight: "bold",
             position: "absolute",

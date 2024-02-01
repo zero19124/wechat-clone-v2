@@ -13,7 +13,6 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as light from "@/theme/light";
 import { router, useNavigation } from "expo-router";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import ThreeDot from "@/icons/three-dot.svg";
@@ -42,7 +41,7 @@ const Page = () => {
             <View
               style={{
                 marginLeft: 4,
-                backgroundColor: light.themeColor.text2,
+                backgroundColor: themeColor.text2,
                 width: 22,
                 height: 22,
                 alignItems: "center",
@@ -58,8 +57,8 @@ const Page = () => {
       headerRightContainerStyle: { paddingRight: 12 },
     });
   }, []);
+  const { toggleTheme, themeColor, themeName } = useTheme();
 
-  const [theme, setTheme] = useState("light");
   const [msg, setMsg] = useState("");
   const heightValue = useRef(new Animated.Value(10)).current;
   const height = useRef(0);
@@ -92,7 +91,7 @@ const Page = () => {
   return (
     <SafeAreaView
       style={{
-        backgroundColor: light.themeColor.fillColor,
+        backgroundColor: themeColor.fillColor,
         flex: 1,
       }}
       edges={["bottom"]}
