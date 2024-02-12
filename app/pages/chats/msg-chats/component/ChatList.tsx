@@ -3,10 +3,14 @@ import MsgReceiver from "app/component/business/MsgReceiver";
 import UserAvatar from "app/component/complex/UserAvatar";
 import { FlatList, View } from "react-native";
 import data from "@/mocks/msgList.json";
+import DeviceInfo from "react-native-device-info";
 
-const PrivateChatList = () => {
+const PrivateChatList = (props: { dataOut: any[] }) => {
+  const { dataOut } = props;
+  console.log(dataOut, "dataOut");
   const renderItem = ({ item }: { item: (typeof data)[0] }) => {
-    const isMe = item.id % 2;
+    const deviceModel = DeviceInfo.getModel();
+    const isMe = item.userId === deviceModel;
     const ItemWrapper = () => {
       return (
         <View
@@ -44,7 +48,7 @@ const PrivateChatList = () => {
         </View>
       );
     };
-    return <ItemWrapper />;
+    return <ItemWrapper key={item.latestMessage} />;
   };
   return (
     <FlatList
@@ -53,8 +57,8 @@ const PrivateChatList = () => {
         padding: 12,
         flex: 1,
       }}
-      data={data}
-      keyExtractor={(item) => item.id + ""}
+      data={dataOut || data}
+      keyExtractor={(item) => item.latestMessage + ""}
       renderItem={renderItem}
     ></FlatList>
   );

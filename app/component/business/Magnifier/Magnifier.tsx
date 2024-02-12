@@ -16,9 +16,10 @@ const Magnifier = ({ children }: { children: any }) => {
           width: 50,
           height: 50,
           backgroundColor: themeColor.bg3,
-          borderTopRightRadius: "50%",
-          borderBottomRightRadius: "50%",
-          borderBottomLeftRadius: "50%",
+          borderTopRightRadius: 50,
+          borderBottomRightRadius: 50,
+          // some phone doesnt suppot % also '50', number only
+          borderBottomLeftRadius: 50,
           transform: [{ rotate: "135deg" }],
         }}
       />

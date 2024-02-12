@@ -1,10 +1,25 @@
 {
+  "submit": {
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "../path/to/api-xxx-yyy-zzz.json",
+        "track": "internal"
+      },
+      "ios": {
+        "appleId": "18376639110@163.com",
+        "ascAppId": "6477375736",
+        "appleTeamId": "DT3356CSG3"
+      }
+    }
+  },
   "build": {
     "preview": {
       "android": {
+        "distribution": "internal",
         "buildType": "apk"
       }
     },
+   
     "preview2": {
       "android": {
         "gradleCommand": ":app:assembleRelease"

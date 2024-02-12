@@ -1,8 +1,9 @@
 import { useNavigation, useRouter } from "expo-router";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import {
   FlatList,
   Image,
+  Pressable,
   StyleSheet,
   Text,
   TouchableHighlight,
@@ -20,10 +21,7 @@ import { getSize } from "utils";
 import { Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 import MsgSender from "app/component/business/MsgSender";
 import MsgReceiver from "app/component/business/MsgReceiver";
-import { useTheme } from "@/theme/useTheme";
 const Chats = () => {
-  const { toggleTheme, themeColor, themeName } = useTheme();
-
   const navigate = useNavigation();
   const router = useRouter();
   useLayoutEffect(() => {
@@ -58,7 +56,7 @@ const Chats = () => {
       id: 1,
       isSticky: false,
       avatar: "@/assets/avatar.png",
-      userName: "Bella",
+      userName: "Bella111",
       unReadCount: 1,
       latestMessage: "latestMessage",
       time: "00:00",
@@ -67,7 +65,7 @@ const Chats = () => {
       id: 12,
       isSticky: false,
       avatar: "@/assets/avatar.png",
-      userName: "Bella",
+      userName: "3",
       unReadCount: 12,
       latestMessage: "latestMessage",
       time: "00:00",
@@ -82,34 +80,6 @@ const Chats = () => {
       time: "12:00",
     },
   ];
-  const style = StyleSheet.create({
-    itemContainer: {
-      backgroundColor: "#FFF",
-      flexDirection: "row",
-      margin: 12,
-      marginBottom: 0,
-      marginRight: 0,
-    },
-    itemContainerLeft: { flexDirection: "row" },
-    itemContainerRight: {
-      // backgroundColor: "red",
-      paddingBottom: 16,
-      // alignItems: "center",
-      justifyContent: "space-between",
-      // flexDirection: "row",
-      flex: 1,
-      borderBottomColor: themeColor.fillColor,
-      borderBottomWidth: 1,
-    },
-    itemContainerAvatar: {
-      borderRadius: 4,
-      borderColor: themeColor.fillColor,
-      borderWidth: 1,
-      width: getSize(50),
-      height: getSize(50),
-      marginRight: 12,
-    },
-  });
   const renderItem = ({ item }: { item: (typeof data)[0] }) => {
     {
       /* 头像 */
@@ -137,7 +107,7 @@ const Chats = () => {
           >
             <Text
               style={{
-                color: themeColor.white,
+                color: light.themeColor.white,
                 fontSize: 10,
                 fontWeight: "bold",
                 textAlign: "center",
@@ -181,7 +151,7 @@ const Chats = () => {
             style={{
               width: getSize(50),
               fontSize: 12,
-              color: themeColor.text1,
+              color: light.themeColor.text1,
             }}
           >
             {item.time}
@@ -195,10 +165,12 @@ const Chats = () => {
             paddingRight: 16,
           }}
         >
-          <Text style={{ color: themeColor.text1 }}>{item.latestMessage}</Text>
+          <Text style={{ color: light.themeColor.text1 }}>
+            {item.latestMessage}
+          </Text>
           <MaterialCommunityIcons
             size={16}
-            color={themeColor.text1}
+            color={light.themeColor.text1}
             name="bell-off-outline"
           />
         </View>
@@ -217,8 +189,25 @@ const Chats = () => {
       </TouchableOpacity>
     );
   };
+  const [msg, setMsg] = useState("");
+  const getUser = () => {
+    fetch("http://172.20.10.3:4000/hello", {
+      method: "get",
+    }).then(async (res) => {
+      const text = await res.text();
+      console.log(text, "text");
+      setMsg(text);
+    });
+  };
   return (
-    <View style={{ backgroundColor: themeColor.white, flex: 1 }}>
+    <View style={{ backgroundColor: light.themeColor.white, flex: 1 }}>
+      <Pressable
+        onPress={() => {
+          getUser();
+        }}
+      >
+        <Text>{msg} get</Text>
+      </Pressable>
       {/* <Image
         style={{ width: 50, height: 50 }}
         source={require("@/assets/avatar.png")}
@@ -243,5 +232,32 @@ const Chats = () => {
     </View>
   );
 };
-
+const style = StyleSheet.create({
+  itemContainer: {
+    backgroundColor: "#FFF",
+    flexDirection: "row",
+    margin: 12,
+    marginBottom: 0,
+    marginRight: 0,
+  },
+  itemContainerLeft: { flexDirection: "row" },
+  itemContainerRight: {
+    // backgroundColor: "red",
+    paddingBottom: 16,
+    // alignItems: "center",
+    justifyContent: "space-between",
+    // flexDirection: "row",
+    flex: 1,
+    borderBottomColor: light.themeColor.fillColor,
+    borderBottomWidth: 1,
+  },
+  itemContainerAvatar: {
+    borderRadius: 4,
+    borderColor: light.themeColor.fillColor,
+    borderWidth: 1,
+    width: getSize(50),
+    height: getSize(50),
+    marginRight: 12,
+  },
+});
 export default Chats;

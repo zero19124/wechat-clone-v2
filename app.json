@@ -4,15 +4,19 @@
     "experiments": {
       "tsconfigPaths": true
     },
+   
+    "packagerOpts": {
+      "config": "metro.config.js"
+    },
     "name": "wechat-clone",
     "slug": "wechat-clone",
     "scheme": "your-app-scheme",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/bella.png",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/bella.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -49,7 +53,8 @@
           "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
           "isAccessMediaLocationEnabled": true
         }
-      ]
+      ],
+      "expo-localization"
     ],
     "extra": {
       "router": {

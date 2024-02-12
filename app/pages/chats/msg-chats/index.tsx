@@ -12,6 +12,8 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import DeviceInfo from "react-native-device-info";
+
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useNavigation } from "expo-router";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -20,8 +22,15 @@ import GoBack from "@/icons/common/go-back.svg";
 import FnKeyBoard from "@/component/business/FnKeyBoard";
 import PrivateChatList from "./component/ChatList";
 import ChatInput from "./component/ChatInput";
+import { useTheme } from "@/theme/useTheme";
+import usePusher from "@/hooks/usePusher";
+import { PusherEvent } from "@pusher/pusher-websocket-react-native";
 const Page = () => {
   const navigate = useNavigation();
+  // 获取设备型号
+  const deviceModel = DeviceInfo.getModel();
+  console.log("Device Model:", deviceModel);
+  const [dataOut, setDataOut] = useState<any[]>([]);
   useLayoutEffect(() => {
     navigate.setOptions({
       // headerShown: false,
@@ -58,7 +67,7 @@ const Page = () => {
     });
   }, []);
   const { toggleTheme, themeColor, themeName } = useTheme();
-
+  const { pusher, connect } = usePusher();
   const [msg, setMsg] = useState("");
   const heightValue = useRef(new Animated.Value(10)).current;
   const height = useRef(0);
@@ -86,7 +95,23 @@ const Page = () => {
   };
   useEffect(() => {
     console.log(heightValue, "heightValue._value");
-  });
+    connect().then(async () => {
+      console.log("connected");
+      await pusher.subscribe({
+        channelName: "test",
+        onEvent: (event: PusherEvent) => {
+          console.log(event);
+          const data = JSON.parse(event.data);
+          console.log(data, "data");
+          dataOut.push({
+            userId: data.userId,
+            latestMessage: data.message,
+          });
+          setDataOut([...dataOut]);
+        },
+      });
+    });
+  }, []);
 
   return (
     <SafeAreaView
@@ -115,13 +140,19 @@ const Page = () => {
             Keyboard.dismiss();
           }}
         >
-          <PrivateChatList />
+          <PrivateChatList dataOut={dataOut} />
         </TouchableWithoutFeedback>
         {/* keyboard 内容 */}
         <ChatInput
           value={msg}
           onChangeText={(val: string) => {
+            console.log("change", val);
             setMsg(val);
+            fetch(
+              `http://localhost:4000/api/user/hello?msg=${val}&userId=${deviceModel}`
+            ).then(async (res) => {
+              console.log("emit11339");
+            });
           }}
           chatPress={() => {
             console.log("c");

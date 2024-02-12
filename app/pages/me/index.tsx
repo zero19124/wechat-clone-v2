@@ -9,18 +9,106 @@ import CardsOffersIcon from "@/icons/me/cards-offers.svg";
 import Favorites from "@/icons/me/favorites.svg";
 import Sticker from "@/icons/keyboard-panel/emoji-icon.svg";
 import * as Haptics from "expo-haptics";
-import { SafeAreaView, Text, View, Image, StyleProp } from "react-native";
+import PusherTester from "./components/App";
+import {
+  SafeAreaView,
+  Text,
+  View,
+  Image,
+  StyleProp,
+  Pressable,
+  TextInput,
+} from "react-native";
 import RedDot from "@/component/complex/RedDot";
 import Divider from "@/component/complex/Divider";
 import ItemCard from "@/component/complex/ItemCard";
 import { ViewProps } from "react-native-svg/lib/typescript/fabric/utils";
+import { pusherClient } from "lib/pusher";
+import { useEffect, useState } from "react";
+import {
+  Pusher,
+  PusherAuthorizerResult,
+  PusherChannel,
+  PusherEvent,
+  PusherMember,
+} from "@pusher/pusher-websocket-react-native";
+import SimpleLogin from "./components/SimpleLogin";
+import { useUser } from "app/store/user";
 const Me = () => {
+  // return <PusherTester />;
   const avatars = [
     require("@/assets/bella.png"),
     require("@/assets/me.png"),
     require("@/assets/avatar.png"),
   ];
+  const { userStore } = useUser();
+  useEffect(() => {
+    console.log(userStore, "userStore");
+  }, [userStore]);
+  const [members, onChangeMembers] = useState<PusherMember[]>([]);
+  const [msgList, setMsgList] = useState<string[]>([]);
+  const pusher = Pusher.getInstance();
+  const onAuthorizer = async (channelName: string, socketId: string) => {
+    console.log(
+      `calling onAuthorizer. channelName=${channelName}, socketId=${socketId}`
+    );
 
+    const response = await fetch("some_url", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        socket_id: socketId,
+        channel_name: channelName,
+      }),
+    });
+
+    const body = (await response.json()) as PusherAuthorizerResult;
+
+    console.log(`response: ${JSON.stringify(body)}`);
+    return body;
+  };
+  const connect = async () => {
+    const onSubscriptionSucceeded = (channelName: string, data: any) => {
+      console.log(
+        `onSubscriptionSucceeded: ${channelName} data: ${JSON.stringify(data)}`
+      );
+      const channel: PusherChannel | undefined = pusher.getChannel(channelName);
+
+      if (!channel) {
+        return;
+      }
+
+      const me = channel.me;
+      onChangeMembers([...channel.members.values()]);
+      console.log(`Me: ${me}`);
+    };
+    await pusher.init({
+      apiKey: "f9e1ab46abdff9fa95bb",
+      cluster: "ap3",
+      onAuthorizer,
+      onSubscriptionSucceeded,
+    });
+
+    await pusher.connect();
+    let myChannel = await pusher.subscribe({
+      channelName: "my-channel",
+      onEvent: (event: PusherEvent) => {
+        console.log(event);
+        msgList.push(JSON.parse(event.data).message);
+        setMsgList([...msgList]);
+        console.log(msgList, "msgList");
+      },
+    });
+    console.log("pusher connected");
+  };
+  useEffect(() => {
+    connect();
+  }, []);
+  useEffect(() => {
+    console.log(members, "members");
+  }, [members]);
   const serviceList = [
     {
       text: "Favorites",
@@ -41,6 +129,7 @@ const Me = () => {
       icon: <Sticker width={24} height={24} fill={themeColor.iconYellow} />,
     },
   ];
+
   return (
     <SafeAreaView style={{ backgroundColor: themeColor.white }}>
       <View
@@ -134,7 +223,10 @@ const Me = () => {
           </View>
         </View>
       </View>
+      <SimpleLogin />
+
       <Divider />
+
       <ItemCard
         onPress={() =>
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
@@ -152,8 +244,8 @@ const Me = () => {
         }}
         text={"Services"}
       />
-
       <Divider />
+
       {serviceList.map((service) => {
         return (
           <ItemCard
@@ -171,9 +263,7 @@ const Me = () => {
       <Divider />
       <ItemCard
         onPress={() => {
-          Haptics.notificationAsync(
-            Haptics.NotificationFeedbackType.Error
-          )
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
           // Haptics.selectionAsync();
           console.log("haptics");
         }}
