@@ -3,7 +3,7 @@ import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
 interface IUser {
   token?: string;
   refreshToken?: string;
-  userInfo?: any;
+  userInfo?: { act: string; psw: string; _id: string; image: string };
 }
 export const userState = atom<IUser>({
   key: "userState",

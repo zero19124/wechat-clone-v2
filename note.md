@@ -21,3 +21,7 @@ pod install 找不到expo相关的包可以 expo doctor and npx expo install --c
 
 pusher
 presence-test  the channel-name must start with presence-
+
+4
+Pusher not working in production on Verce 
+https://github.com/vercel/next.js/discussions/48433

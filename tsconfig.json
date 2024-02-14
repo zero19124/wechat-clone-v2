@@ -16,7 +16,8 @@
       "@/component/*": ["app/component/*"],
       "@/theme/*": ["theme/*"],
       "@/assets/*": ["assets/*"],
-      "@/mocks/*": ["mocks/*"]
+      "@/mocks/*": ["mocks/*"],
+      "@/config/*": ["app/config/*"]
     }
   },
   "extends": "expo/tsconfig.base",

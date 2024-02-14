@@ -1,10 +1,24 @@
 const cluster = "ap3";
-import { Pusher } from "@pusher/pusher-websocket-react-native";
+import { Pusher, PusherChannel } from "@pusher/pusher-websocket-react-native";
 export const pusherClient = async () => {
   const pusher = Pusher.getInstance();
+  const onSubscriptionSucceeded = (channelName: string, data: any) => {
+    console.log(
+      `onSubscriptionSucceeded: ${channelName} data: ${JSON.stringify(data)}`
+    );
+    const channel: PusherChannel | undefined = pusher.getChannel(channelName);
+
+    if (!channel) {
+      return;
+    }
+
+    const me = channel.me;
+    // onChangeMembers([...channel.members.values()]);
+    // log(`Me: ${me}`);
+  };
   await pusher.init({
-    apiKey: "f9e1ab46abdff9fa95bb",
-    cluster,
+    apiKey: "ap",
+    cluster,onSubscriptionSucceeded
   });
 
   await pusher.connect();

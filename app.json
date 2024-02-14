@@ -4,7 +4,6 @@
     "experiments": {
       "tsconfigPaths": true
     },
-   
     "packagerOpts": {
       "config": "metro.config.js"
     },
@@ -20,7 +19,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -63,6 +64,10 @@
       "eas": {
         "projectId": "a4bad71e-b2bf-48c5-9494-1a19ada37d39"
       }
+    },
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/a4bad71e-b2bf-48c5-9494-1a19ada37d39"
     }
   }
 }

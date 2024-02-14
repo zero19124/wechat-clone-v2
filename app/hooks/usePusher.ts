@@ -1,6 +1,6 @@
-import { Pusher } from "@pusher/pusher-websocket-react-native";
+import { Pusher, PusherChannel } from "@pusher/pusher-websocket-react-native";
 import { useState } from "react";
-
+let testChannel: PusherChannel;
 export default () => {
   const pusher = Pusher.getInstance();
   const [apiKey, onChangeApiKey] = useState("f9e1ab46abdff9fa95bb");
@@ -20,11 +20,17 @@ export default () => {
       //     console.log(event);
       //   },
       // });
+      testChannel = await pusher.subscribe({
+        channelName: "test",
+      });
+      console.log('pusher connected');
+      return testChannel;
     } catch (e) {
       console.log("ERROR: " + e);
     }
   };
   return {
+    testChannel,
     pusher,
     connect,
   };

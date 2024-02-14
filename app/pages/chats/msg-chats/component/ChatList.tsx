@@ -3,14 +3,15 @@ import MsgReceiver from "app/component/business/MsgReceiver";
 import UserAvatar from "app/component/complex/UserAvatar";
 import { FlatList, View } from "react-native";
 import data from "@/mocks/msgList.json";
-import DeviceInfo from "react-native-device-info";
+import { useUser } from "app/store/user";
+import { useEffect, useRef } from "react";
 
 const PrivateChatList = (props: { dataOut: any[] }) => {
   const { dataOut } = props;
-  console.log(dataOut, "dataOut");
+  const { userInfo } = useUser().userStore;
+  // console.log(dataOut, "dataOut-userInfo");
   const renderItem = ({ item }: { item: (typeof data)[0] }) => {
-    const deviceModel = DeviceInfo.getModel();
-    const isMe = item.userId === deviceModel;
+    const isMe = item.userId === userInfo?._id;
     const ItemWrapper = () => {
       return (
         <View
@@ -29,7 +30,7 @@ const PrivateChatList = (props: { dataOut: any[] }) => {
             >
               <MsgReceiver type="right" text={item.latestMessage} />
               <UserAvatar
-                source={require("@/assets/me.png")}
+                source={{ uri: userInfo?.image }}
                 style={{ marginLeft: 8 }}
               />
             </View>
@@ -41,24 +42,36 @@ const PrivateChatList = (props: { dataOut: any[] }) => {
                 flex: 1,
               }}
             >
-              <UserAvatar style={{ marginRight: 8 }} />
+              <UserAvatar
+                source={{ uri: item.image }}
+                style={{ marginRight: 8 }}
+              />
               <MsgReceiver text={item.latestMessage}></MsgReceiver>
             </View>
           )}
         </View>
       );
     };
-    return <ItemWrapper key={item.latestMessage} />;
+    return <ItemWrapper />;
   };
+  const flatListRef = useRef<FlatList>();
+
+  useEffect(() => {
+    // console.log(flatListRef.current?.scrollToEnd, "flatListRef.current");
+    // flatListRef.current?.scrollToEnd({ animated: true });
+  }, [dataOut]);
   return (
     <FlatList
+      style={{ paddingBottom: 58 }}
+      // ref={flatListRef}
+      inverted
       contentContainerStyle={{
         backgroundColor: themeColor.fillColor,
         padding: 12,
         flex: 1,
       }}
       data={dataOut || data}
-      keyExtractor={(item) => item.latestMessage + ""}
+      keyExtractor={(item) => item.msgId}
       renderItem={renderItem}
     ></FlatList>
   );

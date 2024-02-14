@@ -41,10 +41,8 @@ const Me = () => {
     require("@/assets/me.png"),
     require("@/assets/avatar.png"),
   ];
-  const { userStore } = useUser();
-  useEffect(() => {
-    console.log(userStore, "userStore");
-  }, [userStore]);
+  const { userInfo } = useUser().userStore;
+
   const [members, onChangeMembers] = useState<PusherMember[]>([]);
   const [msgList, setMsgList] = useState<string[]>([]);
   const pusher = Pusher.getInstance();
@@ -92,19 +90,17 @@ const Me = () => {
     });
 
     await pusher.connect();
-    let myChannel = await pusher.subscribe({
-      channelName: "my-channel",
-      onEvent: (event: PusherEvent) => {
-        console.log(event);
-        msgList.push(JSON.parse(event.data).message);
-        setMsgList([...msgList]);
-        console.log(msgList, "msgList");
-      },
-    });
-    console.log("pusher connected");
+    // let myChannel = await pusher.subscribe({
+    //   channelName: "my-channel",
+    //   onEvent: (event: PusherEvent) => {
+    //     console.log(event);
+    //     msgList.push(JSON.parse(event.data).message);
+    //     setMsgList([...msgList]);
+    //     console.log(msgList, "msgList");
+    //   },
+    // });
   };
   useEffect(() => {
-    connect();
   }, []);
   useEffect(() => {
     console.log(members, "members");
@@ -129,7 +125,8 @@ const Me = () => {
       icon: <Sticker width={24} height={24} fill={themeColor.iconYellow} />,
     },
   ];
-
+  const meImg = require("@/assets/me.png");
+  const bellaImg = require("@/assets/bella.png");
   return (
     <SafeAreaView style={{ backgroundColor: themeColor.white }}>
       <View
@@ -144,10 +141,10 @@ const Me = () => {
             height: 60,
             borderRadius: 4,
           }}
-          source={require("@/assets/me.png")}
+          source={{ uri: userInfo?.image }}
         />
         <View className="flex-1">
-          <Text style={{ fontSize: 24, marginBottom: 8 }}>Evan</Text>
+          <Text style={{ fontSize: 24, marginBottom: 8 }}>{userInfo?.act}</Text>
           <View className="flex-row justify-between items-center">
             <Text style={{ fontSize: 18, color: themeColor.text3 }}>
               Wechat Id: zero123456
@@ -163,7 +160,7 @@ const Me = () => {
               alignSelf: "flex-start",
               marginTop: 8,
               paddingHorizontal: 8,
-              borderRadius: "50%",
+              borderRadius: 8,
               borderColor: themeColor.fillColor,
               borderWidth: 1,
             }}
@@ -187,7 +184,7 @@ const Me = () => {
               paddingLeft: 2,
               paddingRight: 8,
               paddingVertical: 2,
-              borderRadius: "50%",
+              borderRadius: 8,
               borderColor: themeColor.fillColor,
               borderWidth: 1,
             }}
@@ -203,7 +200,7 @@ const Me = () => {
                       height: 16,
                       borderColor: themeColor.white,
                       borderWidth: 1,
-                      borderRadius: "50%",
+                      borderRadius: 8,
                     }}
                     source={avatar}
                   />
