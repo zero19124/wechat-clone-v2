@@ -34,6 +34,7 @@ import {
 } from "@pusher/pusher-websocket-react-native";
 import SimpleLogin from "./components/SimpleLogin";
 import { useUser } from "app/store/user";
+import { useNavigation } from "expo-router";
 const Me = () => {
   // return <PusherTester />;
   const avatars = [
@@ -42,7 +43,7 @@ const Me = () => {
     require("@/assets/avatar.png"),
   ];
   const { userInfo } = useUser().userStore;
-
+  const navigator = useNavigation();
   const [members, onChangeMembers] = useState<PusherMember[]>([]);
   const [msgList, setMsgList] = useState<string[]>([]);
   const pusher = Pusher.getInstance();
@@ -100,8 +101,7 @@ const Me = () => {
     //   },
     // });
   };
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
   useEffect(() => {
     console.log(members, "members");
   }, [members]);
@@ -262,7 +262,7 @@ const Me = () => {
         onPress={() => {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
           // Haptics.selectionAsync();
-          console.log("haptics");
+          navigator.navigate('pages/me/setting/index')
         }}
         borderVisible={false}
         leftComp={() => {

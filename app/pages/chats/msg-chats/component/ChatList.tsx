@@ -4,10 +4,12 @@ import UserAvatar from "app/component/complex/UserAvatar";
 import { FlatList, View } from "react-native";
 import data from "@/mocks/msgList.json";
 import { useUser } from "app/store/user";
-import { useEffect, useRef } from "react";
 
-const PrivateChatList = (props: { dataOut: any[] }) => {
-  const { dataOut } = props;
+const PrivateChatList = (props: {
+  dataOut: any[];
+  flatListRef: React.MutableRefObject<FlatList<any> | undefined>;
+}) => {
+  const { dataOut, flatListRef } = props;
   const { userInfo } = useUser().userStore;
   // console.log(dataOut, "dataOut-userInfo");
   const renderItem = ({ item }: { item: (typeof data)[0] }) => {
@@ -54,21 +56,15 @@ const PrivateChatList = (props: { dataOut: any[] }) => {
     };
     return <ItemWrapper />;
   };
-  const flatListRef = useRef<FlatList>();
-
-  useEffect(() => {
-    // console.log(flatListRef.current?.scrollToEnd, "flatListRef.current");
-    // flatListRef.current?.scrollToEnd({ animated: true });
-  }, [dataOut]);
   return (
     <FlatList
       // style={{ paddingBottom: 58 }}
-      // ref={flatListRef}
+      ref={flatListRef}
       inverted
       contentContainerStyle={{
         backgroundColor: themeColor.fillColor,
         padding: 12,
-        // dont give flex:1  it will strict the list on the sreen and cant scroll up everytime u scroll up it will automaticly bounce back 
+        // dont give flex:1  it will strict the list on the sreen and cant scroll up everytime u scroll up it will automaticly bounce back
         // flex: 1,
       }}
       data={dataOut || data}

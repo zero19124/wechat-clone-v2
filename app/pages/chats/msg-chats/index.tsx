@@ -259,6 +259,7 @@ const Page = () => {
       setMsg("");
     });
   };
+  const flatListRef = useRef<FlatList>();
 
   return (
     <SafeAreaView
@@ -287,13 +288,17 @@ const Page = () => {
             Keyboard.dismiss();
           }}
         >
-          <PrivateChatList dataOut={dataOut} />
+          <PrivateChatList dataOut={dataOut} flatListRef={flatListRef} />
         </TouchableWithoutFeedback>
         {/* keyboard 内容 */}
         <ChatInput
           value={msg}
           onChangeText={(val: string) => {
             setMsg(() => val);
+          }}
+          onFocus={() => {
+            console.log(flatListRef.current?.props, "flatListRef");
+            flatListRef.current?.scrollToIndex({ animated: true, index: 0 });
           }}
           onEndEditing={() => {
             sendMsgHandler(msg);

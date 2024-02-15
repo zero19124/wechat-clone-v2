@@ -10,6 +10,7 @@ const ChatInput = ({
   onEndEditing,
   onChangeText,
   chatPress,
+  onFocus,
   emojiPress,
   plusPress,
 }) => {
@@ -42,6 +43,7 @@ const ChatInput = ({
         value={value}
         selectionColor={themeColor.primary}
         onChangeText={onChangeText}
+        onFocus={onFocus}
         onSubmitEditing={onEndEditing}
         blurOnSubmit={false}
         returnKeyType="send"

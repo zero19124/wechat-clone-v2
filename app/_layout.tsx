@@ -10,63 +10,119 @@ import { PortalProvider } from "./component/business/Portal";
 import { ThemeProvider } from "@/theme/useTheme";
 import { RecoilRoot } from "recoil";
 import { PusherProvider } from "./hooks/usePusherProvider";
+import { useUser } from "./store/user";
+import { useEffect } from "react";
+import { I18nextProvider, initReactI18next } from "react-i18next";
+import i18n from "i18next";
 const Layout = () => {
   console.log(" top-level component");
+
+  // Translations
+  const resources = {
+    en: {
+      translation: {
+        greeting: "Hello!",
+        Chats: "Chats",
+        Contacts: "Contacts",
+        Discover: "Discover",
+        Me: "Me",
+        moments: "Moments",
+        setting: "setting",
+        "change language to chinese": "change language to chinese",
+      },
+    },
+    cn: {
+      translation: {
+        Chats: "微信",
+        Contacts: "通讯录",
+        Discover: "发现",
+        Me: "我",
+        greeting: "Bonjour!",
+        setting: "设置",
+        moments: "朋友圈",
+        "change language to chinese": "切换到英文",
+      },
+    },
+  };
+
+  // Initialize i18n
+  i18n.use(initReactI18next).init({
+    resources,
+    lng: "en", // Default language
+    fallbackLng: "en", // Fallback language
+    interpolation: {
+      escapeValue: false,
+    },
+  });
 
   return (
     <RecoilRoot>
       <PusherProvider>
         <ThemeProvider>
-          <ToastProvider>
-            <PortalProvider>
-              <BottomSheetModalProvider>
-                <ActionSheetProvider>
-                  <RootSiblingParent>
-                    <Stack
-                      screenOptions={{
-                        headerStyle: {
-                          backgroundColor: light.themeColor.fillColor,
-                        },
-                        // headerTintColor: "#fff",
-                        headerTitleStyle: {
-                          fontWeight: "bold",
-                        },
-                      }}
-                    >
-                      <Stack.Screen
-                        name="(tabs)"
-                        options={{
-                          headerShown: false,
+          <I18nextProvider i18n={i18n}>
+            <ToastProvider>
+              <PortalProvider>
+                <BottomSheetModalProvider>
+                  <ActionSheetProvider>
+                    <RootSiblingParent>
+                      <Stack
+                        screenOptions={{
+                          headerStyle: {
+                            backgroundColor: light.themeColor.fillColor,
+                          },
+                          // headerTintColor: "#fff",
+                          headerTitleStyle: {
+                            fontWeight: "bold",
+                          },
                         }}
-                      />
+                      >
+                        <Stack.Screen
+                          name="(tabs)"
+                          options={{
+                            headerShown: false,
+                          }}
+                        />
 
-                      <Stack.Screen
-                        name="individual-payment/index"
-                        options={{
-                          headerShadowVisible: false,
-                          title: "Payment",
-                        }}
-                      />
-                      <Stack.Screen
-                        name="pages/chats/msg-chats/index"
-                        options={{
-                          title: "msg-chats",
-                        }}
-                      />
-
-                      <Stack.Screen
-                        name="component/business/PayDone/index"
-                        options={{
-                          headerShown: false,
-                        }}
-                      />
-                    </Stack>
-                    <Toast />
-                  </RootSiblingParent>
-                </ActionSheetProvider>
-              </BottomSheetModalProvider>
-            </PortalProvider>
-          </ToastProvider>
+                        <Stack.Screen
+                          name="individual-payment/index"
+                          options={{
+                            headerShadowVisible: false,
+                            title: "Payment",
+                          }}
+                        />
+                        <Stack.Screen
+                          name="pages/chats/msg-chats/index"
+                          options={{
+                            title: "msg-chats",
+                          }}
+                        />
+                        <Stack.Screen
+                          name="pages/discover/moments/index"
+                          options={{
+                            title: "moments",
+                          }}
+                        />
+                        <Stack.Screen
+                          name="component/business/PayDone/index"
+                          options={{
+                            headerShown: false,
+                          }}
+                        />
+                        {/* me  */}
+                        <Stack.Screen
+                          name="pages/me/setting/index"
+                          options={{
+                            title: "setting",
+                          }}
+                        />
+                      </Stack>
+                      <Toast />
+                    </RootSiblingParent>
+                  </ActionSheetProvider>
+                </BottomSheetModalProvider>
+              </PortalProvider>
+            </ToastProvider>
+          </I18nextProvider>
         </ThemeProvider>
       </PusherProvider>
     </RecoilRoot>

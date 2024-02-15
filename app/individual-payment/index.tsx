@@ -18,8 +18,7 @@ import * as light from "../../theme/light";
 import { FontAwesome } from "@expo/vector-icons";
 import InputKeyboard from "./InputKeyboard";
 import { useNavigation, useRouter } from "expo-router";
-
-import GoBack from "@/icons/common/go-back.svg";
+import GoBack from "@/component/complex/GoBack";
 
 const Page = () => {
   const [amountValue, setAmountValue] = useState("");
@@ -29,15 +28,7 @@ const Page = () => {
     navigation.setOptions({
       headerShadowVisible: false,
       title: "Payment",
-      headerLeft: () => (
-        <Pressable
-          onPress={() => {
-            router.back();
-          }}
-        >
-          <GoBack />
-        </Pressable>
-      ),
+      headerLeft: () => <GoBack />,
     });
   });
   useEffect(() => {

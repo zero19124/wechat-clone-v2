@@ -2,12 +2,20 @@ import Divider from "@/component/complex/Divider";
 import ItemCard from "@/component/complex/ItemCard";
 import ArrowRightIcon from "@/icons/common/arrow-right.svg";
 import { themeColor } from "@/theme/light";
-import { SafeAreaView, Text, Image, View } from "react-native";
+import { useNavigation, useRouter } from "expo-router";
+import { router } from "expo-router";
+import { SafeAreaView, Text, Image, View, Pressable } from "react-native";
 const Discover = () => {
+  const navigator = useNavigation();
   const cardList = [
     {
       text: "Moments",
       url: require("@/icons/discover/moments.png"),
+      onPressHandler: () => {
+        // router.push('pages/discover/moments/index')
+
+        navigator.navigate("pages/discover/moments/index");
+      },
     },
     {
       text: "Channels",
@@ -68,8 +76,10 @@ const Discover = () => {
           <View key={card.text}>
             {getDivider()}
             <ItemCard
+              onPress={() => {
+                card.onPressHandler?.();
+              }}
               borderVisible={visibleBoderFields.includes(card.text)}
-              key={card.text}
               leftComp={() => {
                 return (
                   <View>

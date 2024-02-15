@@ -6,7 +6,8 @@
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "extract": "i18next-parser --config i18n-parser.config.js"
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "^4.0.1",
@@ -37,8 +38,11 @@
     "expo-router": "^2.0.0",
     "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "~1.6.0",
+    "expo-updates": "~0.18.19",
     "i18n-extract": "^0.6.7",
     "i18n-js": "^4.3.2",
+    "i18next": "^23.8.2",
+    "i18next-parser": "^8.12.0",
     "install-expo-modules": "^0.8.1",
     "lightningcss-darwin-arm64": "^1.23.0",
     "lodash": "^4.17.21",
@@ -48,6 +52,7 @@
     "pinyin": "^4.0.0-alpha.0",
     "pod-install": "^0.2.0",
     "react": "18.2.0",
+    "react-i18next": "^14.0.5",
     "react-native": "0.72.6",
     "react-native-actions-sheet": "^0.9.0-alpha.24",
     "react-native-device-info": "^10.12.0",
@@ -70,8 +75,7 @@
     "recoil": "^0.7.7",
     "segmentit": "^2.0.3",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5.1.3",
-    "expo-updates": "~0.18.19"
+    "typescript": "^5.1.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

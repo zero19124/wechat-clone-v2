@@ -104,8 +104,8 @@ const Contacts = () => {
   const [locale, setLocale] = useState("ja");
   const i18n = new I18n(
     {
-      en: { welcome: "Hello" },
-      ja: { welcome: "こんにちは" },
+      en: { welcome: "Hello", moments: "Moments" },
+      cn: { welcome: "你好", moments: "朋友圈" },
     },
     { locale: locale }
   );

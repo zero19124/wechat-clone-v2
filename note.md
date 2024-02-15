@@ -25,3 +25,7 @@ presence-test  the channel-name must start with presence-
 4
 Pusher not working in production on Verce 
 https://github.com/vercel/next.js/discussions/48433
+
+5
+command not found: i18next-parser. after install  i18next-parser    
+use > npx i18next-parser
