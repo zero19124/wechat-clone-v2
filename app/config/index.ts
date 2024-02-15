@@ -2,8 +2,8 @@ import { Platform } from "react-native";
 // import { Config, NativeConfig } from "react-native-config";
 
 const env = "dev1";
-// const apiDomain = "http://localhost:4000";
-const apiDomain = "http://express-test-2ntz.vercel.app";
+const apiDomain = "http://localhost:4000";
+// const apiDomain = "http://express-test-2ntz.vercel.app";
 // const devConfig = {
 //   env: env as NativeConfig["Env"],
 //   envType: env?.replace(/\d+/, "") as NativeConfig["EnvType"],

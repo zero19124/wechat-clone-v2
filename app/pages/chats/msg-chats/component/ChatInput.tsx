@@ -7,6 +7,7 @@ import CirclePlus from "@/icons/circle-plus.svg";
 import { getSize } from "utils";
 const ChatInput = ({
   value,
+  onEndEditing,
   onChangeText,
   chatPress,
   emojiPress,
@@ -41,6 +42,9 @@ const ChatInput = ({
         value={value}
         selectionColor={themeColor.primary}
         onChangeText={onChangeText}
+        onSubmitEditing={onEndEditing}
+        blurOnSubmit={false}
+        returnKeyType="send"
         style={{
           borderRadius: 4,
           height: getSize(38),

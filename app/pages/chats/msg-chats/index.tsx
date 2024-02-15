@@ -5,9 +5,11 @@ import {
   Image,
   Keyboard,
   KeyboardAvoidingView,
+  NativeSyntheticEvent,
   Platform,
   Text,
   TextInput,
+  TextInputSubmitEditingEventData,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -242,7 +244,6 @@ const Page = () => {
       userId: userInfo?._id,
       convoId,
     });
-    setMsg(val);
     fetch(config.apiDomain + "/api/msg/add-msg", {
       method: "POST",
       headers: {
@@ -254,7 +255,8 @@ const Page = () => {
         convoId,
       }),
     }).then(async (res) => {
-      console.log("emit11339");
+      console.log("add-suc");
+      setMsg("");
     });
   };
   return (
@@ -289,7 +291,12 @@ const Page = () => {
         {/* keyboard 内容 */}
         <ChatInput
           value={msg}
-          onChangeText={sendMsgHandler}
+          onChangeText={(val: string) => {
+            setMsg(() => val);
+          }}
+          onEndEditing={() => {
+            sendMsgHandler(msg);
+          }}
           chatPress={() => {
             console.log("c");
           }}

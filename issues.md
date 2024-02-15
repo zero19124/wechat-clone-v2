@@ -14,4 +14,4 @@ modal 需要
    to clear cache with npm start -- --reset-cache and it works
 
  <!-- 部署   -->
- eas submit -p ios --latest --profile foobar
+eas submit -p ios
