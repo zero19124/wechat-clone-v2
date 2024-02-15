@@ -76,6 +76,13 @@ const Layout = () => {
                           },
                         }}
                       >
+                        {/* chats  */}
+                        <Stack.Screen
+                          name="pages/chats/screens/code-scanner/index"
+                          options={{
+                            headerShown: false,
+                          }}
+                        />
                         <Stack.Screen
                           name="(tabs)"
                           options={{

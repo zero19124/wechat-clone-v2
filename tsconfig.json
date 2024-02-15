@@ -2,24 +2,52 @@
   "compilerOptions": {
     "skipLibCheck": true,
     "moduleResolution": "node",
-    "esModuleInterop": true, // 允许默认导出的 SVG 文件作为模块导入
-    "resolveJsonModule": true, // 允许导入 JSON 文件作为模块
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
     "jsx": "react-jsx",
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["/*"],
-      "@/icons/*": ["assets/icon/*"],
-      "@/pages/*": ["app/pages/*"],
-      "@/hooks/*": ["app/hooks/*"],
-      "@/utils/*": ["app/utils/*"],
-      "@/component/*": ["app/component/*"],
-      "@/theme/*": ["theme/*"],
-      "@/assets/*": ["assets/*"],
-      "@/mocks/*": ["mocks/*"],
-      "@/config/*": ["app/config/*"]
+      "@/*": [
+        "/*"
+      ],
+      "@/icons/*": [
+        "assets/icon/*"
+      ],
+      "@/pages/*": [
+        "app/pages/*"
+      ],
+      "@/hooks/*": [
+        "app/hooks/*"
+      ],
+      "@/utils/*": [
+        "app/utils/*"
+      ],
+      "@/component/*": [
+        "app/component/*"
+      ],
+      "@/theme/*": [
+        "theme/*"
+      ],
+      "@/assets/*": [
+        "assets/*"
+      ],
+      "@/mocks/*": [
+        "mocks/*"
+      ],
+      "@/config/*": [
+        "app/config/*"
+      ]
     }
   },
   "extends": "expo/tsconfig.base",
-  "tscFilesIncludes": ["/@types/"]
+  "tscFilesIncludes": [
+    "/@types/"
+  ],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ]
 }

@@ -1,4 +1,5 @@
 import { Pusher, PusherEvent } from "@pusher/pusher-websocket-react-native";
+import { I18n } from "i18n-js";
 import {
   Children,
   createContext,
@@ -6,12 +7,11 @@ import {
   useEffect,
   useState,
 } from "react";
-import usePusher from "./usePusher";
 interface IPusherProvider {
   pusher: Pusher;
   event: { [eventName: string]: (event: PusherEvent) => void };
 }
-export const PusherContext = createContext(
+export const I18nContext = createContext(
   {} as {
     contextData: IPusherProvider;
     setContextData: React.Dispatch<React.SetStateAction<IPusherProvider>>;
@@ -19,7 +19,14 @@ export const PusherContext = createContext(
 );
 
 export const PusherProvider = ({ children }) => {
-  const { pusher, connect } = usePusher();
+  const i18n = new I18n(
+    {
+      en: { welcome: "Hello", moments: "Moments" },
+      cn: { welcome: "你好", moments: "朋友圈" },
+    },
+    { locale: locale }
+  );
+  i18n.tra
   const [contextData, setContextData] = useState({
     pusher,
     event: {},
@@ -28,30 +35,10 @@ export const PusherProvider = ({ children }) => {
   useEffect(() => {
     // console.log(pusherContext, "pusherContextpusherContextpusherContext");
   }, [contextData]);
-  useEffect(() => {
-    connect().then(async (testChannel) => {
-      // console.log("connected-13", testChannel);
-      if (testChannel) {
-        console.log(
-          testChannel,
-          "testChannel.subscriptionCount"
-        );
-
-        testChannel.onEvent = (event: PusherEvent) => {
-          console.log(contextData, "pusherContext-provider");
-          for (let key in contextData.event) {
-            contextData.event[key]?.(event);
-          }
-          // console.log(event, "event");
-          const data = JSON.parse(event.data);
-          // console.log(data, "subscribe-data-vcos");
-        };
-      }
-    });
-  }, []);
+  useEffect(() => {}, []);
   return (
-    <PusherContext.Provider value={{ contextData, setContextData }}>
+    <I18nContext.Provider value={{ contextData, setContextData }}>
       {children}
-    </PusherContext.Provider>
+    </I18nContext.Provider>
   );
 };

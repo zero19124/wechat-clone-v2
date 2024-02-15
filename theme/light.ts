@@ -1,17 +1,25 @@
 import { Platform, StyleSheet } from "react-native";
 import { parseThemeColors, parseThemeText, parseThemeBorder } from "./utils";
 
+const fillColor = "rgb(237,237,237)";
+
+export const commonStyle = {
+  commonBorderBottom: {
+    borderBottomColor: fillColor,
+    borderBottomWidth: 2,
+  },
+};
 export const themeColor = {
   primary: "#07C160",
-  fillColor: "rgb(237,237,237)",
-
+  fillColor,
+  textBlue: "#576B95",
   bg1: "#FFFFFF",
   white: "#FFFFFF",
   bg2: "#F6F6F6",
   bg3: "#EDEDED",
   bg4: "#333333",
   bg5: "#000000",
-
+  borderColor: "",
   text2: "#C9CDD4",
   text1: "#a0a0a0",
   text3: "#86909C",

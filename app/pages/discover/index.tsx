@@ -4,16 +4,18 @@ import ArrowRightIcon from "@/icons/common/arrow-right.svg";
 import { themeColor } from "@/theme/light";
 import { useNavigation, useRouter } from "expo-router";
 import { router } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { SafeAreaView, Text, Image, View, Pressable } from "react-native";
 const Discover = () => {
   const navigator = useNavigation();
+  const { t } = useTranslation();
+
   const cardList = [
     {
-      text: "Moments",
+      text: t("moments"),
       url: require("@/icons/discover/moments.png"),
       onPressHandler: () => {
         // router.push('pages/discover/moments/index')
-
         navigator.navigate("pages/discover/moments/index");
       },
     },

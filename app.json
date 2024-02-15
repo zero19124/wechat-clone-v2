@@ -54,6 +54,7 @@
           "isAccessMediaLocationEnabled": true
         }
       ],
+      
       "expo-localization"
     ],
     "extra": {

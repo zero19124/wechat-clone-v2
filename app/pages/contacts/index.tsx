@@ -11,11 +11,9 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as light from "@/theme/light";
-import Button from "@/component/base/Button/Button";
 import ItemCard from "@/component/complex/ItemCard";
 import {
   useCallback,
-  useEffect,
   useLayoutEffect,
   useMemo,
   useState,
@@ -101,24 +99,7 @@ const Contacts = () => {
     // }
     // item.pinyinArrStr = pinyinArrStr;
   });
-  const [locale, setLocale] = useState("ja");
-  const i18n = new I18n(
-    {
-      en: { welcome: "Hello", moments: "Moments" },
-      cn: { welcome: "你好", moments: "朋友圈" },
-    },
-    { locale: locale }
-  );
-  let colorScheme = useColorScheme();
 
-  useEffect(() => {
-    setLocale(i18n.locale);
-    console.log(colorScheme, "colorScheme");
-  }, []);
-  // i18n.onChange((v) => {
-  //   console.log(v, "vvv");
-  // });
-  console.log(i18n?.locale, "I18n.locale ");
   const [color, setColor] = useState("#ff0000");
 
   const ColorChangeComponent = useCallback(() => {
@@ -169,34 +150,7 @@ const Contacts = () => {
           backgroundColor: themeColor.white,
         }}
       >
-        <TouchableOpacity
-          onPress={() => {
-            toggleTheme(themeName === "light" ? "dark" : "light");
-            setLocale((v) => {
-              const vv = v === "en" ? "ja" : "en";
-              i18n.locale = vv;
-              console.log(v, 111111111, i18n.locale);
-
-              return vv;
-            });
-          }}
-          style={{
-            // zIndex: 12,
-            // position: "absolute",
-            backgroundColor: "blue",
-            // // top: 844 / 2 - 8.5 * 26,
-            // top: 124,
-            // right: 0,
-            // width: 100,
-            // height: 11,
-          }}
-        >
-          <Text>{i18n.t("welcome")}</Text>
-          <Text>
-            {i18n.locale}-{locale}-{i18n.t("welcome")}
-          </Text>
-        </TouchableOpacity>
-        <ColorChangeComponent />
+        {/* <ColorChangeComponent /> */}
 
         <IndexBar highlightColor={light.themeColor.white} sticky={false}>
           <View className="bg-white flex-1">

@@ -53,7 +53,7 @@ export default () => {
     <View>
       {userStore?.userInfo?.act ? (
         <View>
-          <Text>{userStore?.userInfo?.act}</Text>
+          {/* <Text>{userStore?.userInfo?.act}</Text> */}
           <Button
             title="log out"
             onPress={() => {

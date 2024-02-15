@@ -14,6 +14,7 @@ const Chats = () => {
   useLayoutEffect(() => {
     navigate.setOptions({
       // headerShown: false,
+
       headerLeft: () => <Entypo name="dots-two-horizontal" size={20} />,
       headerLeftContainerStyle: { paddingLeft: 12 },
       headerTitle: "Weixin(331)",
@@ -21,7 +22,7 @@ const Chats = () => {
         <TouchableOpacity
           onPress={() => {
             console.log(1111);
-            router.push("individual-payment");
+            navigate.navigate("pages/chats/screens/code-scanner/index");
           }}
         >
           <CirclePlus />

@@ -37,12 +37,8 @@ const Layout = () => {
       },
     });
   }, []);
-  const TabText = ({ children }) => {
-    return (
-      <Text style={{ fontSize: 12, color: 'grey' }}>
-        {children}
-      </Text>
-    );
+  const TabText = ({ children, color }) => {
+    return <Text style={{ fontSize: 12, color }}>{children}</Text>;
   };
   return (
     <RootSiblingParent>
@@ -59,14 +55,17 @@ const Layout = () => {
           name="index"
           options={{
             // headerShown: false,
-            tabBarLabel: () => <TabText>{t("Chats")}</TabText>,
+            tabBarLabel: ({ color }) => {
+              return <TabText color={color}>{t("Chats")}</TabText>;
+            },
           }}
         ></Tabs.Screen>
         <Tabs.Screen
           name="contacts"
           options={{
-            tabBarLabel: () => <TabText>{t("Contacts")}</TabText>,
-
+            tabBarLabel: ({ color }) => {
+              return <TabText color={color}>{t("Contacts")}</TabText>;
+            },
             headerTitle: "Contacts",
             tabBarIcon: ({ size, color, focused }) => {
               if (focused) {
@@ -79,8 +78,9 @@ const Layout = () => {
         <Tabs.Screen
           name="discover"
           options={{
-            tabBarLabel: () => <TabText>{t("Discover")}</TabText>,
-
+            tabBarLabel: ({ color }) => {
+              return <TabText color={color}>{t("Discover")}</TabText>;
+            },
             headerTitle: "Discover",
             tabBarIcon: ({ size, color, focused }) => {
               if (focused) {
@@ -93,7 +93,9 @@ const Layout = () => {
         <Tabs.Screen
           name="me"
           options={{
-            tabBarLabel: () => <TabText>{t("Me")}</TabText>,
+            tabBarLabel: ({ color }) => {
+              return <TabText color={color}>{t("Me")}</TabText>;
+            },
             headerShown: false,
             headerTitle: () => <Text>ind1ex</Text>,
             tabBarIcon: ({ size, color, focused }) => {

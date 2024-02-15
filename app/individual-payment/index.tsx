@@ -187,7 +187,7 @@ const Page = () => {
               <Text
                 style={{
                   marginTop: 18,
-                  color: "rgb(94,107,148)",
+                  color: light.themeColor.textBlue,
                   fontWeight: "bold",
                 }}
               >
