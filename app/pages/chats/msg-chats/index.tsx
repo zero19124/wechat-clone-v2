@@ -259,6 +259,7 @@ const Page = () => {
       setMsg("");
     });
   };
+
   return (
     <SafeAreaView
       style={{

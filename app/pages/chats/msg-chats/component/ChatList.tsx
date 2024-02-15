@@ -62,13 +62,14 @@ const PrivateChatList = (props: { dataOut: any[] }) => {
   }, [dataOut]);
   return (
     <FlatList
-      style={{ paddingBottom: 58 }}
+      // style={{ paddingBottom: 58 }}
       // ref={flatListRef}
       inverted
       contentContainerStyle={{
         backgroundColor: themeColor.fillColor,
         padding: 12,
-        flex: 1,
+        // dont give flex:1  it will strict the list on the sreen and cant scroll up everytime u scroll up it will automaticly bounce back 
+        // flex: 1,
       }}
       data={dataOut || data}
       keyExtractor={(item) => item.msgId}
