@@ -32,7 +32,6 @@ import FnKeyBoard from "@/component/business/FnKeyBoard";
 import PrivateChatList from "./component/ChatList";
 import ChatInput from "./component/ChatInput";
 import { useTheme } from "@/theme/useTheme";
-import usePusher from "@/hooks/usePusher";
 import { PusherEvent } from "@pusher/pusher-websocket-react-native";
 import { useUser } from "app/store/user";
 import config from "@/config/index";
@@ -87,7 +86,6 @@ const Page = () => {
     });
   }, []);
   const { toggleTheme, themeColor, themeName } = useTheme();
-  const { pusher, connect } = usePusher();
   const [msg, setMsg] = useState("");
   const heightValue = useRef(new Animated.Value(10)).current;
   const height = useRef(0);
@@ -140,76 +138,26 @@ const Page = () => {
     console.log(pusherContext, "12222222");
   }, [pusherContext]);
   useEffect(() => {
-    console.log(pusherContext, "pusherContext");
     console.log(heightValue, "heightValue._value");
-    pusherContext.setContextData((pre) => {
-      console.log(111111);
-
-      pre.event["chats"] = (event: PusherEvent) => {
-        console.log(event, "event");
-        const data = JSON.parse(event.data);
-        console.log(data, "subscribe-data" + deviceModel);
-        const latestMessage = data.message.msg;
-        // 这里会重新调对话窗口列表
+    // 有新消息就更新会话列表
+    pusherContext.socket.on("messages", (data) => {
+      console.log(data, "msgList");
+      try {
+        const latestMessage = data.msg;
+        //     // 这里会重新调对话窗口列表
         updateConvoLatestMsgById(convoId + "", latestMessage);
-        // 会话
-        setChatListStore((pre) => {
-          const updatedList = pre.chatListState.map((item) => {
-            if (item._id === data.message.convoId) {
-              return { ...item, latestMessage: latestMessage };
-            }
-            return item;
-          });
-          return { chatListState: updatedList };
-        });
-        setDataOut((pre) => [
-          {
-            userId: data.userId,
-            msgId: data.message._id,
-            image: data.message.user.image,
-            latestMessage,
-          },
-          ...pre,
-        ]);
-      };
-
-      return {
-        ...pre,
-      };
+        // 插入信息列表
+        const newMsg = {
+          userId: data.user._id,
+          msgId: data._id,
+          image: data.user.image,
+          latestMessage,
+        };
+        setDataOut((pre) => [newMsg, ...pre]);
+      } catch (e) {
+        console.error(e, "mgsList-error");
+      }
     });
-    console.log(pusherContext, 111111);
-    // connect().then(async (testChannel) => {
-    // console.log("connected", testChannel);
-
-    // await pusher.subscribe({
-    //   channelName: "test",
-    //   onEvent: (event: PusherEvent) => {
-    //     // console.log(event, "event");
-    //     const data = JSON.parse(event.data);
-    //     console.log(data, "subscribe-data");
-    //     const latestMessage = data.message.msg;
-    //     updateConvoLatestMsgById(convoId + "", latestMessage);
-    //     setChatListStore((pre) => {
-    //       const updatedList = pre.chatListState.map((item) => {
-    //         if (item._id === data.message.convoId) {
-    //           return { ...item, latestMessage: latestMessage };
-    //         }
-    //         return item;
-    //       });
-    //       return { chatListState: updatedList };
-    //     });
-    //     setDataOut((pre) => [
-    //       {
-    //         userId: data.userId,
-    //         msgId: data.message._id,
-    //         image: data.message.user.image,
-    //         latestMessage,
-    //       },
-    //       ...pre,
-    //     ]);
-    //   },
-    // });
-    // });
 
     fetch(config.apiDomain + `/api/msg/allMsgByConvoId?convoId=${convoId}`)
       .then((res) => res.json())

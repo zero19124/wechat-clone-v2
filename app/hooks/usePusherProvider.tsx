@@ -1,4 +1,3 @@
-import { Pusher, PusherEvent } from "@pusher/pusher-websocket-react-native";
 import {
   Children,
   createContext,
@@ -7,50 +6,41 @@ import {
   useState,
 } from "react";
 import usePusher from "./usePusher";
-interface IPusherProvider {
-  pusher: Pusher;
-  event: { [eventName: string]: (event: PusherEvent) => void };
-}
+
+import io, { Socket } from "socket.io-client";
+import { useUser } from "app/store/user";
+
 export const PusherContext = createContext(
   {} as {
-    contextData: IPusherProvider;
-    setContextData: React.Dispatch<React.SetStateAction<IPusherProvider>>;
+    socket: Socket;
   }
 );
 
 export const PusherProvider = ({ children }) => {
-  const { pusher, connect } = usePusher();
-  const [contextData, setContextData] = useState({
-    pusher,
-    event: {},
-  } as IPusherProvider);
-  const pusherContext = useContext(PusherContext);
-  useEffect(() => {
-    // console.log(pusherContext, "pusherContextpusherContextpusherContext");
-  }, [contextData]);
-  useEffect(() => {
-    connect().then(async (testChannel) => {
-      // console.log("connected-13", testChannel);
-      if (testChannel) {
-        console.log(
-          testChannel,
-          "testChannel.subscriptionCount"
-        );
+  const { userStore } = useUser();
+  const userId = userStore.userInfo?._id;
+  const socket = io("http://localhost:4000", {
+    // const socket = io("https://wechat-server-jhc0.onrender.com", {
+    query: {
+      userId,
+    },
+  });
+  socket.on("getOnlineUsers", (users) => {
+    console.log("getOnlineUsers");
+  });
+  // 每一个用户订阅一个频道 userid
+  socket.emit("subscribe", userId);
 
-        testChannel.onEvent = (event: PusherEvent) => {
-          console.log(contextData, "pusherContext-provider");
-          for (let key in contextData.event) {
-            contextData.event[key]?.(event);
-          }
-          // console.log(event, "event");
-          const data = JSON.parse(event.data);
-          // console.log(data, "subscribe-data-vcos");
-        };
-      }
-    });
-  }, []);
+  socket.on("hello", (users) => {
+    console.log(users, "--------");
+  });
+  const [contextData, setContextData] = useState({
+    socket,
+  });
+  useEffect(() => {}, [contextData]);
+
   return (
-    <PusherContext.Provider value={{ contextData, setContextData }}>
+    <PusherContext.Provider value={{ socket }}>
       {children}
     </PusherContext.Provider>
   );

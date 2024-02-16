@@ -15,7 +15,6 @@ import config from "@/config/index";
 import { useUser } from "app/store/user";
 import { formatDateToString } from "@/utils/date";
 import { useChatList } from "app/store/chatList";
-import usePusher from "@/hooks/usePusher";
 import { PusherEvent } from "@pusher/pusher-websocket-react-native";
 import { PusherContext } from "@/hooks/usePusherProvider";
 import DeviceInfo from "react-native-device-info";
@@ -63,17 +62,11 @@ const ConvoList = () => {
   useEffect(() => {
     if (!userId) return;
     getChatList(userId);
-    pusherContext.setContextData((pre) => {
-      console.log(111111);
-
-      pre.event["convos"] = (event: PusherEvent) => {
-        console.log(event, "eeeeeeeeeee", userStore, deviceModel);
-        if (!userId) return;
-        getChatList(userId);
-      };
-      return {
-        ...pre,
-      };
+    // 有新消息就更新会话列表
+    pusherContext.socket.on("messages", (data) => {
+      console.log(data, "getChatList");
+      if (!userId) return;
+      getChatList(userId);
     });
   }, [userStore]);
   const renderItem = ({ item }: { item: any }) => {

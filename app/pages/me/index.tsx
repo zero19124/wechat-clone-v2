@@ -225,9 +225,10 @@ const Me = () => {
       <Divider />
 
       <ItemCard
-        onPress={() =>
-          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
-        }
+        onPress={() => {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          fetch('http://localhost:3000')
+        }}
         borderVisible={false}
         leftComp={() => {
           return (
@@ -262,7 +263,7 @@ const Me = () => {
         onPress={() => {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
           // Haptics.selectionAsync();
-          navigator.navigate('pages/me/setting/index')
+          navigator.navigate("pages/me/setting/index");
         }}
         borderVisible={false}
         leftComp={() => {

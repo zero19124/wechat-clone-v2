@@ -14,9 +14,22 @@ import { useUser } from "./store/user";
 import { useEffect } from "react";
 import { I18nextProvider, initReactI18next } from "react-i18next";
 import i18n from "i18next";
+import io from "socket.io-client";
 const Layout = () => {
   console.log(" top-level component");
+  // const socket = io("http://localhost:3000", {
+  const socket = io("https://socket-test-dqex.onrender.com", {
+    query: {
+      userId: "15 pro",
+    },
+  });
+  socket.on("getOnlineUsers", (users) => {
+    console.log("getOnlineUsers");
+  });
 
+  socket.on("hello", (users) => {
+    console.log(users);
+  });
   // Translations
   const resources = {
     en: {
