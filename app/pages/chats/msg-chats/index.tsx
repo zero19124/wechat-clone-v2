@@ -135,12 +135,8 @@ const Page = () => {
   };
   const pusherContext = useContext(PusherContext);
   useEffect(() => {
-    console.log(pusherContext, "12222222");
-  }, [pusherContext]);
-  useEffect(() => {
-    console.log(heightValue, "heightValue._value");
     // 有新消息就更新会话列表
-    pusherContext.socket.on("messages", (data) => {
+    pusherContext.socket?.on("messages", (data) => {
       console.log(data, "msgList");
       try {
         const latestMessage = data.msg;
@@ -158,6 +154,10 @@ const Page = () => {
         console.error(e, "mgsList-error");
       }
     });
+  }, [pusherContext.socket]);
+
+  useEffect(() => {
+    console.log(heightValue, "heightValue._value");
 
     fetch(config.apiDomain + `/api/msg/allMsgByConvoId?convoId=${convoId}`)
       .then((res) => res.json())

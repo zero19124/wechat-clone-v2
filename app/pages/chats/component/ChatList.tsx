@@ -63,12 +63,12 @@ const ConvoList = () => {
     if (!userId) return;
     getChatList(userId);
     // 有新消息就更新会话列表
-    pusherContext.socket.on("messages", (data) => {
+    pusherContext.socket?.on("messages", (data) => {
       console.log(data, "getChatList");
       if (!userId) return;
       getChatList(userId);
     });
-  }, [userStore]);
+  }, [pusherContext.socket]);
   const renderItem = ({ item }: { item: any }) => {
     {
       /* 头像 */
