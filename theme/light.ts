@@ -3,12 +3,7 @@ import { parseThemeColors, parseThemeText, parseThemeBorder } from "./utils";
 
 const fillColor = "rgb(237,237,237)";
 
-export const commonStyle = {
-  commonBorderBottom: {
-    borderBottomColor: fillColor,
-    borderBottomWidth: 2,
-  },
-};
+
 export const themeColor = {
   primary: "#07C160",
   fillColor,

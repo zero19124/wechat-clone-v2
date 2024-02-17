@@ -245,7 +245,7 @@ const Page = () => {
             setMsg(() => val);
           }}
           onFocus={() => {
-            console.log(flatListRef.current?.props, "flatListRef");
+            // console.log(flatListRef.current?.props, "flatListRef");
             flatListRef.current?.scrollToIndex({ animated: true, index: 0 });
           }}
           onEndEditing={() => {

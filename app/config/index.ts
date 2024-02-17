@@ -3,7 +3,7 @@ import { Platform } from "react-native";
 
 const env = "dev1";
 const apiDomain = "http://localhost:4000";
-// const apiDomain = "http://express-test-2ntz.vercel.app";
+// const apiDomain = "https://wechat-server-jhc0.onrender.com";
 // const devConfig = {
 //   env: env as NativeConfig["Env"],
 //   envType: env?.replace(/\d+/, "") as NativeConfig["EnvType"],

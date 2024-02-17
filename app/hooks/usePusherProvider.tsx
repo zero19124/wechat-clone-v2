@@ -19,8 +19,8 @@ export const PusherProvider = ({ children }) => {
     if (!userId) {
       return;
     }
-    // const socketNew = io("http://localhost:4000", {
-    const socketNew = io("https://wechat-server-jhc0.onrender.com", {
+    const socketNew = io("http://localhost:4000", {
+    // const socketNew = io("https://wechat-server-jhc0.onrender.com", {
       query: {
         userId,
       },

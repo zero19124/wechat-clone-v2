@@ -11,10 +11,18 @@ export type TThemeType = {
 };
 
 export type TThemeName = "dark" | "light";
-
+const getCommonStyle = (theme: TThemeType["themeColor"]) => {
+  return {
+    commonBorderBottom: {
+      borderBottomColor: theme.fillColor,
+      borderBottomWidth: 2,
+    },
+  };
+};
 // Types
 export interface ThemeContextInterface extends TThemeType {
   setTheme: (value: TThemeType) => void;
+  commentStyle: ReturnType<typeof getCommonStyle>;
 }
 
 // Context
@@ -25,7 +33,12 @@ export const ThemeProvider = ({ children }: any): JSX.Element => {
   const [theme, setTheme] = useState(light);
   console.log("ThemeProvider");
   return (
-    <ThemeContext.Provider value={{ ...theme, setTheme }}>
+    <ThemeContext.Provider
+      value={{
+        ...theme,
+        setTheme,
+      }}
+    >
       {children}
     </ThemeContext.Provider>
   );
@@ -42,7 +55,13 @@ export const useTheme = () => {
     setTheme(theme === "light" ? light : dark);
     console.log(themeName, "state", themes.themeColor.white);
   };
-  return { ...themes, themeName, toggleTheme };
+
+  return {
+    ...themes,
+    themeName,
+    toggleTheme,
+    commonStyle: getCommonStyle(themes.themeColor),
+  };
 };
 
 export const useText = () => {

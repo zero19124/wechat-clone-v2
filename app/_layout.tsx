@@ -6,15 +6,20 @@ import Toast from "react-native-root-toast";
 import "react-native-gesture-handler";
 import { ToastProvider } from "react-native-toast-notifications";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { PortalProvider } from "./component/business/Portal";
+import { PortalProvider, usePortal } from "./component/business/Portal";
 import { ThemeProvider } from "@/theme/useTheme";
 import { RecoilRoot } from "recoil";
 import { PusherProvider } from "./hooks/usePusherProvider";
 import { useUser } from "./store/user";
-import { useEffect } from "react";
+import { MutableRefObject, useEffect } from "react";
 import { I18nextProvider, initReactI18next } from "react-i18next";
 import i18n from "i18next";
 import io from "socket.io-client";
+import React from "react";
+import { PortalService } from "./component/base/ConfigProvider/ConfigProvider";
+export const PortalRef =
+  React.createRef<PortalService>() as MutableRefObject<PortalService>;
+
 const Layout = () => {
   console.log(" top-level component");
 
@@ -23,6 +28,8 @@ const Layout = () => {
     en: {
       translation: {
         greeting: "Hello!",
+        like: "Like",
+        comment: "Comment",
         Chats: "Chats",
         Contacts: "Contacts",
         Discover: "Discover",
@@ -35,6 +42,8 @@ const Layout = () => {
     },
     cn: {
       translation: {
+        like: "赞",
+        comment: "评论",
         Chats: "微信",
         Contacts: "通讯录",
         Discover: "发现",
@@ -50,6 +59,7 @@ const Layout = () => {
 
   // Initialize i18n
   i18n.use(initReactI18next).init({
+    compatibilityJSON: "v3",
     resources,
     lng: "en", // Default language
     fallbackLng: "en", // Fallback language
@@ -57,14 +67,19 @@ const Layout = () => {
       escapeValue: false,
     },
   });
-
+  const InitializePortalRef = () => {
+    const portal = usePortal();
+    PortalRef.current = portal;
+    return null;
+  };
   return (
-    <RecoilRoot>
-      <PusherProvider>
-        <ThemeProvider>
-          <I18nextProvider i18n={i18n}>
-            <ToastProvider>
-              <PortalProvider>
+    <PortalProvider>
+      <InitializePortalRef />
+      <RecoilRoot>
+        <PusherProvider>
+          <ThemeProvider>
+            <I18nextProvider i18n={i18n}>
+              <ToastProvider>
                 <BottomSheetModalProvider>
                   <ActionSheetProvider>
                     <RootSiblingParent>
@@ -130,12 +145,12 @@ const Layout = () => {
                     </RootSiblingParent>
                   </ActionSheetProvider>
                 </BottomSheetModalProvider>
-              </PortalProvider>
-            </ToastProvider>
-          </I18nextProvider>
-        </ThemeProvider>
-      </PusherProvider>
-    </RecoilRoot>
+              </ToastProvider>
+            </I18nextProvider>
+          </ThemeProvider>
+        </PusherProvider>
+      </RecoilRoot>
+    </PortalProvider>
   );
 };
 export default Layout;

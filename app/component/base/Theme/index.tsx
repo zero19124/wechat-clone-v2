@@ -2,8 +2,12 @@ import { useMemo } from "react";
 import { createTheming } from "@callstack/react-theme-provider";
 import { Dimensions, StyleSheet } from "react-native";
 // import { defaultTheme } from '../styles';
-import * as vars from './variables';
+import * as vars from "./variables";
 
+type ThemeFactoryCallBack<T extends StyleSheet.NamedStyles<T>> = {
+  styles: T;
+  theme: DiceUI.Theme;
+};
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 const defaultTheme = {
@@ -40,13 +44,9 @@ const defaultTheme = {
   button_plain_background_color: vars.white,
   button_disabled_opacity: vars.disabled_opacity,
 };
+
 export const { ThemeProvider, withTheme, useTheme } =
   createTheming<DiceUI.Theme>(defaultTheme as DiceUI.Theme);
-
-type ThemeFactoryCallBack<T extends StyleSheet.NamedStyles<T>> = {
-  styles: T;
-  theme: DiceUI.Theme;
-};
 
 export function useThemeFactory<T extends StyleSheet.NamedStyles<T>, P>(
   fun: (theme: DiceUI.Theme, ...extra: P[]) => T,
