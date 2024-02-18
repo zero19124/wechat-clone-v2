@@ -2,9 +2,8 @@ import { Button, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useEffect, useLayoutEffect } from "react";
 import { useNavigation } from "expo-router";
-import * as light from "@/theme/light";
 import { useTheme } from "@/theme/useTheme";
-import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
+import { TNavigationOptions } from "@/component/complex/CommonNavigateTitle";
 
 const Setting = () => {
   const navigator = useNavigation();
@@ -26,7 +25,7 @@ const Setting = () => {
       headerTintColor: themeColor.text5,
       headerShadowVisible: false,
       headerStyle: { backgroundColor: themeColor.white },
-    } as NativeStackNavigationOptions);
+    } as TNavigationOptions);
   });
   useEffect(() => {
     console.log(222, themeColor.white);

@@ -102,7 +102,7 @@ const Layout = () => {
               if (focused) {
                 return <MeActiveIcon />;
               }
-              return <MeIcon />;
+              return <MeIcon width={28} height={28}/>;
             },
           }}
         ></Tabs.Screen>

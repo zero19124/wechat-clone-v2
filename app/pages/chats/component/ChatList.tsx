@@ -7,7 +7,6 @@ import {
   Image,
   StyleSheet,
 } from "react-native";
-import * as light from "@/theme/light";
 import { getSize } from "utils";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useContext, useEffect, useMemo, useState } from "react";
@@ -18,6 +17,7 @@ import { useChatList } from "app/store/chatList";
 import { PusherEvent } from "@pusher/pusher-websocket-react-native";
 import { PusherContext } from "@/hooks/usePusherProvider";
 import DeviceInfo from "react-native-device-info";
+import { TThemeType, useTheme } from "@/theme/useTheme";
 // const data = [
 //   {
 //     id: 1,
@@ -50,9 +50,10 @@ import DeviceInfo from "react-native-device-info";
 const ConvoList = () => {
   const navigate = useNavigation();
   const { userStore } = useUser();
+  const { themeColor } = useTheme();
   const { chatListStore, getChatList } = useChatList();
   const userId = useMemo(() => userStore.userInfo?._id, [userStore]);
-
+  const style = getStyle(themeColor);
   useEffect(() => {
     console.log(chatListStore, "chatListStore");
   }, [chatListStore]);
@@ -68,7 +69,7 @@ const ConvoList = () => {
       if (!userId) return;
       getChatList(userId);
     });
-  }, [pusherContext.socket]);
+  }, [pusherContext.socket, userId]);
   const renderItem = ({ item }: { item: any }) => {
     {
       /* 头像 */
@@ -99,7 +100,7 @@ const ConvoList = () => {
           >
             <Text
               style={{
-                color: light.themeColor.white,
+                color: themeColor.white,
                 fontSize: 10,
                 fontWeight: "bold",
                 textAlign: "center",
@@ -145,7 +146,7 @@ const ConvoList = () => {
             style={{
               width: getSize(50),
               fontSize: 12,
-              color: light.themeColor.text1,
+              color: themeColor.text1,
             }}
           >
             {formatDateToString(item.latestMessageTime, "hh:mm")}
@@ -159,12 +160,10 @@ const ConvoList = () => {
             paddingRight: 16,
           }}
         >
-          <Text style={{ color: light.themeColor.text1 }}>
-            {item.latestMessage}
-          </Text>
+          <Text style={{ color: themeColor.text1 }}>{item.latestMessage}</Text>
           <MaterialCommunityIcons
             size={16}
-            color={light.themeColor.text1}
+            color={themeColor.text1}
             name="bell-off-outline"
           />
         </View>
@@ -194,32 +193,35 @@ const ConvoList = () => {
   );
 };
 
-const style = StyleSheet.create({
-  itemContainer: {
-    backgroundColor: "#FFF",
-    flexDirection: "row",
-    margin: 12,
-    marginBottom: 0,
-    marginRight: 0,
-  },
-  itemContainerLeft: { flexDirection: "row" },
-  itemContainerRight: {
-    // backgroundColor: "red",
-    paddingBottom: 16,
-    // alignItems: "center",
-    justifyContent: "space-between",
-    // flexDirection: "row",
-    flex: 1,
-    borderBottomColor: light.themeColor.fillColor,
-    borderBottomWidth: 1,
-  },
-  itemContainerAvatar: {
-    borderRadius: 4,
-    borderColor: light.themeColor.fillColor,
-    borderWidth: 1,
-    width: getSize(50),
-    height: getSize(50),
-    marginRight: 12,
-  },
-});
+const getStyle = (themeColor: TThemeType["themeColor"]) => {
+  const style = StyleSheet.create({
+    itemContainer: {
+      backgroundColor: "#FFF",
+      flexDirection: "row",
+      margin: 12,
+      marginBottom: 0,
+      marginRight: 0,
+    },
+    itemContainerLeft: { flexDirection: "row" },
+    itemContainerRight: {
+      // backgroundColor: "red",
+      paddingBottom: 16,
+      // alignItems: "center",
+      justifyContent: "space-between",
+      // flexDirection: "row",
+      flex: 1,
+      borderBottomColor: themeColor.fillColor,
+      borderBottomWidth: 1,
+    },
+    itemContainerAvatar: {
+      borderRadius: 4,
+      borderColor: themeColor.fillColor,
+      borderWidth: 1,
+      width: getSize(50),
+      height: getSize(50),
+      marginRight: 12,
+    },
+  });
+  return style;
+};
 export default ConvoList;

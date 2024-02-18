@@ -11,6 +11,7 @@ import ArrowRightIcon from "@/icons/common/arrow-right.svg";
 import { themeColor } from "@/theme/light";
 const ItemCard = (props: any) => {
   const {
+    style,
     onPress = null,
     borderVisible = true,
     showRightComp = true,
@@ -66,6 +67,7 @@ const ItemCard = (props: any) => {
             paddingRight: 0,
             backgroundColor: themeColor.white,
           },
+          style,
         ]}
       >
         {leftComp?.() || renderLeft()}

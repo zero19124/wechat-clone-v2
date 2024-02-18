@@ -10,6 +10,7 @@ import type {
 } from "./type";
 import { PortalProvider, usePortal } from "../../business/Portal";
 import { PortalRef } from "app/_layout";
+import { View } from "react-native";
 
 const defaultOptions: ToastProps = {
   icon: "",
@@ -67,7 +68,7 @@ const ToastInner = (opts: ToastProps): ToastReturnType => {
 
     PortalRef.current?.updatePortal(key, renderToast());
   };
-  console.log(PortalRef, key, options, 'PortalRefPortalRef');
+  console.log(PortalRef, key, options, "PortalRefPortalRef");
 
   try {
     PortalRef.current?.addPortal(key, renderToast());

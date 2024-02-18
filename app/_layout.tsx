@@ -1,4 +1,4 @@
-import { Stack } from "expo-router";
+import { Stack, useNavigation } from "expo-router";
 import * as light from "@/theme/light";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { RootSiblingParent } from "react-native-root-siblings";
@@ -22,7 +22,7 @@ export const PortalRef =
 
 const Layout = () => {
   console.log(" top-level component");
-
+  const navigate = useNavigation();
   // Translations
   const resources = {
     en: {
@@ -67,11 +67,15 @@ const Layout = () => {
       escapeValue: false,
     },
   });
+
   const InitializePortalRef = () => {
     const portal = usePortal();
     PortalRef.current = portal;
     return null;
   };
+  useEffect(() => {
+    // navigate.navigate("pages/contacts/screens/friend-info-confirm/index");
+  }, []);
   return (
     <PortalProvider>
       <InitializePortalRef />
@@ -94,20 +98,67 @@ const Layout = () => {
                           },
                         }}
                       >
-                        {/* chats  */}
-                        <Stack.Screen
-                          name="pages/chats/screens/code-scanner/index"
-                          options={{
-                            headerShown: false,
-                          }}
-                        />
                         <Stack.Screen
                           name="(tabs)"
                           options={{
                             headerShown: false,
                           }}
                         />
+                        {/* chats  */}
+                        <Stack.Screen
+                          name="pages/chats/msg-chats/index"
+                          options={{
+                            title: "msg-chats",
+                          }}
+                        />
+                        <Stack.Screen
+                          name="pages/chats/screens/code-scanner/index"
+                          options={{
+                            headerShown: false,
+                          }}
+                        />
 
+                        {/* contacts  */}
+                        <Stack.Screen
+                          name="pages/contacts/screens/new-friends/index"
+                          options={{ headerShadowVisible: false }}
+                        />
+                        <Stack.Screen
+                          name="pages/contacts/screens/add-contacts/index"
+                          options={{}}
+                        />
+                        <Stack.Screen
+                          name="pages/contacts/screens/add-contacts-search/index"
+                          options={{
+                            headerShown: false,
+                          }}
+                        />
+                        <Stack.Screen name="pages/contacts/screens/friend-info/index" />
+                        <Stack.Screen name="pages/contacts/screens/friend-info-confirm/index" />
+                        {/* discover  */}
+                        <Stack.Screen
+                          name="pages/discover/moments/index"
+                          options={{
+                            title: "moments",
+                          }}
+                        />
+                        <Stack.Screen
+                          name="pages/discover/moments/screens/post-moments/index"
+                          options={{
+                            headerShown: false,
+                            presentation: "fullScreenModal",
+                            title: "post-moments",
+                          }}
+                        />
+
+                        {/* me  */}
+                        <Stack.Screen
+                          name="pages/me/setting/index"
+                          options={{
+                            title: "setting",
+                          }}
+                        />
+                        {/* comomns  */}
                         <Stack.Screen
                           name="individual-payment/index"
                           options={{
@@ -116,28 +167,9 @@ const Layout = () => {
                           }}
                         />
                         <Stack.Screen
-                          name="pages/chats/msg-chats/index"
-                          options={{
-                            title: "msg-chats",
-                          }}
-                        />
-                        <Stack.Screen
-                          name="pages/discover/moments/index"
-                          options={{
-                            title: "moments",
-                          }}
-                        />
-                        <Stack.Screen
                           name="component/business/PayDone/index"
                           options={{
                             headerShown: false,
-                          }}
-                        />
-                        {/* me  */}
-                        <Stack.Screen
-                          name="pages/me/setting/index"
-                          options={{
-                            title: "setting",
                           }}
                         />
                       </Stack>

@@ -1,6 +1,6 @@
 import { useNavigation } from "expo-router";
 import { useLayoutEffect, useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import CameraOutline from "@/icons/common/camera-outline.svg";
 import { useTranslation } from "react-i18next";
 import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
@@ -9,6 +9,9 @@ import MomentsCard from "./components/MomentsCard";
 import ActionSheet, { ActionSheetAction } from "@/component/base/ActionSheet";
 import { useTheme } from "@/theme/useTheme";
 import Toast from "@/component/base/Toast";
+import * as ImagePicker from "expo-image-picker";
+import { useCommonNavigateProps } from "@/component/complex/CommonNavigateTitle";
+
 const getMock = (type = "img", name = "读书方法") => {
   const Mock = {
     img: "https://placekitten.com/300/300",
@@ -53,25 +56,44 @@ const Moments = () => {
   ]);
 
   useLayoutEffect(() => {
-    navigator.setOptions({
-      title: t("moments"),
-      headerLeft: () => <GoBack />,
-      headerRight: () => (
-        <Pressable
-          onPress={() => {
-            Toast.success("成功文案");
-            return;
-            setVisible(true);
-          }}
-        >
-          <CameraOutline />
-        </Pressable>
-      ),
-    } as NativeStackNavigationOptions);
+    const navigatorProps = useCommonNavigateProps({
+      title: t("Moments"),
+      rightComp: () => <CameraOutline />,
+      rightHandler: () => {
+        // setVisible(true);
+        Toast.success('Toast')
+      },
+    });
+    navigator.setOptions(navigatorProps as NativeStackNavigationOptions);
   });
+
+  const [image, setImage] = useState(null);
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result, "result");
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+      navigator.navigate("pages/discover/moments/screens/post-moments/index");
+    }
+  };
   const defaultActions: ActionSheetAction[] = [
     { name: t("Camera"), subname: "Take a photo or video" },
-    { name: t("Choose from Album") },
+    {
+      name: t("Choose from Album"),
+      callback: () => {
+        setTimeout(async () => {
+          await pickImage();
+        }, 600);
+      },
+    },
   ];
   const [visible, setVisible] = useState(false);
 
@@ -80,6 +102,7 @@ const Moments = () => {
   };
   return (
     <ScrollView style={{ backgroundColor: themeColor.white, flex: 1 }}>
+      <Image style={{ width: 50, height: 50 }} source={{ uri: image }} />
       <ActionSheet
         style={{ backgroundColor: themeColor.white, borderRadius: 8 }}
         visible={visible}

@@ -1,70 +1,30 @@
-import {
-  Image,
-  ScrollView,
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  useColorScheme,
-  Animated,
-  Easing,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Image, Text, View } from "react-native";
 import * as light from "@/theme/light";
 import ItemCard from "@/component/complex/ItemCard";
-import {
-  useCallback,
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigation } from "expo-router";
 import AddFriendIcon from "@/icons/add-friend.svg";
-import SearchIcon from "@/icons/common/search.svg";
 import IndexBar from "@/component/business/IndexBar";
-import { list1 } from "@/cont.js";
 import pinyin from "pinyin";
 import { PortalHost } from "@/component/business/Portal";
-import { getLocales } from "expo-localization";
-import { I18n } from "i18n-js";
-
 import { tempNavigatorCount } from "@/component/business/IndexBar/style";
 import { cardList, originalList } from "./data/contacts-mocks";
 import { useTheme } from "@/theme/useTheme";
+import config from "@/config/index";
+import { useUser } from "app/store/user";
+import SearchBar from "@/component/complex/SearchBar";
+import UserAvatar from "@/component/complex/UserAvatar";
+const _ = require("lodash");
+
 const Contacts = () => {
-  const { toggleTheme, themeColor, themeName } = useTheme();
+  const { themeColor } = useTheme();
+  const { userStore } = useUser();
   const navigate = useNavigation();
   useLayoutEffect(() => {
     navigate.setOptions({
       headerRight: () => <AddFriendIcon style={{ marginRight: 12 }} />,
     });
   });
-  const urls = [
-    "https://wx.qlogo.cn/mmhead/ver_1/r8lPicJIVKrJhzoYCO9kqCIgpSpvdKstOfW0PpdKVSrnXb3RoZO97fuicmOGrYqmq62kxjjX2Tlnic0GAlw8PQicl1ichRpRWYFtgWUahX32mKN0/132",
-    ,
-    "https://wx.qlogo.cn/mmhead/ver_1/rR4NYnibS1lbswZqjjedejicZT9FvxvrbR7l8lXD8WW1rNLKlm9SErbENiafAhqKF074bvKMcfHmqF9bFq7FLWHILvYmf6NIonQIL2iaWGQDib8g/0",
-  ];
-  const SearchBar = () => (
-    <View
-      style={{
-        backgroundColor: themeColor.fillColor,
-      }}
-    >
-      <View
-        className="flex-row justify-center items-center rounded-md"
-        style={{
-          height: 36,
-          backgroundColor: themeColor.white,
-          marginTop: 8,
-          marginHorizontal: 8,
-          marginBottom: 16,
-        }}
-      >
-        <SearchIcon fill={themeColor.text3} />
-        <Text style={{ color: themeColor.text3 }}>Search</Text>
-      </View>
-    </View>
-  );
 
   const indexList: string[] = [];
   const customIndexList = [1, 2, 3, 4, 5, 6, 8, 9, 10];
@@ -73,76 +33,55 @@ const Contacts = () => {
   for (let i = 0; i < tempNavigatorCount; i += 1) {
     indexList.push(String.fromCharCode(charCodeOfA + i));
   }
-  const _ = require("lodash");
 
-  // console.log(pinyin("岩雀", { style: pinyin.STYLE_NORMAL }), "pinyin");
-  // 将数据列表转化为拼音存储，以便于拼音搜索
-  const listMap = new Map();
-  originalList.forEach((item, index, arr) => {
-    // 将Item的名称转为拼音数组
-    if (!item.name) return;
-    const pinyinArr = pinyin(item.name, { style: pinyin.STYLE_NORMAL });
-    const firstPinyin = pinyinArr[0];
-    const initial = firstPinyin[0][0];
-    if (listMap.has(initial)) {
-      const pre = listMap.get(initial);
-      pre.push(item);
-      return;
-    }
-    listMap.set(initial, [item]);
+  const [friendList, setFriendList] = useState([]);
+  const [listMap, setListMap] = useState(new Map());
+  useEffect(() => {
+    fetch(
+      config.apiDomain +
+        "/api/friends/getFriendsByUserId?userId=" +
+        userStore.userInfo?._id
+    )
+      .then((res) => res.json())
+      .then((friendList) => {
+        console.log(friendList[0], "friendList");
+        setFriendList(friendList[0].friendRequestList);
 
-    // 将拼音数组转化为一个字符串，以支持拼音搜索
-    // for (let i = 0; i < pinyinArr.length; i++) {
-    //   for (let j = 0; j < pinyinArr[i].length; j++) {
-    //     pinyinArrStr = pinyinArrStr + pinyinArr[i][j];
-    //   }
-    // }
-    // item.pinyinArrStr = pinyinArrStr;
-  });
+        // console.log(pinyin("岩雀", { style: pinyin.STYLE_NORMAL }), "pinyin");
+        // 将数据列表转化为拼音存储，以便于拼音搜索
 
-  const [color, setColor] = useState("#ff0000");
+        friendList[0].friendRequestList.forEach((item, index, arr) => {
+          // 将Item的名称转为拼音数组
+          console.log(1111111111, item);
+          if (!item.status) return;
+          console.log(1111111111333);
 
-  const ColorChangeComponent = useCallback(() => {
-    const animatedColorValue = new Animated.Value(0);
+          const pinyinArr = pinyin(item.status, { style: pinyin.STYLE_NORMAL });
+          const firstPinyin = pinyinArr[0];
+          const initial = firstPinyin[0][0];
+          if (listMap.has(initial)) {
+            const pre = listMap.get(initial);
+            pre.push(item);
+            return;
+          }
+          const newMap = new Map(listMap);
+          newMap.set(initial, [item]);
+          console.log(listMap, "listMaplistMaplistMap");
+          setListMap(newMap);
 
-    const backgroundColorInterpolate = animatedColorValue.interpolate({
-      inputRange: [0, 1],
-      outputRange: ["#ff0000", "#00ff00"],
-    });
-
-    const animatedStyle = {
-      backgroundColor: backgroundColorInterpolate,
-    };
-    console.log(animatedColorValue, "animatedColorValue11");
-    const changeColor = () => {
-      Animated.timing(animatedColorValue, {
-        toValue: animatedColorValue ? 1 : 0,
-        duration: 1000,
-        easing: Easing.linear,
-        useNativeDriver: false,
-      }).start();
-    };
-
-    return (
-      <View
-        style={{
-          position: "absolute",
-          top: 100,
-          flex: 1,
-          zIndex: 4,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Animated.View style={[{ width: 200, height: 200 }, animatedStyle]}>
-          <TouchableOpacity onPress={changeColor}>
-            <Text>Change Color</Text>
-          </TouchableOpacity>
-        </Animated.View>
-      </View>
-    );
-  }, [color]);
-
+          // 将拼音数组转化为一个字符串，以支持拼音搜索
+          // for (let i = 0; i < pinyinArr.length; i++) {
+          //   for (let j = 0; j < pinyinArr[i].length; j++) {
+          //     pinyinArrStr = pinyinArrStr + pinyinArr[i][j];
+          //   }
+          // }
+          // item.pinyinArrStr = pinyinArrStr;
+        });
+      });
+  }, [userStore.userInfo]);
+  useEffect(() => {
+    console.log(listMap, "listMap.-effet");
+  }, [listMap]);
   return (
     <>
       <View
@@ -150,17 +89,22 @@ const Contacts = () => {
           backgroundColor: themeColor.white,
         }}
       >
-        {/* <ColorChangeComponent /> */}
-
         <IndexBar highlightColor={light.themeColor.white} sticky={false}>
           <View className="bg-white flex-1">
             <SearchBar />
 
-            {cardList.map((card) => {
+            {cardList.map((card, index) => {
               return (
                 <ItemCard
+                  onPress={() => {
+                    if (card.text === "New Friends") {
+                      navigate.navigate(
+                        "pages/contacts/screens/new-friends/index"
+                      );
+                    }
+                  }}
                   showRightComp={false}
-                  key={card.text}
+                  key={index}
                   leftComp={() => {
                     return (
                       <Image
@@ -182,16 +126,17 @@ const Contacts = () => {
           </View>
           <View style={{ paddingTop: 12 }}></View>
           {indexList.map((item, index) => {
-            const itemList = listMap.get(item.toLocaleLowerCase());
+            // 拿到 abcd对应字母的数据  {a> ['anna','android']}
+            const itemList = listMap?.get?.(item.toLocaleLowerCase());
             // 没有则不显示
-            // if (!itemList?.length) return null;
+            if (!itemList?.length) return null;
             return (
-              <View key={item}>
+              <View key={index}>
                 <IndexBar.Anchor index={item} />
-                {itemList?.map((item, index) => {
-                  if (index % 2) {
-                    item.desc = "descdesc";
-                  }
+                {itemList?.map((_item, _index) => {
+                  // if (index % 2) {
+                  //   item.desc = "descdesc";
+                  // }
                   return (
                     <ItemCard
                       showRightComp={false}
@@ -203,35 +148,24 @@ const Contacts = () => {
                                 fontSize: 16,
                               }}
                             >
-                              {item.name}
+                              {_item.userId}
                             </Text>
-                            {item?.desc && (
+                            {_item?.desc && (
                               <Text
                                 style={{
                                   color: light.themeColor.text3,
                                 }}
                               >
-                                {item?.desc}
+                                {_item?.desc}
                               </Text>
                             )}
                           </View>
                         );
                       }}
                       leftComp={() => {
-                        return (
-                          <Image
-                            style={{
-                              marginLeft: 12,
-                              marginVertical: 8,
-                              width: 40,
-                              height: 40,
-                            }}
-                            borderRadius={4}
-                            source={require("@/assets/me.png")}
-                          />
-                        );
+                        return <UserAvatar source={{ uri: _item.image }} />;
                       }}
-                      text={item.name}
+                      text={_item.userId}
                     />
                   );
                 })}
