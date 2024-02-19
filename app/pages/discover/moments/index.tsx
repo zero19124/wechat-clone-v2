@@ -1,5 +1,5 @@
 import { useNavigation } from "expo-router";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import CameraOutline from "@/icons/common/camera-outline.svg";
 import { useTranslation } from "react-i18next";
@@ -11,12 +11,14 @@ import { useTheme } from "@/theme/useTheme";
 import Toast from "@/component/base/Toast";
 import * as ImagePicker from "expo-image-picker";
 import { useCommonNavigateProps } from "@/component/complex/CommonNavigateTitle";
+import config from "@/config/index";
+import { useUser } from "app/store/user";
 
 const getMock = (type = "img", name = "读书方法") => {
   const Mock = {
-    img: "https://placekitten.com/300/300",
-    name,
-    content:
+    image: "https://placekitten.com/300/300",
+    act:name,
+    contentText:
       type === "img"
         ? "33"
         : "231312213123131221312313122131231312213123131221312313122131231312213123131221312313122131231312213123131221312313122131231312213123131221312313122131231312213123131221312313122131",
@@ -47,12 +49,13 @@ export type IMomentData = ReturnType<typeof getMock>;
 const Moments = () => {
   const navigator = useNavigation();
   const { t } = useTranslation();
+  const { userStore } = useUser();
   const { themeColor } = useTheme();
   const [momentsList, setMomentsList] = useState([
-    getMock(),
-    getMock(),
-    getMock("video", "evan"),
-    getMock("video", "evan"),
+    // getMock(),
+    // getMock(),
+    // getMock("video", "evan"),
+    // getMock("video", "evan"),
   ]);
 
   useLayoutEffect(() => {
@@ -100,6 +103,22 @@ const Moments = () => {
   const onClose = () => {
     setVisible(false);
   };
+  useEffect(() => {
+    fetch(
+      config.apiDomain +
+        "/api/moments/getMomentsByUserId?userId=" +
+        userStore.userInfo?._id
+    )
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res, "getMomentsByUserId");
+        if (res?.code === 200) {
+          setMomentsList(res.data);
+        } else {
+          console.log(res.data);
+        }
+      });
+  }, []);
   return (
     <ScrollView style={{ backgroundColor: themeColor.white, flex: 1 }}>
       <Image style={{ width: 50, height: 50 }} source={{ uri: image }} />

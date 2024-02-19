@@ -48,6 +48,7 @@ const FriendInfoConfirm = () => {
     console.log(params, "prams", data);
 
     if (params?.sendFriendRequestTitle) {
+      // confirm add friend  and create a convo
       fetch(config.apiDomain + "/api/friends/requestFriendUpdate", {
         method: "POST",
         headers: {
@@ -63,6 +64,17 @@ const FriendInfoConfirm = () => {
           console.log(res, "requestFriendUpdate");
           // confirm go to chat?
           navigate.goBack();
+          fetch(config.apiDomain + "/api/convo/add-convo", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              participants: [userId, friendId],
+            }),
+          }).then(() => {
+            console.log("add-convo");
+          });
         });
       return;
     }

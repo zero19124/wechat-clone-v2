@@ -16,10 +16,39 @@ import {
   View,
 } from "react-native";
 import { useNavigation } from "expo-router";
+import config from "@/config/index";
+import { useUser } from "app/store/user";
 const PostMoments = () => {
   const { t } = useTranslation();
   const navigator = useNavigation();
   const { themeColor } = useTheme();
+  const { userStore } = useUser();
+  const postMomentsHandler = () => {
+    fetch(config.apiDomain + "/api/moments/add-moments", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: userStore.userInfo?._id,
+        contentText: "text" + Math.random() * 10,
+        contentType: "img",
+        isDeleted: false,
+        imgList: ["https://placekitten.com/302/302"],
+        videoLink:
+          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+      }),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res, "res");
+        if (res?.code === 200) {
+          navigator.goBack();
+        } else {
+          console.log(res?.msg);
+        }
+      });
+  };
   const PostMomentsHeader = () => {
     return (
       <View
@@ -36,6 +65,9 @@ const PostMoments = () => {
           <Text style={{ fontSize: 18 }}>{t("Cancel")}</Text>
         </Pressable>
         <TouchableOpacity
+          onPress={() => {
+            postMomentsHandler();
+          }}
           style={{
             backgroundColor: themeColor.primary,
             borderRadius: 6,

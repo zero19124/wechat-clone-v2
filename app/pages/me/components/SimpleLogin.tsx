@@ -1,9 +1,17 @@
 import { useUser } from "app/store/user";
 import { useEffect, useState } from "react";
-import { Button, StyleSheet, TextInput, View, Text } from "react-native";
+import {
+  Button,
+  StyleSheet,
+  TextInput,
+  View,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import config from "@/config/index";
 import DeviceInfo from "react-native-device-info";
 import Toast from "@/component/base/Toast";
+import * as Clipboard from "expo-clipboard";
 
 const style = StyleSheet.create({
   inputStyle: {
@@ -16,11 +24,10 @@ export default () => {
   const { setUserStore, userStore } = useUser();
   const deviceModel = DeviceInfo.getModel();
 
-  const [data, setData] = useState(
-    // deviceModel === "iPhone 15"
-    //   ? { act: "12", psw: "12" }
-    //   : { psw: "1", act: "1" }
-  );
+  const [data, setData] = useState();
+  // deviceModel === "iPhone 15"
+  //   ? { act: "12", psw: "12" }
+  //   : { psw: "1", act: "1" }
   useEffect(() => {
     // loginHandler();
     // Toast.fail("2222");
@@ -63,6 +70,14 @@ export default () => {
       {userStore?.userInfo?.act ? (
         <View>
           <Text>userID ===={userStore.userInfo._id}</Text>
+          <TouchableOpacity
+            onPress={async () => {
+              await Clipboard.setStringAsync(userStore?.userInfo?._id || "");
+              Toast.success("copied");
+            }}
+          >
+            <Text>copy userId</Text>
+          </TouchableOpacity>
           {/* <Text>{userStore?.userInfo?.act}</Text> */}
           <Button
             title="log out"

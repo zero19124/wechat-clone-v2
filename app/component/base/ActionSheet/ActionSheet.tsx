@@ -21,7 +21,7 @@ const ActionSheet = (props: ActionSheetProps): JSX.Element => {
     ...rest
   } = props;
   const styles = createStyle(THEME_VARIABLE as any);
-  console.log(styles, "stylesstylesstyles");
+  // console.log(styles, "stylesstylesstyles");
   const insets = useSafeAreaInsets();
   const activeBackground = THEME_VARIABLE.active_color;
 

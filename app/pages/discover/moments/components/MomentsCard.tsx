@@ -50,13 +50,14 @@ const MomentsCard = (props: IMomentsCard) => {
   return (
     <View style={[commonStyle.commonBorderBottom, style.momentsCardWrapper]}>
       <View style={style.momentsCardAvatar}>
-        <UserAvatar source={{ uri: momentData.img }} />
+        <UserAvatar source={{ uri: momentData.image }} />
       </View>
       <View style={style.momentsCardContentWrapper}>
-        <Text style={style.momentsCardTextBlue}>{momentData.name}</Text>
+        {/* userName  */}
+        <Text style={style.momentsCardTextBlue}>{momentData.act}</Text>
         <View style={style.momentsCardContent}>
           <Text style={{ fontSize: 16, marginBottom: 8, marginTop: 4 }}>
-            {momentData.content}
+            {momentData.contentText}
           </Text>
           {momentData.contentType === "video" ? (
             <View>
@@ -67,47 +68,49 @@ const MomentsCard = (props: IMomentsCard) => {
           )}
         </View>
         <MomentsComment momentData={momentData} />
-        <View style={style.momentsCardComment}>
-          {/* like  */}
-          <View
-            style={{
-              paddingHorizontal: 4,
-              paddingVertical: 2,
-              flexDirection: "row",
-              alignItems: "center",
-              ...commonStyle.commonBorderBottom,
-            }}
-          >
-            <HeartOutlineIcon width={20} fill={themeColor.textBlue} />
-            <View style={{ marginLeft: 4 }}>
-              {momentData.likes.map((like) => {
-                return (
-                  <Text style={[style.momentsCardTextBlue, { fontSize: 14 }]}>
-                    {like.name}
-                  </Text>
-                );
-              })}
+        {/* like  */}
+        {momentData.likes.length > 0 && (
+          <View style={style.momentsCardComment}>
+            <View
+              style={{
+                paddingHorizontal: 4,
+                paddingVertical: 2,
+                flexDirection: "row",
+                alignItems: "center",
+                ...commonStyle.commonBorderBottom,
+              }}
+            >
+              <HeartOutlineIcon width={20} fill={themeColor.textBlue} />
+              <View style={{ marginLeft: 4 }}>
+                {momentData.likes.map((like) => {
+                  return (
+                    <Text style={[style.momentsCardTextBlue, { fontSize: 14 }]}>
+                      {like.name}
+                    </Text>
+                  );
+                })}
+              </View>
             </View>
           </View>
-          {/* comment  */}
-          <View style={{ paddingHorizontal: 8, paddingVertical: 2 }}>
-            {momentData.comments.map((com) => {
-              return (
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    marginTop: 2,
-                  }}
-                >
-                  <Text style={[style.momentsCardTextBlue, { fontSize: 14 }]}>
-                    {com.name}:
-                  </Text>
-                  <Text>{com.comment}</Text>
-                </View>
-              );
-            })}
-          </View>
+        )}
+        {/* comment  */}
+        <View style={{ paddingHorizontal: 8, paddingVertical: 2 }}>
+          {momentData.comments.map((com) => {
+            return (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginTop: 2,
+                }}
+              >
+                <Text style={[style.momentsCardTextBlue, { fontSize: 14 }]}>
+                  {com.name}:
+                </Text>
+                <Text>{com.comment}</Text>
+              </View>
+            );
+          })}
         </View>
       </View>
     </View>
