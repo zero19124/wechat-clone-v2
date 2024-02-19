@@ -1,5 +1,5 @@
-import { useNavigation } from "expo-router";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useFocusEffect, useNavigation } from "expo-router";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import CameraOutline from "@/icons/common/camera-outline.svg";
 import { useTranslation } from "react-i18next";
@@ -14,10 +14,12 @@ import { useCommonNavigateProps } from "@/component/complex/CommonNavigateTitle"
 import config from "@/config/index";
 import { useUser } from "app/store/user";
 
+
 const getMock = (type = "img", name = "读书方法") => {
   const Mock = {
     image: "https://placekitten.com/300/300",
-    act:name,
+    act: name,
+    user: { act: "", img: "" },
     contentText:
       type === "img"
         ? "33"
@@ -45,6 +47,11 @@ const getMock = (type = "img", name = "读书方法") => {
   };
   return Mock;
 };
+type TImageIns = {
+  uri: string;
+  type: "image" | "video" | undefined;
+  name: string | null | undefined;
+};
 export type IMomentData = ReturnType<typeof getMock>;
 const Moments = () => {
   const navigator = useNavigation();
@@ -64,27 +71,76 @@ const Moments = () => {
       rightComp: () => <CameraOutline />,
       rightHandler: () => {
         setVisible(true);
-        // Toast.success('Toast')
       },
     });
     navigator.setOptions(navigatorProps as NativeStackNavigationOptions);
   });
 
-  const [image, setImage] = useState(null);
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
+
+  const pickImages = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: true,
       quality: 1,
     });
 
-    console.log(result, "result");
-
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
-      navigator.navigate("pages/discover/moments/screens/post-moments/index");
+      console.log(result, "result");
+      const selectedImages = result?.assets?.map((image) => {
+        return {
+          uri: image.uri,
+          type: image.type,
+          name: image.fileName,
+        };
+      });
+      console.log(selectedImages.length, "selectedImages.length");
+
+      // setImages(selectedImages);
+      // console.log(selectedImages, "selectedImages");
+
+      const uploadedImgs = await uploadImages(selectedImages);
+      if (uploadedImgs?.length) {
+        navigator.navigate(
+          "pages/discover/moments/screens/post-moments/index",
+          {
+            uploadedImgs,
+          }
+        );
+      } else {
+        Toast.fail(t("upload failed"));
+      }
+    }
+  };
+  const uploadImages = async (images:TImageIns[]) => {
+    const formData = new FormData();
+    console.log(images.length, "images.length");
+    images.forEach((image, index) => {
+      formData.append(`files`, {
+        uri: image.uri,
+        name: image.name,
+        type: image.type,
+      } as any);
+    });
+    console.log(formData, "formData");
+    try {
+      const response = await fetch(config.apiDomain + "/api/utils/upload", {
+        method: "POST",
+        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      if (data.code === 200) {
+        console.log("ok");
+        return data.data;
+      } else {
+        Toast.fail("upload failed");
+        return [];
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      return [];
     }
   };
   const defaultActions: ActionSheetAction[] = [
@@ -93,7 +149,7 @@ const Moments = () => {
       name: t("Choose from Album"),
       callback: () => {
         setTimeout(async () => {
-          await pickImage();
+          await pickImages();
         }, 600);
       },
     },
@@ -103,25 +159,29 @@ const Moments = () => {
   const onClose = () => {
     setVisible(false);
   };
-  useEffect(() => {
+  const getMomentsList = () => {
     fetch(
       config.apiDomain +
-        "/api/moments/getMomentsByUserId?userId=" +
+        "/api/moments/getFriendMomentsByUserId?userId=" +
         userStore.userInfo?._id
     )
       .then((res) => res.json())
       .then((res) => {
         console.log(res, "getMomentsByUserId");
         if (res?.code === 200) {
-          setMomentsList(res.data);
+          setMomentsList(res.data.momentsList);
         } else {
           console.log(res.data);
         }
       });
-  }, []);
+  };
+  useFocusEffect(
+    useCallback(() => {
+      getMomentsList();
+    }, [])
+  );
   return (
     <ScrollView style={{ backgroundColor: themeColor.white, flex: 1 }}>
-      <Image style={{ width: 50, height: 50 }} source={{ uri: image }} />
       <ActionSheet
         style={{ backgroundColor: themeColor.white, borderRadius: 8 }}
         visible={visible}
@@ -130,7 +190,8 @@ const Moments = () => {
         cancelText={t("Cancel")}
         onCancel={onClose}
       />
-      {momentsList.map((item, index) => {
+      {momentsList?.map((item, index) => {
+        // console.log(item, "item");
         return <MomentsCard key={index} momentData={item} />;
       })}
     </ScrollView>

@@ -150,7 +150,7 @@ const Contacts = () => {
               <View key={index}>
                 <IndexBar.Anchor index={item} />
                 {itemList?.map((_item, _index) => {
-                  console.log(_item, "_item_item_item_item");
+                  // console.log(_item, "_item_item_item_item");
                   // if (index % 2) {
                   //   item.desc = "descdesc";
                   // }

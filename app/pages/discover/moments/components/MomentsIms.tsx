@@ -5,7 +5,7 @@ interface IMomentsImgPros {
 }
 const MomentsImg = (props: IMomentsImgPros) => {
   const { imgList } = props;
-  console.log(imgList, "imgList");
+  // console.log(imgList, "imgList");
   return (
     <View
       style={{

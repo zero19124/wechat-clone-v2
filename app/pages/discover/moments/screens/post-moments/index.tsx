@@ -8,6 +8,7 @@ import AtIcon from "@/icons/discover/at.svg";
 import MeIcon from "@/icons/tabs/me.svg";
 
 import {
+  Image,
   Pressable,
   SafeAreaView,
   Text,
@@ -15,12 +16,17 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useNavigation } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import config from "@/config/index";
 import { useUser } from "app/store/user";
+import { useState } from "react";
+import MomentsImg from "../../components/MomentsIms";
 const PostMoments = () => {
   const { t } = useTranslation();
   const navigator = useNavigation();
+  const params = useLocalSearchParams<{ uploadedImgs: string[] }>();
+
+  const [contentText, setContentText] = useState("");
   const { themeColor } = useTheme();
   const { userStore } = useUser();
   const postMomentsHandler = () => {
@@ -31,21 +37,21 @@ const PostMoments = () => {
       },
       body: JSON.stringify({
         userId: userStore.userInfo?._id,
-        contentText: "text" + Math.random() * 10,
+        contentText,
         contentType: "img",
         isDeleted: false,
-        imgList: ["https://placekitten.com/302/302"],
+        imgList: params.uploadedImgs,
         videoLink:
           "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
       }),
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res, "res");
+        console.log(res, "res-postMomentsHandler");
         if (res?.code === 200) {
           navigator.goBack();
         } else {
-          console.log(res?.msg);
+          console.log(res?.data);
         }
       });
   };
@@ -127,17 +133,21 @@ const PostMoments = () => {
       </View>
     );
   };
+  console.log(params.uploadedImgs, "params.uploadedImgs");
   return (
     <SafeAreaView>
       <View style={{ padding: 16 }}>
         <PostMomentsHeader />
         <View style={{ padding: 12 }}>
           <TextInput
+            onChangeText={(val: string) => {
+              setContentText(val);
+            }}
             placeholder={t("Say something")}
             selectionColor={themeColor.primary}
           />
-          <View style={{ marginVertical: 24 }}>
-            <Text>img</Text>
+          <View style={{ marginTop: 24 }}>
+            <MomentsImg imgList={params.uploadedImgs} />
           </View>
         </View>
         <OptionsSection />

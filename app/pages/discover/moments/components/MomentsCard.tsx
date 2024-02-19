@@ -50,11 +50,11 @@ const MomentsCard = (props: IMomentsCard) => {
   return (
     <View style={[commonStyle.commonBorderBottom, style.momentsCardWrapper]}>
       <View style={style.momentsCardAvatar}>
-        <UserAvatar source={{ uri: momentData.image }} />
+        <UserAvatar source={{ uri: momentData.userId?.image }} />
       </View>
       <View style={style.momentsCardContentWrapper}>
         {/* userName  */}
-        <Text style={style.momentsCardTextBlue}>{momentData.act}</Text>
+        <Text style={style.momentsCardTextBlue}>{momentData.userId?.act}</Text>
         <View style={style.momentsCardContent}>
           <Text style={{ fontSize: 16, marginBottom: 8, marginTop: 4 }}>
             {momentData.contentText}
