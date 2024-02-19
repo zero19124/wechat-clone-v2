@@ -10,20 +10,34 @@ import ThreeDot from "@/icons/three-dot.svg";
 
 import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import { Fontisto } from "@expo/vector-icons";
-import { themeColor } from "@/theme/light";
 import BottomWidthDivider from "@/component/complex/BottomWidthDivider";
 import UserAvatar from "@/component/complex/UserAvatar";
 import config from "@/config/index";
+import AddConfirmBtn from "./components/AddConfirmBtn";
+import { useTheme } from "@/theme/useTheme";
 const FriendInfo = () => {
   const navigate = useNavigation();
   const { t } = useTranslation();
+  const { themeColor } = useTheme();
   const [user, setUser] = useState();
   const params = useLocalSearchParams();
-  const friendId = useMemo(() => params.friendId || null, [params]);
-  const dataFromRequestList = useMemo<{ status: string; userId: string }>(
-    () => (params as any) || null,
-    [params]
-  );
+  const routeParams = useMemo<{
+    friendId: string;
+    confirm: boolean;
+    type: string;
+    status: undefined | string;
+  }>(() => {
+    if (params.type === "search") {
+      return { friendId: params.friendId, type: params.type };
+    }
+    return {
+      status: params.status,
+      confirm: params.confirm,
+      friendId: params.friendId,
+      type: params.type,
+    };
+  }, [params]);
+
   useLayoutEffect(() => {
     const navigatorProps = useCommonNavigateProps({
       title: "",
@@ -43,20 +57,23 @@ const FriendInfo = () => {
     navigate.setOptions(navigatorProps as TNavigationOptions);
   });
   useEffect(() => {
-    fetch(config.apiDomain + `/api/user/getUserById?userId=${friendId}`)
+    console.log(routeParams, "routeParams");
+
+    if (!routeParams.friendId) return;
+    fetch(
+      config.apiDomain + `/api/user/getUserById?userId=${routeParams.friendId}`
+    )
       .then((res) => res.json())
-      .then((user) => {
-        setUser(user);
-        console.log(user, "user");
+      .then((res) => {
+        console.log(res, "user");
+
+        if (res.code === 200) {
+          setUser(res.data);
+        }
       });
-  }, [friendId]);
-  console.log(dataFromRequestList, "dataFromRequestList");
+  }, [routeParams]);
   return (
     <View>
-      {/* <Text>
-        FriendInfo
-        {friendId}
-      </Text> */}
       <View
         style={{
           backgroundColor: themeColor.white,
@@ -78,7 +95,7 @@ const FriendInfo = () => {
       </View>
       <View
         style={{
-          paddingLeft:16,
+          paddingLeft: 16,
           backgroundColor: themeColor.white,
           marginVertical: 12,
         }}
@@ -97,39 +114,12 @@ const FriendInfo = () => {
           </Text>
         </View>
       </View>
-      {dataFromRequestList?.status === "done" ? (
-        <View
-          style={{
-            backgroundColor: themeColor.white,
-            alignItems: "center",
-            paddingVertical: 12,
-          }}
-        >
-          <Text style={{ color: themeColor.text2, fontSize: 16 }}>ddd</Text>
-        </View>
-      ) : (
-        <TouchableOpacity
-          style={{ backgroundColor: themeColor.white, paddingVertical: 12 }}
-          onPress={() => {
-            navigate.navigate(
-              "pages/contacts/screens/friend-info-confirm/index",
-              {
-                friendId,
-              }
-            );
-          }}
-        >
-          <Text
-            style={{
-              textAlign: "center",
-              color: themeColor.textBlue,
-              fontSize: 16,
-            }}
-          >
-            {t("Add")}
-          </Text>
-        </TouchableOpacity>
-      )}
+      {}
+      <AddConfirmBtn
+        confirm={routeParams.confirm}
+        friendId={routeParams?.friendId}
+        status={routeParams?.status}
+      />
     </View>
   );
 };

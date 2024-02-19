@@ -9,9 +9,11 @@ import { useTranslation } from "react-i18next";
 import { Text, TouchableOpacity, View } from "react-native";
 import QrcodeIcon from "@/icons/discover/qrcode.svg";
 import { useTheme } from "@/theme/useTheme";
+import { useUser } from "app/store/user";
 
 const AddContacts = () => {
   const navigate = useNavigation();
+  const { userStore } = useUser();
   const { t } = useTranslation();
   const { themeColor } = useTheme();
   useLayoutEffect(() => {
@@ -30,7 +32,10 @@ const AddContacts = () => {
         }}
       />
       <View className="flex-row  justify-center items-center">
-        <Text style={{ marginRight: 8 }}>{t("My Weixin ID: evan123")}</Text>
+        <Text style={{ marginRight: 8 }}>
+          {t("My Weixin ID:")}
+          {`${userStore.userInfo?._id}`}
+        </Text>
         <QrcodeIcon fill={themeColor.primary} width={20} height={20} />
       </View>
     </View>

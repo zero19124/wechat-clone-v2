@@ -5,15 +5,22 @@ import {
 import UserAvatar from "@/component/complex/UserAvatar";
 import config from "@/config/index";
 import { useUser } from "app/store/user";
-import { useNavigation } from "expo-router";
+import { useFocusEffect, useNavigation } from "expo-router";
 
 import MobilePhoneIcon from "@/icons/discover/mobile-phone.svg";
-import { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { themeColor } from "@/theme/light";
 import SearchBar from "@/component/complex/SearchBar";
 import BottomWidthDivider from "@/component/complex/BottomWidthDivider";
+import Toast from "@/component/base/Toast";
 const NewFriends = () => {
   const navigate = useNavigation();
   const { t } = useTranslation();
@@ -33,17 +40,35 @@ const NewFriends = () => {
     });
     navigate.setOptions(navigatorProps as TNavigationOptions);
   });
-  useEffect(() => {
+  const getFriendRequestingList = () => {
     fetch(
       config.apiDomain +
-        `/api/friends/getFriendRequestByUserId?userId=${userId}`
+        `/api/friends/getFriendRequestListByUserId?userId=${userId}`
     )
-      .then((res) => res.json())
-      .then((friends) => {
-        setFriendRequestList(friends.friendRequestList);
-        console.log(friends.friendRequestList, "friends");
+      .then((res) => {
+        try {
+          return res.json();
+        } catch (e) {
+          return {};
+        }
+      })
+      .then((res) => {
+        console.log(res, "res1");
+        if (res.code === 200) {
+          if (!res.data) return;
+          setFriendRequestList(res.data.friendRequestList);
+          console.log(res.data.friendRequestList, "friendRequestList");
+        } else {
+          Toast.fail(res.data);
+        }
       });
-  }, []);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      getFriendRequestingList();
+    }, [])
+  );
   return (
     <ScrollView>
       <SearchBar
@@ -67,19 +92,22 @@ const NewFriends = () => {
           paddingRight: 0,
         }}
       >
-        {friendRequestList.map((request) => {
-          const { status, userId } = request;
+        {friendRequestList?.map((request) => {
+          const { status, userId: user, confirm } = request;
+          console.log(user._id, "user._id");
           return (
             <TouchableOpacity
               onPress={() => {
                 navigate.navigate("pages/contacts/screens/friend-info/index", {
                   status,
-                  userId,
+                  confirm,
+                  friendId: user._id,
+                  type: "new",
                 });
               }}
             >
               <View style={{ flexDirection: "row" }}>
-                <UserAvatar source={{ uri: userId?.image }} />
+                <UserAvatar source={{ uri: user?.image }} />
                 <View
                   style={{
                     flex: 1,
@@ -88,7 +116,7 @@ const NewFriends = () => {
                     justifyContent: "space-between",
                   }}
                 >
-                  <Text>{userId?.act}</Text>
+                  <Text>{user?.act}</Text>
                   <Text>{status}</Text>
                 </View>
               </View>

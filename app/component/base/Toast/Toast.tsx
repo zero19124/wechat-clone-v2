@@ -9,7 +9,6 @@ import Loading from "../Loading";
 import { isDef } from "@/utils/typeof";
 import * as THEME_VARIABLE from "@/theme/styles/variables";
 import { defaultTheme } from "@/theme/styles";
-
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
@@ -35,7 +34,7 @@ const Toast = (
     }
   );
   // const { styles, theme } = useThemeFactory(createStyle);
-  const styles = createStyle(THEME_VARIABLE as any);
+  const styles = createStyle(defaultTheme);
   const theme = defaultTheme;
   const renderIcon = () => {
     const hasIcon = icon || type === "success" || type === "fail";

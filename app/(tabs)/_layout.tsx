@@ -24,19 +24,8 @@ import { useEffect } from "react";
 
 const Layout = () => {
   console.log("tabs");
-  const { setUserStore } = useUser();
   const { t } = useTranslation();
 
-  useEffect(() => {
-    setUserStore({
-      userInfo: {
-        _id: "65ca596cd90c67e46d6b01a7",
-        psw: "1",
-        act: "1",
-        image: "https://robohash.org/32.png?set=set3",
-      },
-    });
-  }, []);
   const TabText = ({ children, color }) => {
     return <Text style={{ fontSize: 12, color }}>{children}</Text>;
   };
@@ -102,7 +91,7 @@ const Layout = () => {
               if (focused) {
                 return <MeActiveIcon />;
               }
-              return <MeIcon width={28} height={28}/>;
+              return <MeIcon width={28} height={28} />;
             },
           }}
         ></Tabs.Screen>

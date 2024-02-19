@@ -109,6 +109,7 @@ const AddContactsSearch = () => {
               onPress={() => {
                 navigate.navigate("pages/contacts/screens/friend-info/index", {
                   friendId: user._id,
+                  type: "search",
                 });
               }}
               borderVisible={false}

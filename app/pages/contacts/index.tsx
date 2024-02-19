@@ -1,4 +1,4 @@
-import { Image, Text, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import * as light from "@/theme/light";
 import ItemCard from "@/component/complex/ItemCard";
 import { useEffect, useLayoutEffect, useState } from "react";
@@ -14,29 +14,39 @@ import config from "@/config/index";
 import { useUser } from "app/store/user";
 import SearchBar from "@/component/complex/SearchBar";
 import UserAvatar from "@/component/complex/UserAvatar";
+import { isNumber } from "@/utils/typeof";
 const _ = require("lodash");
-
+const indexList: string[] = [];
+const customIndexList = [1, 2, 3, 4, 5, 6, 8, 9, 10];
+const charCodeOfA = "A".charCodeAt(0);
+// const headerHeight = useHeaderHeight();
+for (let i = 0; i < tempNavigatorCount; i += 1) {
+  indexList.push(String.fromCharCode(charCodeOfA + i));
+}
+indexList.push("#");
 const Contacts = () => {
   const { themeColor } = useTheme();
   const { userStore } = useUser();
   const navigate = useNavigation();
   useLayoutEffect(() => {
     navigate.setOptions({
-      headerRight: () => <AddFriendIcon style={{ marginRight: 12 }} />,
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => {
+            navigate.navigate("pages/contacts/screens/add-contacts/index");
+          }}
+        >
+          <AddFriendIcon style={{ marginRight: 12 }} />
+        </TouchableOpacity>
+      ),
     });
   });
-
-  const indexList: string[] = [];
-  const customIndexList = [1, 2, 3, 4, 5, 6, 8, 9, 10];
-  const charCodeOfA = "A".charCodeAt(0);
-  // const headerHeight = useHeaderHeight();
-  for (let i = 0; i < tempNavigatorCount; i += 1) {
-    indexList.push(String.fromCharCode(charCodeOfA + i));
-  }
 
   const [friendList, setFriendList] = useState([]);
   const [listMap, setListMap] = useState(new Map());
   useEffect(() => {
+    setFriendList([]);
+    setListMap(new Map());
     fetch(
       config.apiDomain +
         "/api/friends/getFriendsByUserId?userId=" +
@@ -45,18 +55,25 @@ const Contacts = () => {
       .then((res) => res.json())
       .then((friendList) => {
         console.log(friendList[0], "friendList");
-        setFriendList(friendList[0].friendRequestList);
+        setFriendList(friendList[0].friendsArray);
 
         // console.log(pinyin("岩雀", { style: pinyin.STYLE_NORMAL }), "pinyin");
         // 将数据列表转化为拼音存储，以便于拼音搜索
 
-        friendList[0].friendRequestList.forEach((item, index, arr) => {
+        friendList[0].friendsArray.forEach((item, index, arr) => {
           // 将Item的名称转为拼音数组
           console.log(1111111111, item);
-          if (!item.status) return;
+          if (!item.act) return;
           console.log(1111111111333);
-
-          const pinyinArr = pinyin(item.status, { style: pinyin.STYLE_NORMAL });
+          if (isNumber(Number(item.act))) {
+            console.log(111111);
+            console.log("pinyinArr");
+            const newMap = new Map(listMap);
+            newMap.set("#", [item]);
+            setListMap(newMap);
+            return;
+          }
+          const pinyinArr = pinyin(item.act, { style: pinyin.STYLE_NORMAL });
           const firstPinyin = pinyinArr[0];
           const initial = firstPinyin[0][0];
           if (listMap.has(initial)) {
@@ -66,7 +83,6 @@ const Contacts = () => {
           }
           const newMap = new Map(listMap);
           newMap.set(initial, [item]);
-          console.log(listMap, "listMaplistMaplistMap");
           setListMap(newMap);
 
           // 将拼音数组转化为一个字符串，以支持拼音搜索
@@ -79,9 +95,9 @@ const Contacts = () => {
         });
       });
   }, [userStore.userInfo]);
-  useEffect(() => {
-    console.log(listMap, "listMap.-effet");
-  }, [listMap]);
+  // useEffect(() => {
+  //   console.log(listMap, "listMap.-effet");
+  // }, [listMap]);
   return (
     <>
       <View
@@ -128,12 +144,13 @@ const Contacts = () => {
           {indexList.map((item, index) => {
             // 拿到 abcd对应字母的数据  {a> ['anna','android']}
             const itemList = listMap?.get?.(item.toLocaleLowerCase());
-            // 没有则不显示
+            // 没有则显示到其他
             if (!itemList?.length) return null;
             return (
               <View key={index}>
                 <IndexBar.Anchor index={item} />
                 {itemList?.map((_item, _index) => {
+                  console.log(_item, "_item_item_item_item");
                   // if (index % 2) {
                   //   item.desc = "descdesc";
                   // }
@@ -148,7 +165,7 @@ const Contacts = () => {
                                 fontSize: 16,
                               }}
                             >
-                              {_item.userId}
+                              {_item.act}
                             </Text>
                             {_item?.desc && (
                               <Text
@@ -165,14 +182,16 @@ const Contacts = () => {
                       leftComp={() => {
                         return <UserAvatar source={{ uri: _item.image }} />;
                       }}
-                      text={_item.userId}
+                      text={_item.act}
                     />
                   );
                 })}
               </View>
             );
           })}
-          <Text className="text-center my-4 text-gray-500"> 1000 friends</Text>
+          <Text className="text-center my-4 text-gray-500">
+            {friendList?.length} friends
+          </Text>
         </IndexBar>
       </View>
       <PortalHost name="ContactsPortalHost" />

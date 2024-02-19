@@ -74,7 +74,7 @@ const Layout = () => {
     return null;
   };
   useEffect(() => {
-    // navigate.navigate("pages/contacts/screens/friend-info-confirm/index");
+    // navigate.navigate("pages/contacts/screens/send-friend-request/index");
   }, []);
   return (
     <PortalProvider>
@@ -134,7 +134,7 @@ const Layout = () => {
                           }}
                         />
                         <Stack.Screen name="pages/contacts/screens/friend-info/index" />
-                        <Stack.Screen name="pages/contacts/screens/friend-info-confirm/index" />
+                        <Stack.Screen name="pages/contacts/screens/send-friend-request/index" />
                         {/* discover  */}
                         <Stack.Screen
                           name="pages/discover/moments/index"

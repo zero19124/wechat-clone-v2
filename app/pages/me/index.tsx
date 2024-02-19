@@ -9,29 +9,10 @@ import CardsOffersIcon from "@/icons/me/cards-offers.svg";
 import Favorites from "@/icons/me/favorites.svg";
 import Sticker from "@/icons/keyboard-panel/emoji-icon.svg";
 import * as Haptics from "expo-haptics";
-import PusherTester from "./components/App";
-import {
-  SafeAreaView,
-  Text,
-  View,
-  Image,
-  StyleProp,
-  Pressable,
-  TextInput,
-} from "react-native";
+import { SafeAreaView, Text, View, Image } from "react-native";
 import RedDot from "@/component/complex/RedDot";
 import Divider from "@/component/complex/Divider";
 import ItemCard from "@/component/complex/ItemCard";
-import { ViewProps } from "react-native-svg/lib/typescript/fabric/utils";
-import { pusherClient } from "lib/pusher";
-import { useEffect, useState } from "react";
-import {
-  Pusher,
-  PusherAuthorizerResult,
-  PusherChannel,
-  PusherEvent,
-  PusherMember,
-} from "@pusher/pusher-websocket-react-native";
 import SimpleLogin from "./components/SimpleLogin";
 import { useUser } from "app/store/user";
 import { useNavigation } from "expo-router";
@@ -44,67 +25,7 @@ const Me = () => {
   ];
   const { userInfo } = useUser().userStore;
   const navigator = useNavigation();
-  const [members, onChangeMembers] = useState<PusherMember[]>([]);
-  const [msgList, setMsgList] = useState<string[]>([]);
-  const pusher = Pusher.getInstance();
-  const onAuthorizer = async (channelName: string, socketId: string) => {
-    console.log(
-      `calling onAuthorizer. channelName=${channelName}, socketId=${socketId}`
-    );
 
-    const response = await fetch("some_url", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        socket_id: socketId,
-        channel_name: channelName,
-      }),
-    });
-
-    const body = (await response.json()) as PusherAuthorizerResult;
-
-    console.log(`response: ${JSON.stringify(body)}`);
-    return body;
-  };
-  const connect = async () => {
-    const onSubscriptionSucceeded = (channelName: string, data: any) => {
-      console.log(
-        `onSubscriptionSucceeded: ${channelName} data: ${JSON.stringify(data)}`
-      );
-      const channel: PusherChannel | undefined = pusher.getChannel(channelName);
-
-      if (!channel) {
-        return;
-      }
-
-      const me = channel.me;
-      onChangeMembers([...channel.members.values()]);
-      console.log(`Me: ${me}`);
-    };
-    await pusher.init({
-      apiKey: "f9e1ab46abdff9fa95bb",
-      cluster: "ap3",
-      onAuthorizer,
-      onSubscriptionSucceeded,
-    });
-
-    await pusher.connect();
-    // let myChannel = await pusher.subscribe({
-    //   channelName: "my-channel",
-    //   onEvent: (event: PusherEvent) => {
-    //     console.log(event);
-    //     msgList.push(JSON.parse(event.data).message);
-    //     setMsgList([...msgList]);
-    //     console.log(msgList, "msgList");
-    //   },
-    // });
-  };
-  useEffect(() => {}, []);
-  useEffect(() => {
-    console.log(members, "members");
-  }, [members]);
   const serviceList = [
     {
       text: "Favorites",
@@ -125,8 +46,6 @@ const Me = () => {
       icon: <Sticker width={24} height={24} fill={themeColor.iconYellow} />,
     },
   ];
-  const meImg = require("@/assets/me.png");
-  const bellaImg = require("@/assets/bella.png");
   return (
     <SafeAreaView style={{ backgroundColor: themeColor.white }}>
       <View
@@ -147,7 +66,7 @@ const Me = () => {
           <Text style={{ fontSize: 24, marginBottom: 8 }}>{userInfo?.act}</Text>
           <View className="flex-row justify-between items-center">
             <Text style={{ fontSize: 18, color: themeColor.text3 }}>
-              Wechat Id: zero123456
+              Wechat Id: {userInfo?._id}
             </Text>
             <View className="flex-row items-center" style={{ marginRight: 12 }}>
               <QrCodeIcon style={{ marginRight: 24 }} width={18} />
@@ -227,7 +146,7 @@ const Me = () => {
       <ItemCard
         onPress={() => {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-          fetch('http://localhost:3000')
+          fetch("http://localhost:3000");
         }}
         borderVisible={false}
         leftComp={() => {

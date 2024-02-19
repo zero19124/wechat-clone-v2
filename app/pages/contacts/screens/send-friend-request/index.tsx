@@ -8,7 +8,6 @@ import config from "@/config/index";
 import { useTheme } from "@/theme/useTheme";
 import { useUser } from "app/store/user";
 import ArrowRightIcon from "@/icons/common/arrow-right.svg";
-
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useLayoutEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
@@ -28,11 +27,12 @@ const FriendInfoConfirm = () => {
   const { t } = useTranslation();
   const { userStore } = useUser();
   const params = useLocalSearchParams();
+  console.log(params, "params");
   const friendId = useMemo(() => params.friendId, [params]);
   const userId = useMemo(() => userStore.userInfo?._id, [userStore]);
   useLayoutEffect(() => {
     const navigatorProps = useCommonNavigateProps({
-      title: t(name),
+      title: t(params?.sendFriendRequestTitle || name),
       rightComp: () => <Text style={{ fontSize: 16 }}></Text>,
     });
     navigate.setOptions({
@@ -47,6 +47,26 @@ const FriendInfoConfirm = () => {
     };
     console.log(params, "prams", data);
 
+    if (params?.sendFriendRequestTitle) {
+      fetch(config.apiDomain + "/api/friends/requestFriendUpdate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+        .then((res) => {
+          console.log("requestFriendUpdate-res", res);
+          return res.json();
+        })
+        .then((res) => {
+          console.log(res, "requestFriendUpdate");
+          // confirm go to chat?
+          navigate.goBack();
+        });
+      return;
+    }
+
     fetch(config.apiDomain + "/api/friends/requestFriend", {
       method: "POST",
       headers: {
@@ -56,7 +76,8 @@ const FriendInfoConfirm = () => {
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res, "requestFriendHandler");
+        console.log(res, "requestFriend");
+        // request then goback to info
         navigate.goBack();
       });
   };
@@ -113,7 +134,7 @@ const FriendInfoConfirm = () => {
           </View>
         </View>
         <Text>
-          ===== friendId:{friendId}==== userId:{userId}
+          ===== friendId:{friendId}/n==== userId:{userId}
         </Text>
         <View
           style={{
@@ -145,7 +166,7 @@ const FriendInfoConfirm = () => {
                   textAlign: "center",
                 }}
               >
-                {t("Send")}
+                {params?.sendFriendRequestTitle ? t("Done") : t("Send")}
               </Text>
             </View>
           </TouchableOpacity>

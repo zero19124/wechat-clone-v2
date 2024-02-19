@@ -60,8 +60,8 @@ const Moments = () => {
       title: t("Moments"),
       rightComp: () => <CameraOutline />,
       rightHandler: () => {
-        // setVisible(true);
-        Toast.success('Toast')
+        setVisible(true);
+        // Toast.success('Toast')
       },
     });
     navigator.setOptions(navigatorProps as NativeStackNavigationOptions);
