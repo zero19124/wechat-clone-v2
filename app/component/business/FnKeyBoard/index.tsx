@@ -13,15 +13,26 @@ import * as light from "@/theme/light";
 import { SwiperFlatList } from "react-native-swiper-flatlist";
 import { useNavigation, useRouter } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
+import { pickImages } from "@/hooks/useImagePicker";
+export const FN_TYPE_MAPS = {
+  Album: "Album",
+  Camera: "Camera",
+  VideoCall: "VideoCall",
+  Location: "Location",
+  RedPacket: "RedPacket",
+  Transfer: "Transfer",
+  VoiceInput: "VoiceInput",
+  Favorites: "Favorites",
+};
 const iconOrderOne = [
-  "Album",
-  "Camera",
-  "VideoCall",
-  "Location",
-  "RedPacket",
-  "Transfer",
-  "VoiceInput",
-  "Favorites",
+  FN_TYPE_MAPS.Album,
+  FN_TYPE_MAPS.Camera,
+  FN_TYPE_MAPS.VideoCall,
+  FN_TYPE_MAPS.Location,
+  FN_TYPE_MAPS.RedPacket,
+  FN_TYPE_MAPS.Transfer,
+  FN_TYPE_MAPS.VoiceInput,
+  FN_TYPE_MAPS.Favorites,
 ];
 
 const { width } = Dimensions.get("window");
@@ -49,7 +60,13 @@ const styles = StyleSheet.create({
 });
 const iconOrderTwo = ["ContactCard", "File", "Coupons", "Music"];
 
-const FnKeyBoard = ({ heightValue }: { heightValue: number }) => {
+const FnKeyBoard = ({
+  heightValue,
+  handlers,
+}: {
+  heightValue: number;
+  handlers: (type: keyof typeof FN_TYPE_MAPS, val: any) => void;
+}) => {
   console.log("FnKeyBoard", heightValue);
   const [heightValueMemo, setHeightValueMemo] = useState(0);
 
@@ -69,15 +86,30 @@ const FnKeyBoard = ({ heightValue }: { heightValue: number }) => {
   }, []);
 
   const router = useRouter();
-  const svgHandler = (name: string) => {
+  const navigator = useNavigation();
+  const svgHandler = async (name: string) => {
     switch (name) {
-      case "Transfer":
+      case FN_TYPE_MAPS.Transfer:
         console.log(222);
         router.push("/individual-payment");
+        handlers?.(FN_TYPE_MAPS.Transfer, "");
         break;
-      case "ImgPicker":
-        console.log(222);
-        router.push("/pages/socket-test");
+      // case "ImgPicker":
+      //   console.log(222);
+      //   router.push("/pages/socket-test");
+      //   handlers?.(FN_TYPE_MAPS.Album, "");
+
+      //   break;
+      case "Album":
+        const imageList = await pickImages();
+        if (imageList.length === 1) {
+          handlers?.({ type: FN_TYPE_MAPS.Album, val: imageList[0] });
+        }
+        console.log("Album", imageList);
+
+        break;
+      case "Camera":
+        navigator.navigate("pages/chats/msg-chats/screens/camera/index");
         break;
     }
   };

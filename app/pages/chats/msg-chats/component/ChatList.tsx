@@ -11,7 +11,7 @@ const PrivateChatList = (props: {
 }) => {
   const { dataOut, flatListRef } = props;
   const { userInfo } = useUser().userStore;
-  console.log(dataOut, "dataOut-userInfo");
+  // console.log(dataOut, "dataOut-userInfo");
   const renderItem = ({ item }: { item: (typeof data)[0] }) => {
     const isMe = item.userId === userInfo?._id;
     const ItemWrapper = () => {

@@ -13,6 +13,7 @@ import * as ImagePicker from "expo-image-picker";
 import { useCommonNavigateProps } from "@/component/complex/CommonNavigateTitle";
 import config from "@/config/index";
 import { useUser } from "app/store/user";
+import { TImageIns } from "@/hooks/useImagePicker";
 
 
 const getMock = (type = "img", name = "读书方法") => {
@@ -47,11 +48,7 @@ const getMock = (type = "img", name = "读书方法") => {
   };
   return Mock;
 };
-type TImageIns = {
-  uri: string;
-  type: "image" | "video" | undefined;
-  name: string | null | undefined;
-};
+
 export type IMomentData = ReturnType<typeof getMock>;
 const Moments = () => {
   const navigator = useNavigation();

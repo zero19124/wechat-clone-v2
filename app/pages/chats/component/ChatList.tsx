@@ -51,12 +51,13 @@ const ConvoList = () => {
   const navigate = useNavigation();
   const { userStore } = useUser();
   const { themeColor } = useTheme();
-  const { chatListStore, getChatList } = useChatList();
+  const { chatListStore, getChatList, setChatListStore } = useChatList();
   const userId = useMemo(() => userStore.userInfo?._id, [userStore]);
   const style = getStyle(themeColor);
   useEffect(() => {
     console.log(chatListStore, "chatListStore");
   }, [chatListStore]);
+
   const pusherContext = useContext(PusherContext);
   const deviceModel = DeviceInfo.getModel();
 
@@ -172,8 +173,14 @@ const ConvoList = () => {
     return (
       <TouchableOpacity
         onPress={() => {
+          const convoId = item._id + "";
+          setChatListStore({
+            chatListState: chatListStore.chatListState,
+            curConvo: { convoId },
+          });
+
           navigate.navigate("pages/chats/msg-chats/index", {
-            convoId: item._id,
+            convoId,
           });
         }}
       >

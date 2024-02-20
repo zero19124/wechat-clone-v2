@@ -2,10 +2,14 @@ import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
 import config from "../config";
 import DeviceInfo from "react-native-device-info";
 
-interface IUser {}
-export const chatListState = atom<IUser>({
+interface IConvo {
+  curConvo: { convoId: string } | undefined;
+  chatListState?: any[] | undefined;
+}
+export const chatListState = atom<IConvo>({
   key: "chatList",
   default: {
+    curConvo: undefined,
     // token: storage.get("token") || "",
     chatListState: undefined,
   },

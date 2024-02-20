@@ -28,7 +28,7 @@ import {
 } from "react";
 import ThreeDot from "@/icons/three-dot.svg";
 import GoBack from "@/icons/common/go-back.svg";
-import FnKeyBoard from "@/component/business/FnKeyBoard";
+import FnKeyBoard, { FN_TYPE_MAPS } from "@/component/business/FnKeyBoard";
 import PrivateChatList from "./component/ChatList";
 import ChatInput from "./component/ChatInput";
 import { useTheme } from "@/theme/useTheme";
@@ -37,6 +37,7 @@ import { useUser } from "app/store/user";
 import config from "@/config/index";
 import { useChatList } from "app/store/chatList";
 import { PusherContext } from "@/hooks/usePusherProvider";
+import useSendMsg from "@/hooks/useSendMsg";
 const Page = () => {
   const navigate = useNavigation();
   // 获取设备型号
@@ -89,6 +90,9 @@ const Page = () => {
   const [msg, setMsg] = useState("");
   const heightValue = useRef(new Animated.Value(10)).current;
   const height = useRef(0);
+
+  const { sendMsgHandler } = useSendMsg();
+  const flatListRef = useRef<FlatList>();
   const startAnimation = (toValue) => {
     Animated.timing(heightValue, {
       toValue,
@@ -184,35 +188,6 @@ const Page = () => {
       });
   }, []);
 
-  const sendMsgHandler = (val: string) => {
-    if (!val) {
-      console.log("input is empty");
-      return;
-    }
-    console.log("change", val, {
-      msg: val,
-      userId: userInfo?._id,
-      convoId,
-    });
-    fetch(config.apiDomain + "/api/msg/add-msg", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        msg: "https://placekitten.com/302/302",
-        // msg: val,
-        type: "img",
-        userId: userInfo?._id,
-        convoId,
-      }),
-    }).then(async (res) => {
-      console.log("add-suc");
-      setMsg("");
-    });
-  };
-  const flatListRef = useRef<FlatList>();
-
   return (
     <SafeAreaView
       style={{
@@ -240,7 +215,7 @@ const Page = () => {
             Keyboard.dismiss();
           }}
         >
-          {/* 会话列表 */}
+          {/* 聊天列表 */}
           <PrivateChatList dataOut={dataOut} flatListRef={flatListRef} />
         </TouchableWithoutFeedback>
         {/* keyboard 内容 */}
@@ -254,7 +229,15 @@ const Page = () => {
             // flatListRef.current?.scrollToIndex({ animated: true, index: 0 });
           }}
           onEndEditing={() => {
-            sendMsgHandler(msg);
+            sendMsgHandler({
+              val: msg,
+              userId: userInfo?._id + "",
+              type: "text",
+              convoId: convoId + "",
+              doneHandler: () => {
+                setMsg("");
+              },
+            });
           }}
           chatPress={() => {
             console.log("c");
@@ -268,7 +251,24 @@ const Page = () => {
           }}
         />
 
-        {<FnKeyBoard heightValue={heightValue} />}
+        {
+          <FnKeyBoard
+            heightValue={heightValue}
+            handlers={({ type, val }: { type: string; val: any }) => {
+              console.log(type, val, "handlers");
+
+              if (type === FN_TYPE_MAPS.Album) {
+                sendMsgHandler({
+                  val,
+                  userId: userInfo?._id + "",
+                  type: "img",
+                  convoId: convoId + "",
+                  doneHandler: () => {},
+                });
+              }
+            }}
+          />
+        }
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
