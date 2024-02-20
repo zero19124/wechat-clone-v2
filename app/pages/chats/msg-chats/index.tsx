@@ -43,13 +43,13 @@ const Page = () => {
   // 获取设备型号
   const deviceModel = DeviceInfo.getModel();
   const { userInfo } = useUser().userStore;
-  const { getChatList, setChatListStore } = useChatList();
+  const { getChatList, chatListStore } = useChatList();
 
   const params = useLocalSearchParams();
   const convoId = useMemo(() => {
-    return params.convoId;
+    return chatListStore.curConvo?.convoId;
   }, [params]);
-  console.log(convoId, "params");
+  console.log(convoId, "paramsparams");
   const [dataOut, setDataOut] = useState<any[]>([]);
   useLayoutEffect(() => {
     navigate.setOptions({
@@ -117,6 +117,10 @@ const Page = () => {
   };
 
   const updateConvoLatestMsgById = (convoId: string, latestMessage: string) => {
+    if (!convoId) {
+      console.log("convoId is null updateConvoLatestMsgById ");
+      return;
+    }
     fetch(config.apiDomain + "/api/convo/updateConvoLatestMsgById", {
       method: "POST",
       headers: {
@@ -229,6 +233,10 @@ const Page = () => {
             // flatListRef.current?.scrollToIndex({ animated: true, index: 0 });
           }}
           onEndEditing={() => {
+            if (!convoId) {
+              console.log("convoId is null onEndEditing");
+              return;
+            }
             sendMsgHandler({
               val: msg,
               userId: userInfo?._id + "",

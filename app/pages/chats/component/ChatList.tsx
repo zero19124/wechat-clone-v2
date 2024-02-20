@@ -51,7 +51,7 @@ const ConvoList = () => {
   const navigate = useNavigation();
   const { userStore } = useUser();
   const { themeColor } = useTheme();
-  const { chatListStore, getChatList, setChatListStore } = useChatList();
+  const { chatListStore, getChatList, setChatListStoreV2 } = useChatList();
   const userId = useMemo(() => userStore.userInfo?._id, [userStore]);
   const style = getStyle(themeColor);
   useEffect(() => {
@@ -174,7 +174,7 @@ const ConvoList = () => {
       <TouchableOpacity
         onPress={() => {
           const convoId = item._id + "";
-          setChatListStore({
+          setChatListStoreV2({
             chatListState: chatListStore.chatListState,
             curConvo: { convoId },
           });

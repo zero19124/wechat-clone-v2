@@ -20,7 +20,7 @@ export default () => {
   const { sendMsgHandler } = useSendMsg();
   const navigator = useNavigation();
   const { userInfo } = useUser().userStore;
-  const { chatListStore, getChatList, setChatListStore } = useChatList();
+  const { chatListStore } = useChatList();
   const [photo, setPhoto] = useState<CameraCapturedPicture | null>(null);
   const [video, setVideo] = useState("");
   const takePhoto = async () => {

@@ -1,4 +1,4 @@
-import { AntDesign, FontAwesome, FontAwesome5 } from "@expo/vector-icons";
+import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
 import {
   Text,
   TouchableOpacity,
@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Pressable,
 } from "react-native";
-import Toast from "react-native-root-toast";
 import * as Clipboard from "expo-clipboard";
 import * as light from "../../theme/light";
 import { getSize } from "../../utils";
@@ -241,18 +240,7 @@ const InputKeyboard = (props) => {
         {/* <Toast /> */}
         <TouchableOpacity
           onPress={() => {
-            console.log(Toast, "Toast");
             openModal();
-            // router.push('/individual-payment/pay-modal')
-            // Toast.show("This is a short toast");
-            // const toast = Toast.show("リンクがコピーされました！31", {
-            //   duration: Toast.durations.LONG,
-            //   position: 150,
-            //   shadow: true,
-            //   animation: true,
-            //   hideOnPress: true,
-            //   delay: 0,
-            // });
           }}
           style={{
             borderRadius: 4,

@@ -1,5 +1,6 @@
 import { useUser } from "app/store/user";
 import config from "../config";
+import Toast from "@/component/base/Toast";
 
 const useSendMsg = () => {
   const sendMsgHandler = ({
@@ -32,10 +33,16 @@ const useSendMsg = () => {
         userId,
         convoId,
       }),
-    }).then(async (res) => {
-      console.log("add-suc");
-      doneHandler?.();
-    });
+    })
+      .then((res) => res.json())
+      .then(async (res) => {
+        if (res.code === 200) {
+          console.log("add-suc");
+        } else {
+          Toast.fail("sendMsg failed");
+        }
+        doneHandler?.();
+      });
   };
   return { sendMsgHandler };
 };
