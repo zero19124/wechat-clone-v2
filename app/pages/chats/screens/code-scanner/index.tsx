@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Text,
   View,
@@ -22,7 +22,33 @@ const CodeScanner = () => {
   const [text, setText] = useState("");
   const navigator = useNavigation();
   const { themeColor } = useTheme();
+  const verticalPosition = new Animated.Value(-200);
+  const fadeAnim = new Animated.Value(1);
+  const startAnimation = useCallback(() => {
+    console.log("startAnimation");
+    Animated.loop(
+      Animated.parallel([
+        Animated.timing(verticalPosition, {
+          toValue: 200,
+          duration: 2500,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
 
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 2500,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start(() => {
+      // 重置动画
+      verticalPosition.setValue(-200);
+      fadeAnim.setValue(0.5);
+      startAnimation();
+    });
+  }, [verticalPosition, fadeAnim]);
   useEffect(() => {
     if (text.includes("userId+")) {
       const userId = text.split("+")[1];
@@ -49,7 +75,7 @@ const CodeScanner = () => {
     //     console.log(values, "values");
     //   })
     //   .catch((error) => console.log("Cannot detect QR code in image", error));
-    startAnimation();
+    // startAnimation();
   }, []);
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
@@ -62,35 +88,27 @@ const CodeScanner = () => {
   if (hasPermission === false) {
     return <Text>No access to camera</Text>;
   }
-  const verticalPosition = new Animated.Value(-100);
-  const fadeAnim = new Animated.Value(1);
-  const startAnimation = () => {
-    Animated.loop(
-      Animated.parallel([
-        Animated.timing(verticalPosition, {
-          toValue: 100,
-          duration: 1500,
-          easing: Easing.linear,
-          useNativeDriver: true,
-        }),
-
-        Animated.timing(fadeAnim, {
-          toValue: 0,
-          duration: 1500,
-          easing: Easing.linear,
-          useNativeDriver: true,
-        }),
-      ])
-    ).start(() => {
-      // 重置动画
-      verticalPosition.setValue(-100);
-      fadeAnim.setValue(1);
-      startAnimation();
-    });
-  };
+  startAnimation();
 
   return (
     <View style={styles.container}>
+      <Animated.View
+        style={[
+          { width: "100%", position: "absolute", zIndex: 1 },
+          { transform: [{ translateY: verticalPosition }], opacity: fadeAnim },
+        ]}
+      >
+        <LinearGradient
+          colors={[
+            "transparent",
+            "rgba(89, 237, 90,0.05)",
+            "rgba(89, 237, 90,0.1)",
+            "rgba(89, 237, 90,0.9)",
+          ]}
+          // colors={["transparent", themeColor.primary, "transparent"]}
+          style={{ width: "100%", height: 250 }}
+        />
+      </Animated.View>
       <TouchableOpacity
         onPress={() => {
           alert("tab!");
@@ -111,7 +129,7 @@ const CodeScanner = () => {
       </TouchableOpacity>
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={{ width: 300, height: 300 }}
+        style={{ width: "100%", height: "80%" }}
       />
       {scanned && (
         <Button
@@ -123,27 +141,6 @@ const CodeScanner = () => {
         />
       )}
       <Text>{text}</Text>
-      {/* <LinearGradient
-        colors={["rgba(0,0,0,0)", "green"]}
-        style={{ width: "100%", height: 100 }}
-      /> */}
-      <Animated.View
-        style={[
-          { width: "100%" },
-          { transform: [{ translateY: verticalPosition }], opacity: fadeAnim },
-        ]}
-      >
-        <LinearGradient
-          colors={[
-            "transparent",
-            "rgba(89, 237, 90,0.05)",
-            "rgba(89, 237, 90,0.1)",
-            "rgba(89, 237, 90,0.5)",
-          ]}
-          // colors={["transparent", themeColor.primary, "transparent"]}
-          style={{ width: "100%", height: 100 }}
-        />
-      </Animated.View>
     </View>
   );
 };

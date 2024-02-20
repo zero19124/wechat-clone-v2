@@ -11,7 +11,7 @@ const PrivateChatList = (props: {
 }) => {
   const { dataOut, flatListRef } = props;
   const { userInfo } = useUser().userStore;
-  // console.log(dataOut, "dataOut-userInfo");
+  console.log(dataOut, "dataOut-userInfo");
   const renderItem = ({ item }: { item: (typeof data)[0] }) => {
     const isMe = item.userId === userInfo?._id;
     const ItemWrapper = () => {
@@ -30,7 +30,11 @@ const PrivateChatList = (props: {
                 flex: 1,
               }}
             >
-              <MsgReceiver type="right" text={item.latestMessage} />
+              <MsgReceiver
+                msgType={item.type}
+                type="right"
+                text={item.latestMessage}
+              />
               <UserAvatar
                 source={{ uri: userInfo?.image }}
                 style={{ marginLeft: 8 }}
@@ -48,7 +52,10 @@ const PrivateChatList = (props: {
                 source={{ uri: item.image }}
                 style={{ marginRight: 8 }}
               />
-              <MsgReceiver text={item.latestMessage}></MsgReceiver>
+              <MsgReceiver
+                msgType={item.type}
+                text={item.latestMessage}
+              ></MsgReceiver>
             </View>
           )}
         </View>
@@ -70,7 +77,7 @@ const PrivateChatList = (props: {
       data={dataOut || data}
       keyExtractor={(item) => item.msgId}
       renderItem={renderItem}
-    ></FlatList>
+    />
   );
 };
 export default PrivateChatList;

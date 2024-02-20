@@ -1,4 +1,4 @@
-import { StyleProp, Text, View, ViewStyle } from "react-native";
+import { StyleProp, Text, View, ViewStyle, Image } from "react-native";
 import * as light from "@/theme/light";
 import { getSize } from "utils";
 const msgTypeMap: Record<string, StyleProp<ViewStyle>> = {
@@ -26,7 +26,7 @@ const msgTypeMap: Record<string, StyleProp<ViewStyle>> = {
     ],
   },
   itemLeftWrapper: {
-    marginLeft:4,
+    marginLeft: 4,
     backgroundColor: light.themeColor.white,
   },
   itemLeft: {
@@ -47,12 +47,37 @@ const msgTypeMap: Record<string, StyleProp<ViewStyle>> = {
   },
 };
 const MsgWrapper = ({
+  msgType = "text",
   type = "left",
   text,
 }: {
   type?: "left" | "right";
   text: string;
+  msgType: string;
 }) => {
+  const getContent = () => {
+    if (msgType === "img") {
+      return (
+        <Image source={{ uri: text }} style={{ width: 180, height: 100 }} />
+      );
+    }
+    return (
+      <>
+        <View
+          style={msgTypeMap[type === "left" ? "itemLeft" : "itemRight"]}
+        ></View>
+        <Text
+          style={{
+            alignSelf: "flex-start",
+            marginVertical: 8,
+            marginHorizontal: 12,
+          }}
+        >
+          {text}
+        </Text>
+      </>
+    );
+  };
   return (
     <View
       style={[
@@ -69,18 +94,7 @@ const MsgWrapper = ({
         },
       ]}
     >
-      <View
-        style={msgTypeMap[type === "left" ? "itemLeft" : "itemRight"]}
-      ></View>
-      <Text
-        style={{
-          alignSelf: "flex-start",
-          marginVertical: 8,
-          marginHorizontal: 12,
-        }}
-      >
-        {text}
-      </Text>
+      {getContent()}
     </View>
   );
 };

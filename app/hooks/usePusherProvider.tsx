@@ -2,6 +2,7 @@ import { createContext, useEffect, useState } from "react";
 
 import io, { Socket } from "socket.io-client";
 import { useUser, userState } from "app/store/user";
+import config from "../config";
 export const PusherContext = createContext(
   {} as {
     onlineUsers: any[];
@@ -19,8 +20,8 @@ export const PusherProvider = ({ children }) => {
     if (!userId) {
       return;
     }
-    const socketNew = io("http://localhost:4000", {
-    // const socketNew = io("https://wechat-server-jhc0.onrender.com", {
+    const socketNew = io(config.apiDomain, {
+      // const socketNew = io("https://wechat-server-jhc0.onrender.com", {
       query: {
         userId,
       },
@@ -33,7 +34,7 @@ export const PusherProvider = ({ children }) => {
     socketNew?.emit("subscribe", userId);
 
     socketNew?.on("hello", (users) => {
-      console.log(users, "--------");
+      console.log(users, "------------------------------------------------");
     });
     setSocket(socketNew);
 

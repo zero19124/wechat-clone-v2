@@ -146,6 +146,7 @@ const Page = () => {
         const newMsg = {
           userId: data.user._id,
           msgId: data._id,
+          type: data.type,
           image: data.user.image,
           latestMessage,
         };
@@ -167,6 +168,7 @@ const Page = () => {
           setDataOut([
             ...res.data?.map((item) => {
               return {
+                type: item.type,
                 userId: item.userId,
                 msgId: item._id,
                 image: item.user.image,
@@ -198,7 +200,9 @@ const Page = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        msg: val,
+        msg: "https://placekitten.com/302/302",
+        // msg: val,
+        type: "img",
         userId: userInfo?._id,
         convoId,
       }),
@@ -236,6 +240,7 @@ const Page = () => {
             Keyboard.dismiss();
           }}
         >
+          {/* 会话列表 */}
           <PrivateChatList dataOut={dataOut} flatListRef={flatListRef} />
         </TouchableWithoutFeedback>
         {/* keyboard 内容 */}
