@@ -22,6 +22,11 @@ export const PortalRef =
 
 const Layout = () => {
   console.log(" top-level component");
+  if (__DEV__) {
+    console.log("App is running in development mode");
+  } else {
+    console.log("App is running in production mode");
+  }
   const navigate = useNavigation();
   // Translations
   const resources = {
@@ -156,6 +161,14 @@ const Layout = () => {
                           name="pages/me/setting/index"
                           options={{
                             title: "setting",
+                          }}
+                        />
+                        {/* my qrcode */}
+                        <Stack.Screen
+                          name="pages/me/screens/my-qrcode/index"
+                          options={{
+                            title: "qrcode",
+                            presentation: "fullScreenModal",
                           }}
                         />
                         {/* comomns  */}

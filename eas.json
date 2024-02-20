@@ -13,13 +13,16 @@
     }
   },
   "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
     "preview": {
       "android": {
         "distribution": "internal",
         "buildType": "apk"
       }
     },
-   
     "preview2": {
       "android": {
         "gradleCommand": ":app:assembleRelease"
@@ -32,5 +35,8 @@
       "distribution": "internal"
     },
     "production": {}
+  },
+  "cli": {
+    "promptToConfigurePushNotifications": false
   }
 }

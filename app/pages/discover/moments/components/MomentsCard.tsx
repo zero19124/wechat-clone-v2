@@ -5,6 +5,7 @@ import HeartOutlineIcon from "@/icons/discover/heart-outline.svg";
 import MomentsImg from "./MomentsIms";
 import { useTheme } from "@/theme/useTheme";
 import MomentsComment from "./MomentsComment";
+import { Video, ResizeMode } from "expo-av";
 export interface IMomentsCard {
   momentData: IMomentData;
 }
@@ -61,7 +62,19 @@ const MomentsCard = (props: IMomentsCard) => {
           </Text>
           {momentData.contentType === "video" ? (
             <View>
-              <Text>video</Text>
+              <Video
+                playsInSilentLockedModeIOS={true}
+                // ref={video}
+                style={{ width: "80%", height: 200 }}
+                // style={styles.video}
+                source={{
+                  uri: "https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
+                }}
+                useNativeControls
+                resizeMode={ResizeMode.CONTAIN}
+                isLooping
+                // onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+              />
             </View>
           ) : (
             <MomentsImg imgList={momentData.imgList} />

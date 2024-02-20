@@ -8,46 +8,20 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "/*"
-      ],
-      "@/icons/*": [
-        "assets/icon/*"
-      ],
-      "@/pages/*": [
-        "app/pages/*"
-      ],
-      "@/hooks/*": [
-        "app/hooks/*"
-      ],
-      "@/utils/*": [
-        "app/utils/*"
-      ],
-      "@/component/*": [
-        "app/component/*"
-      ],
-      "@/theme/*": [
-        "theme/*"
-      ],
-      "@/assets/*": [
-        "assets/*"
-      ],
-      "@/mocks/*": [
-        "mocks/*"
-      ],
-      "@/config/*": [
-        "app/config/*"
-      ]
+      "@/*": ["/*"],
+      "@/icons/*": ["assets/icon/*"],
+      "@/pages/*": ["app/pages/*"],
+      "@/hooks/*": ["app/hooks/*"],
+      "@/utils/*": ["app/utils/*"],
+      "@/const/*": ["app/const/*"],
+      "@/component/*": ["app/component/*"],
+      "@/theme/*": ["theme/*"],
+      "@/assets/*": ["assets/*"],
+      "@/mocks/*": ["mocks/*"],
+      "@/config/*": ["app/config/*"]
     }
   },
   "extends": "expo/tsconfig.base",
-  "tscFilesIncludes": [
-    "/@types/"
-  ],
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts"
-  ]
+  "tscFilesIncludes": ["/@types/"],
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
 }

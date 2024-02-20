@@ -1,8 +1,19 @@
 import { Platform } from "react-native";
-// import { Config, NativeConfig } from "react-native-config";
+import publicIP from "react-native-public-ip";
+// import * as Network from "expo-network";
+import { useState } from "react";
 
+const ipAlert = async () => {
+  // const ip = await Network.getIpAddressAsync();
+  // alert(ip);
+  // setApiDomain
+};
+
+ipAlert();
 const env = "dev1";
-const apiDomain = "http://localhost:4000";
+// const [apiDomain, setApiDomain] = useState("http://localhost:4000");
+const apiDomain = "http://172.20.10.3:4000";
+// const apiDomain = "http://localhost:4000";
 // const apiDomain = "https://wechat-server-jhc0.onrender.com";
 // const devConfig = {
 //   env: env as NativeConfig["Env"],

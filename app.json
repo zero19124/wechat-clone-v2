@@ -54,7 +54,13 @@
           "isAccessMediaLocationEnabled": true
         }
       ],
-      
+      [
+        "expo-barcode-scanner",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access camera."
+        }
+      ],
+
       "expo-localization"
     ],
     "extra": {

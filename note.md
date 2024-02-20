@@ -29,3 +29,6 @@ https://github.com/vercel/next.js/discussions/48433
 5
 command not found: i18next-parser. after install  i18next-parser    
 use > npx i18next-parser
+
+5
+尝试 最开始 会有灰色边框 LinearGradient

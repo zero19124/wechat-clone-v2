@@ -65,8 +65,11 @@ export default () => {
         console.log(e, "eeee");
       });
   };
+  // Network Images
+
   return (
     <View>
+      <Text>{config.apiDomain}</Text>
       {userStore?.userInfo?.act ? (
         <View>
           <Text>userID ===={userStore.userInfo._id}</Text>

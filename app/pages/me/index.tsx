@@ -9,7 +9,13 @@ import CardsOffersIcon from "@/icons/me/cards-offers.svg";
 import Favorites from "@/icons/me/favorites.svg";
 import Sticker from "@/icons/keyboard-panel/emoji-icon.svg";
 import * as Haptics from "expo-haptics";
-import { SafeAreaView, Text, View, Image } from "react-native";
+import {
+  SafeAreaView,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import RedDot from "@/component/complex/RedDot";
 import Divider from "@/component/complex/Divider";
 import ItemCard from "@/component/complex/ItemCard";
@@ -60,7 +66,9 @@ const Me = () => {
             height: 60,
             borderRadius: 4,
           }}
-          source={{ uri: userInfo?.image }}
+          source={{
+            uri: userInfo?.image,
+          }}
         />
         <View className="flex-1">
           <Text style={{ fontSize: 24, marginBottom: 8 }}>{userInfo?.act}</Text>
@@ -68,10 +76,16 @@ const Me = () => {
             <Text style={{ fontSize: 18, color: themeColor.text3 }}>
               Wechat Id: {userInfo?._id}
             </Text>
-            <View className="flex-row items-center" style={{ marginRight: 12 }}>
+            <TouchableOpacity
+              onPress={() => {
+                navigator.navigate("pages/me/screens/my-qrcode/index");
+              }}
+              className="flex-row items-center"
+              style={{ marginRight: 12 }}
+            >
               <QrCodeIcon style={{ marginRight: 24 }} width={18} />
               <ArrowRightIcon />
-            </View>
+            </TouchableOpacity>
           </View>
           <View
             className="flex-row justify-center items-center"
