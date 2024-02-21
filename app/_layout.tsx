@@ -128,6 +128,13 @@ const Layout = () => {
                             headerShown: false,
                           }}
                         />
+                        <Stack.Screen
+                          name="pages/chats/screens/transfer-receive/index"
+                          options={{
+                            presentation: "fullScreenModal",
+                            headerShown: false,
+                          }}
+                        />
 
                         {/* contacts  */}
                         <Stack.Screen
@@ -175,6 +182,13 @@ const Layout = () => {
                           options={{
                             title: "qrcode",
                             presentation: "fullScreenModal",
+                          }}
+                        />
+                        {/* my qrcode */}
+                        <Stack.Screen
+                          name="pages/me/screens/wallet/index"
+                          options={{
+                            title: "wallet",
                           }}
                         />
                         {/* comomns  */}

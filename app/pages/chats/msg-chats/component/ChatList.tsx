@@ -32,6 +32,7 @@ const PrivateChatList = (props: {
             >
               <MsgReceiver
                 msgType={item.type}
+                msgSenderId={item.userId}
                 type="right"
                 text={item.latestMessage}
               />
@@ -53,6 +54,7 @@ const PrivateChatList = (props: {
                 style={{ marginRight: 8 }}
               />
               <MsgReceiver
+                msgSenderId={item.userId}
                 msgType={item.type}
                 text={item.latestMessage}
               ></MsgReceiver>

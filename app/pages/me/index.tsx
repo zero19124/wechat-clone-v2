@@ -160,7 +160,7 @@ const Me = () => {
       <ItemCard
         onPress={() => {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-          fetch("http://localhost:3000");
+          navigator.navigate("pages/me/screens/wallet/index");
         }}
         borderVisible={false}
         leftComp={() => {
