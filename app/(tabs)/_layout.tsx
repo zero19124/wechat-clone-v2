@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { Text } from "react-native";
+import { SafeAreaView, Text, View } from "react-native";
 import * as light from "@/theme/light";
 
 import ContactsIcon from "@/icons/tabs/contacts.svg";
@@ -19,13 +19,22 @@ import { useTranslation } from "react-i18next";
 import "../../global.css";
 import { useUser } from "app/store/user";
 import { useEffect } from "react";
+import SimpleLogin from "@/pages/me/components/SimpleLogin";
 
 // export default Slot
 
 const Layout = () => {
   console.log("tabs");
   const { t } = useTranslation();
+  const { userStore } = useUser();
 
+  if (!userStore.userInfo?._id) {
+    // return (
+    //   <SafeAreaView style={{ backgroundColor: "yellow", flex: 1 }}>
+    //     <SimpleLogin />
+    //   </SafeAreaView>
+    // );
+  }
   const TabText = ({ children, color }) => {
     return <Text style={{ fontSize: 12, color }}>{children}</Text>;
   };

@@ -61,7 +61,7 @@ const MsgWrapper = ({
   const navigator = useNavigation();
   const getContent = () => {
     if (msgType === "transfer") {
-      const transId = text.split("+")[2];
+      const transId = text.split("+")[0];
       const amount = text.split("+")[1];
       return (
         <Button

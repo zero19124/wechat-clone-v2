@@ -17,6 +17,7 @@ import i18n from "i18next";
 import io from "socket.io-client";
 import React from "react";
 import { PortalService } from "./component/base/ConfigProvider/ConfigProvider";
+import { View, Text } from "react-native";
 export const PortalRef =
   React.createRef<PortalService>() as MutableRefObject<PortalService>;
 
@@ -81,6 +82,11 @@ const Layout = () => {
   useEffect(() => {
     // navigate.navigate("pages/contacts/screens/send-friend-request/index");
   }, []);
+  // return (
+  //   <View style={{ backgroundColor: "blue" }}>
+  //     <Text>3</Text>
+  //   </View>
+  // );
   return (
     <PortalProvider>
       <InitializePortalRef />
@@ -135,6 +141,7 @@ const Layout = () => {
                             headerShown: false,
                           }}
                         />
+                        <Stack.Screen name="pages/chats/screens/money-qrcode/index" />
 
                         {/* contacts  */}
                         <Stack.Screen

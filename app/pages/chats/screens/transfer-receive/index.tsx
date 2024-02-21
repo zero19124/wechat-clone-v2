@@ -4,6 +4,7 @@ import useSendMsg from "@/hooks/useSendMsg";
 import { useChatList } from "app/store/chatList";
 import { useUser } from "app/store/user";
 import { useLocalSearchParams, useNavigation } from "expo-router";
+import { useEffect } from "react";
 import { Button, SafeAreaView, Text, View } from "react-native";
 const TransferReceive = () => {
   const { userStore } = useUser();
@@ -50,6 +51,17 @@ const TransferReceive = () => {
         }
       });
   };
+
+  useEffect(() => {
+    fetch(
+      config.apiDomain +
+        `/api/transaction/getTransById?transId=${params.transId}`
+    )
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res, "red");
+      });
+  });
   return (
     <SafeAreaView>
       <Text>TransferReceive</Text>

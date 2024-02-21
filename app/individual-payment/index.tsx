@@ -221,8 +221,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
-// const Page = () => {
-//   console.log("individual-payment", new Date().getTime());
-//   return <Text>3</Text>;
-// };
+
 export default Page;

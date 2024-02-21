@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, Image, TextProps } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TextProps,
+  Pressable,
+} from "react-native";
 import UserAvatar from "@/component/complex/UserAvatar";
 import { IMomentData } from "../index";
 import HeartOutlineIcon from "@/icons/discover/heart-outline.svg";
@@ -6,6 +13,7 @@ import MomentsImg from "./MomentsIms";
 import { useTheme } from "@/theme/useTheme";
 import MomentsComment from "./MomentsComment";
 import { Video, ResizeMode } from "expo-av";
+import ImagePreview from "@/component/base/ImagePreview";
 export interface IMomentsCard {
   momentData: IMomentData;
 }
@@ -48,6 +56,7 @@ const MomentsCard = (props: IMomentsCard) => {
     },
   });
   const { momentData } = props;
+
   return (
     <View style={[commonStyle.commonBorderBottom, style.momentsCardWrapper]}>
       <View style={style.momentsCardAvatar}>

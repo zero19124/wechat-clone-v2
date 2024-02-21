@@ -1,11 +1,12 @@
-import { Image, View, Text } from "react-native";
+import ImagePreview from "@/component/base/ImagePreview";
+import { Image, View, Text, Pressable } from "react-native";
 import { getSize } from "utils";
 interface IMomentsImgPros {
   imgList: string[];
 }
 const MomentsImg = (props: IMomentsImgPros) => {
   const { imgList } = props;
-  // console.log(imgList, "imgList");
+  console.log(imgList, "imgList");
   return (
     <View
       style={{
@@ -17,11 +18,25 @@ const MomentsImg = (props: IMomentsImgPros) => {
     >
       {imgList.map((imgUri, index) => {
         return (
-          <Image
-            style={{ width: getSize(80), height: 80 }}
-            key={index}
-            source={{ uri: imgUri }}
-          />
+          <Pressable
+            onPress={() => {
+              console.log(1, ImagePreview);
+
+              ImagePreview.open({
+                showIndex: false,
+
+                showIndicators: true,
+                images: imgList,
+                onChange: (index) => console.log(`当前展示第${index + 1}张`),
+              });
+            }}
+          >
+            <Image
+              style={{ width: getSize(80), height: 80 }}
+              key={index}
+              source={{ uri: imgUri }}
+            />
+          </Pressable>
         );
       })}
     </View>

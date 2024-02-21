@@ -50,11 +50,16 @@ const CodeScanner = () => {
     });
   }, [verticalPosition, fadeAnim]);
   useEffect(() => {
-    if (text.includes("userId+")) {
-      const userId = text.split("+")[1];
+    const [type, userId] = text.split("+");
+    if (type === "add") {
       navigator.navigate("pages/contacts/screens/friend-info/index", {
         friendId: userId,
         type: "new",
+      });
+    }
+    if (type === "transfer") {
+      navigator.navigate("individual-payment/index", {
+        userId,
       });
     }
   }, [text]);

@@ -60,6 +60,12 @@ const Chats = () => {
     if (option.text === "Scan") {
       navigate.navigate("pages/chats/screens/code-scanner/index");
     }
+    if (option.text === "Add Contacts") {
+      navigate.navigate("pages/contacts/screens/add-contacts/index");
+    }
+    if (option.text === "Money") {
+      navigate.navigate("pages/chats/screens/money-qrcode/index");
+    }
     popover.current?.hide();
     Toast.info(option.text);
   };

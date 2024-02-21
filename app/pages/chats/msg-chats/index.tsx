@@ -90,7 +90,6 @@ const Page = () => {
   const [msg, setMsg] = useState("");
   const heightValue = useRef(new Animated.Value(10)).current;
   const height = useRef(0);
-
   const { sendMsgHandler } = useSendMsg();
   const flatListRef = useRef<FlatList>();
   const startAnimation = (toValue) => {
@@ -100,9 +99,11 @@ const Page = () => {
       useNativeDriver: false, // 在 Android 上需要设置为 false
     }).start();
   };
+
   Keyboard.addListener("keyboardWillShow", () => {
     startAnimation(0);
   });
+
   const _270 = 220;
   const setH = () => {
     console.log(heightValue, "cH.current");
@@ -112,6 +113,7 @@ const Page = () => {
       height.current = 0;
       return;
     }
+
     height.current = _270;
     startAnimation(_270);
   };

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Dimensions,
   StyleSheet,
+  Keyboard,
 } from "react-native";
 import PanelSvgs from "@/icons/utils/svgs";
 import { convertCamelCaseToNormal, getSize } from "utils";
@@ -14,6 +15,8 @@ import { SwiperFlatList } from "react-native-swiper-flatlist";
 import { useNavigation, useRouter } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { pickImages } from "@/hooks/useImagePicker";
+import Swiper from "@/component/base/Swiper";
+import { useTheme } from "@/theme/useTheme";
 export const FN_TYPE_MAPS = {
   Album: "Album",
   Camera: "Camera",
@@ -36,28 +39,7 @@ const iconOrderOne = [
 ];
 
 const { width } = Dimensions.get("window");
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // backgroundColor: "white"
-  },
-  child: { width, justifyContent: "center" },
-  text: { fontSize: width * 0.5, textAlign: "center" },
-  touchItemWrapper: {
-    // backgroundColor: "tomato",
-    flexDirection: "row",
-    flexWrap: "wrap",
-  },
-  touchItem: {
-    marginHorizontal: 16,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 16,
-    backgroundColor: light.themeColor.white,
-    width: getSize(60),
-    height: getSize(60),
-  },
-});
+
 const iconOrderTwo = ["ContactCard", "File", "Coupons", "Music"];
 
 const FnKeyBoard = ({
@@ -68,25 +50,31 @@ const FnKeyBoard = ({
   handlers: (type: keyof typeof FN_TYPE_MAPS, val: any) => void;
 }) => {
   console.log("FnKeyBoard", heightValue);
-  const [heightValueMemo, setHeightValueMemo] = useState(0);
-
-  useEffect(() => {
-    heightValue?.addListener((value) => {
-      if (value === 220) {
-        console.log("当前值为：", value);
-        setHeightValueMemo(0);
-        return;
-      }
-      if (value === 0) {
-        console.log("当前值为：", value);
-        setHeightValueMemo(220);
-        return;
-      }
-    });
-  }, []);
-
+  const { themeColor } = useTheme();
   const router = useRouter();
   const navigator = useNavigation();
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      // backgroundColor: "white"
+    },
+    child: { width, justifyContent: "center" },
+    text: { fontSize: width * 0.5, textAlign: "center" },
+    touchItemWrapper: {
+      // backgroundColor: "tomato",
+      flexDirection: "row",
+      flexWrap: "wrap",
+    },
+    touchItem: {
+      marginHorizontal: 16,
+      justifyContent: "center",
+      alignItems: "center",
+      borderRadius: 16,
+      backgroundColor: themeColor.white,
+      width: getSize(60),
+      height: getSize(60),
+    },
+  });
   const svgHandler = async (name: string) => {
     switch (name) {
       case FN_TYPE_MAPS.Transfer:
@@ -118,21 +106,30 @@ const FnKeyBoard = ({
       style={{
         fontSize: 11,
         marginVertical: 8,
-        color: light.themeColor.text4,
+        color: themeColor.text4,
         textAlign: "center",
       }}
     >
       {convertCamelCaseToNormal(children)}
     </Text>
   );
-  useEffect(() => {
-    console.log(heightValueMemo, "heightValueMemo");
-  }, [heightValueMemo]);
+
+  const [showIndicator, setShowIndicator] = useState(false);
+  const onLayoutChange = (event) => {
+    const { height } = event.nativeEvent.layout;
+    console.log(height, "height");
+    if (height > 200) {
+      setShowIndicator(true);
+      return;
+    }
+    setShowIndicator(false);
+  };
   return (
     <Animated.View
+      onLayout={onLayoutChange}
       style={{
         // backgroundColor: "blue",
-        borderTopColor: light.themeColor.fill5,
+        borderTopColor: themeColor.fill5,
         borderTopWidth: StyleSheet.hairlineWidth,
         height: heightValue,
         paddingTop: 12,
@@ -140,57 +137,57 @@ const FnKeyBoard = ({
         bottom: 0,
       }}
     >
-      <SwiperFlatList
-        paginationStyleItem={{
-          width: 8,
-          height: 8,
-          marginHorizontal: 4,
-        }}
-        // keyExtractor={(item) => item + Math.random()}
-        paginationStyle={{ bottom: -12 }}
-        showPagination={heightValueMemo < 10}
-        // showPagination={true}
-        paginationActiveColor={light.themeColor.bg4}
-        paginationDefaultColor={light.themeColor.text1}
+      <Swiper
+        initialSwipe={0}
+        indicator={showIndicator}
+        loop
+        onChange={() => {}}
+        indicatorStyle={{ bottom: -20 }}
+        dotStyle={{ backgroundColor: themeColor.bg4 }}
+        activeDotStyle={{ backgroundColor: themeColor.bg5 }}
       >
-        <View style={[styles.child, styles.touchItemWrapper]}>
-          {iconOrderOne.map((iconName, index) => {
-            const Svg = PanelSvgs[iconName];
-            return (
-              <View key={index + iconName}>
-                <TouchableOpacity
-                  style={styles.touchItem}
-                  onPress={() => {
-                    svgHandler(iconName);
-                  }}
-                >
-                  <Svg width={32} height={32} />
-                </TouchableOpacity>
-                <SvgText>{iconName}</SvgText>
-              </View>
-            );
-          })}
-        </View>
-        <View
-          style={[
-            styles.child,
-            styles.touchItemWrapper,
-            // { backgroundColor: "thistle" },
-          ]}
-        >
-          {iconOrderTwo.map((iconName, index) => {
-            const Svg = PanelSvgs[iconName];
-            return (
-              <View key={index + iconName}>
-                <TouchableOpacity style={styles.touchItem}>
-                  <Svg width={32} height={32} />
-                </TouchableOpacity>
-                <SvgText>{iconName}</SvgText>
-              </View>
-            );
-          })}
-        </View>
-      </SwiperFlatList>
+        <Swiper.Item>
+          <View style={[styles.child, styles.touchItemWrapper]}>
+            {iconOrderOne.map((iconName, index) => {
+              const Svg = PanelSvgs[iconName];
+              return (
+                <View key={index + iconName}>
+                  <TouchableOpacity
+                    style={styles.touchItem}
+                    onPress={() => {
+                      svgHandler(iconName);
+                    }}
+                  >
+                    <Svg width={32} height={32} />
+                  </TouchableOpacity>
+                  <SvgText>{iconName}</SvgText>
+                </View>
+              );
+            })}
+          </View>
+        </Swiper.Item>
+        <Swiper.Item>
+          <View
+            style={[
+              styles.child,
+              styles.touchItemWrapper,
+              // { backgroundColor: "thistle" },
+            ]}
+          >
+            {iconOrderTwo.map((iconName, index) => {
+              const Svg = PanelSvgs[iconName];
+              return (
+                <View key={index + iconName}>
+                  <TouchableOpacity style={styles.touchItem}>
+                    <Svg width={32} height={32} />
+                  </TouchableOpacity>
+                  <SvgText>{iconName}</SvgText>
+                </View>
+              );
+            })}
+          </View>
+        </Swiper.Item>
+      </Swiper>
     </Animated.View>
   );
 };

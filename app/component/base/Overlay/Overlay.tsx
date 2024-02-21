@@ -6,7 +6,7 @@ import useMemoizedFn from "@/hooks/useMemoizedFn";
 import { useThemeFactory } from "../Theme";
 import { createStyle } from "./style";
 import type { OverlayProps } from "./type";
-import * as THEME_VARIABLE from "@/theme/styles/variables";
+import { defaultTheme } from "@/theme/styles";
 
 const PressableAnimated = Animated.createAnimatedComponent(Pressable);
 
@@ -14,7 +14,7 @@ const Overlay = (props: OverlayProps): JSX.Element => {
   const { children, visible = false, duration = 300 } = props;
   const [modalVisible, setModalVisible] = useState<boolean>(visible);
   const fadeAnimation = useRef(new Animated.Value(0));
-  const styles = createStyle(THEME_VARIABLE as any);
+  const styles = createStyle(defaultTheme);
 
   const animateFading = useMemoizedFn((toValue: number) => {
     return Animated.timing(fadeAnimation.current, {

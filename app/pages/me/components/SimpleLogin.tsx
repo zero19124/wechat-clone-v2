@@ -24,7 +24,7 @@ export default () => {
   const { setUserStore, userStore } = useUser();
   const deviceModel = DeviceInfo.getModel();
 
-  const [data, setData] = useState();
+  const [data, setData] = useState({ psw: "1", act: "1" });
   // deviceModel === "iPhone 15"
   //   ? { act: "12", psw: "12" }
   //   : { psw: "1", act: "1" }

@@ -234,7 +234,7 @@ export const createDefaultTheme = (vars: typeof _vars) => ({
   swiper_indicator_margin: vars.padding_sm,
   swiper_indicator_active_opacity: 1,
   swiper_indicator_inactive_opacity: 0.3,
-  swiper_indicator_active_background_color: vars.primary_color,
+  swiper_indicator_active_background_color: vars.white,
   swiper_indicator_inactive_background_color: vars.border_color,
 
   // Overlay
