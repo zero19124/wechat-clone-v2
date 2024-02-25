@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Button,
@@ -17,6 +17,8 @@ import { useNavigation } from "expo-router";
 
 export default () => {
   const cameraRef = useRef<Camera>(null);
+  const videoRef = useRef<Video>(null);
+
   const { sendMsgHandler } = useSendMsg();
   const navigator = useNavigation();
   const { userInfo } = useUser().userStore;
@@ -40,13 +42,18 @@ export default () => {
       setVideo(recorded.uri);
     }
   };
-
+  useEffect(() => {
+    console.log(video, "video");
+  }, [video]);
   const stopRecording = async () => {
     if (cameraRef.current) {
       try {
-        const video = await cameraRef.current.stopRecording();
+        await cameraRef.current.stopRecording();
         console.log("Video recorded:", video);
-        // 将视频上传至服务器
+
+        setTimeout(() => {
+          videoRef.current?.playAsync();
+        }, 200); // 将视频上传至服务器
         // uploadFile(video.uri);
       } catch (e) {
         console.log("error:" + e);
@@ -98,9 +105,10 @@ export default () => {
             }}
           />
           <Video
+            ref={videoRef}
             playsInSilentLockedModeIOS={true}
             // ref={video}
-            style={{ width: "80%", height: 200 }}
+            style={{ width: "100%", height: "80%" }}
             // style={styles.video}
             source={{
               uri: video,
@@ -117,6 +125,7 @@ export default () => {
       <>
         <Camera style={{ flex: 1 }} ref={cameraRef} />
         <TouchableOpacity
+          style={{ backgroundColor: "grey", padding: 24 }}
           onPress={takePhoto}
           onLongPress={startRecording}
           onPressOut={stopRecording}

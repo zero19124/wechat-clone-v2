@@ -19,7 +19,9 @@ import {
   PopoverInstance,
 } from "@/component/base/Popover";
 import { useTheme } from "@/theme/useTheme";
+import AppText from "./screens/code-scanner/index";
 const Chats = () => {
+  // return <AppText />;
   const navigate = useNavigation();
   const { t } = useTranslation();
   const { themeColor } = useTheme();
@@ -47,6 +49,18 @@ const Chats = () => {
       ),
     },
     {
+      text: t("rec"),
+      icon: (
+        <ScanFilled style={{ width: 22, height: 22 }} fill={themeColor.white} />
+      ),
+    },
+    {
+      text: t("send"),
+      icon: (
+        <ScanFilled style={{ width: 22, height: 22 }} fill={themeColor.white} />
+      ),
+    },
+    {
       text: t("Money"),
       icon: (
         <MoneyFilled
@@ -56,8 +70,21 @@ const Chats = () => {
       ),
     },
   ];
+  const router = useRouter();
   const select = (option: PopoverAction) => {
+    if (option.text === "rec") {
+      // router.push('/pages/chats/screens/code-scanner/')
+      // router.push("pages/chats/screens/code-scanner/index");
+      navigate.navigate("pages/chats/screens/video-call-rec/index");
+    }
+    if (option.text === "send") {
+      // router.push('/pages/chats/screens/code-scanner/')
+      // router.push("pages/chats/screens/code-scanner/index");
+      navigate.navigate("pages/chats/screens/video-call-send/index");
+    }
     if (option.text === "Scan") {
+      // router.push('/pages/chats/screens/code-scanner/')
+      // router.push("pages/chats/screens/code-scanner/index");
       navigate.navigate("pages/chats/screens/code-scanner/index");
     }
     if (option.text === "Add Contacts") {

@@ -105,7 +105,6 @@ const Layout = () => {
           }}
         ></Tabs.Screen>
       </Tabs>
-      <Toast />
     </RootSiblingParent>
   );
 };

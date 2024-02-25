@@ -55,7 +55,7 @@ const ConvoList = () => {
   const userId = useMemo(() => userStore.userInfo?._id, [userStore]);
   const style = getStyle(themeColor);
   useEffect(() => {
-    console.log(chatListStore, "chatListStore");
+    console.log(chatListStore.chatListState?.length, "chatListStore");
   }, [chatListStore]);
 
   const pusherContext = useContext(PusherContext);

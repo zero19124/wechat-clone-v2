@@ -16,12 +16,14 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
+import Image1 from "@/component/base/Image";
 import RedDot from "@/component/complex/RedDot";
 import Divider from "@/component/complex/Divider";
 import ItemCard from "@/component/complex/ItemCard";
 import SimpleLogin from "./components/SimpleLogin";
 import { useUser } from "app/store/user";
 import { useNavigation } from "expo-router";
+import Loading from "@/component/base/Loading";
 const Me = () => {
   // return <PusherTester />;
   const avatars = [

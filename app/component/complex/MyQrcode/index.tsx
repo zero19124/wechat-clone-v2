@@ -64,7 +64,6 @@ const MyQrcode = ({
       };
       // Create QRCode Object
       var qrCode = new QRCode(canvas, options);
-      console.log(qrCode, "qrCode");
     }
   };
   return (

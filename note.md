@@ -32,3 +32,9 @@ use > npx i18next-parser
 
 5
 尝试 最开始 会有灰色边框 LinearGradient
+6 如果路由找不到 但是路径没问题 可能是因为文件报错咯 导致没加载进去（example webrtc）
+
+7webrtc 
+   // let offer = new RTCSessionDescription(offerData.offer);
+      await peer.setRemoteDescription(offerData.offer); 
+  <!-- fix 多看别人代码 -->
