@@ -6,19 +6,8 @@
  * @flow strict-local
  */
 
-import React, { useCallback, useEffect, useState } from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  TextInput,
-  Button,
-  StatusBar,
-  TouchableOpacity,
-  Dimensions,
-} from "react-native";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { View, Button, Dimensions } from "react-native";
 
 import {
   RTCPeerConnection,
@@ -31,36 +20,16 @@ import {
   registerGlobals,
 } from "react-native-webrtc";
 
-import io from "socket.io-client";
-
-import Video from "./video";
 import config from "@/config/index";
 import { useUser } from "app/store/user";
+import { PusherContext } from "@/hooks/usePusherProvider";
 
-const dimensions = Dimensions.get("window");
-let socket = null;
-
-const AppText = () => {
+const VideoCallSender = () => {
   const { userStore } = useUser();
-  const socketInit = () => {
-    return new Promise((res, rej) => {
-      console.log(11111);
-      socket = io(config.apiDomain, {
-        auth: {
-          userid: "222",
-
-          // userid: userStore.userInfo?._id || "222",
-          username: "我是呼叫端",
-          role: "sender",
-        },
-      });
-      socket.on("call", async (data) => {
-        console.log("call");
-        initRemote(data);
-      });
-      res("ok");
-    });
-  };
+  const pusherContext = useContext(PusherContext);
+  const userId = useMemo(() => userStore.userInfo?._id || "222", [userStore]);
+  const socket = pusherContext.socket;
+  const toId = "123";
 
   const [peers, setPeers] = useState();
   const [local_stream, setLocal_stream] = useState();
@@ -72,9 +41,6 @@ const AppText = () => {
       facingMode: isFrontCamera ? "environment" : "user", // 切换前后摄像头
     },
   };
-  useEffect(() => {
-    console.log("local_stream111", local_stream);
-  }, [local_stream]);
 
   const initRemote = useCallback(async () => {
     // console.log("ok11111", socket);
@@ -109,8 +75,8 @@ const AppText = () => {
     await peer.setLocalDescription(offer);
 
     socket.emit("offer-test", {
-      to: "123", // 呼叫端 Socket ID
-      from: "222", // 呼叫端 Socket ID
+      to: toId, // 呼叫端 Socket ID
+      from: userId, // 呼叫端 Socket ID
       offer,
     });
 
@@ -121,7 +87,7 @@ const AppText = () => {
         console.log("onicecandidate");
         if (event.candidate) {
           socket.emit("candid", {
-            to: "123", // 接收端 Socket ID
+            to: toId, // 接收端 Socket ID
             candid: event.candidate,
           });
         }
@@ -141,7 +107,7 @@ const AppText = () => {
   }, [local_stream]);
   // 获取本地摄像头
   const getMedia = async () => {
-    await socketInit();
+    console.log(socket, "socket");
     socket.on("answer", (data) => {
       console.log("连接成功-answer1", peers);
 
@@ -157,11 +123,6 @@ const AppText = () => {
     });
     setLocal_stream(localStream);
     console.log(localStream, "localStream");
-    // localStream = await mediaDevices.getUserMedia({
-    //   audio: true,
-    //   video: { facingMode: isFrontCamera ? "environment" : "user" },
-    // });
-    // setLocal_stream(localStream);
   };
 
   // 播放视频组件
@@ -201,10 +162,10 @@ const AppText = () => {
   useEffect(() => {
     getMedia();
     return () => {
-      socket.disconnect();
+      // socket.disconnect();
     };
-  }, [isFrontCamera]);
+  }, []);
   return <Player />;
 };
 
-export default AppText;
+export default VideoCallSender;

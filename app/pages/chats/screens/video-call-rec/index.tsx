@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { View, Button, Dimensions } from "react-native";
 
 import {
@@ -22,30 +22,13 @@ import {
 import io from "socket.io-client";
 import config from "@/config/index";
 import { useUser } from "app/store/user";
-
-let socket = null;
+import { PusherContext } from "@/hooks/usePusherProvider";
 
 const VideoCallRec = () => {
   const { userStore } = useUser();
-
-  const socketInit = () => {
-    return new Promise((res, rej) => {
-      console.log(11111);
-      socket = io(config.apiDomain, {
-        auth: {
-          userid: "222",
-          // userid: userStore.userInfo?._id || "222",
-          username: "我是呼叫端",
-          role: "sender",
-        },
-      });
-      socket.on("call", async (data) => {
-        console.log("call");
-        initRemote(data);
-      });
-      res("ok");
-    });
-  };
+  const pusherContext = useContext(PusherContext);
+  const userId = useMemo(() => userStore.userInfo?._id || "222", [userStore]);
+  const socket = pusherContext.socket;
 
   const [peers, setPeer] = useState([]);
   const [local_stream, setLocal_stream] = useState();
@@ -96,7 +79,7 @@ const VideoCallRec = () => {
 
       socket.emit("answer", {
         to: offerData.from, // 呼叫端 Socket ID
-        from: offerData.to, // 呼叫端 Socket ID
+        from: userId, // 响应端 Socket ID
         answer,
       });
 
@@ -108,7 +91,7 @@ const VideoCallRec = () => {
           console.log("onicecandidate");
           if (event.candidate) {
             socket.emit("candid", {
-              to: "123", // 接收端 Socket ID
+              to: offerData.from, // 接收端 Socket ID
               candid: event.candidate,
             });
           }
@@ -130,18 +113,17 @@ const VideoCallRec = () => {
   );
   // 获取本地摄像头
   const getMedia = async () => {
-    await socketInit();
+    socket.on("call", async (data) => {
+      // call is offer
+      console.log("call");
+      initRemote(data);
+    });
     const localStream = await mediaDevices.getUserMedia({
       audio: true,
       video: { facingMode: isFrontCamera ? "environment" : "user" },
     });
     setLocal_stream(localStream);
     console.log(localStream, "localStream");
-    // localStream = await mediaDevices.getUserMedia({
-    //   audio: true,
-    //   video: { facingMode: isFrontCamera ? "environment" : "user" },
-    // });
-    // setLocal_stream(localStream);
   };
 
   // 播放视频组件
@@ -175,9 +157,9 @@ const VideoCallRec = () => {
   useEffect(() => {
     getMedia();
     return () => {
-      socket.disconnect();
+      // socket.disconnect();
     };
-  }, [isFrontCamera]);
+  }, []);
   return <Player />;
 };
 
