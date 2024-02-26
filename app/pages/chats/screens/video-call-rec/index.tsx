@@ -113,6 +113,7 @@ const VideoCallRec = () => {
   );
   // 获取本地摄像头
   const getMedia = async () => {
+    console.log(socket, "getMedia");
     socket.on("call", async (data) => {
       // call is offer
       console.log("call");
