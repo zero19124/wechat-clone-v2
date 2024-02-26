@@ -174,9 +174,18 @@ const ConvoList = () => {
       <TouchableOpacity
         onPress={() => {
           const convoId = item._id + "";
+          let curReceiverInfo;
+          if (item.isGroup) {
+          } else {
+            curReceiverInfo =
+              item.participants?.filter(
+                (userItem) => userItem._id !== userId
+              )?.[0] || null;
+          }
+          console.log(curReceiverInfo, "curReceiverInfo");
           setChatListStoreV2({
             chatListState: chatListStore.chatListState,
-            curConvo: { convoId },
+            curConvo: { convoId, curReceiverInfo },
           });
 
           navigate.navigate("pages/chats/msg-chats/index", {

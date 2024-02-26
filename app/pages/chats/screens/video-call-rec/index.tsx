@@ -23,16 +23,34 @@ import io from "socket.io-client";
 import config from "@/config/index";
 import { useUser } from "app/store/user";
 import { PusherContext } from "@/hooks/usePusherProvider";
-import { useNavigation } from "expo-router";
-// const toId = "65ca596cd90c67e46d6b01a7";
-const toId = "65ca5993d90c67e46d6b01ac";
+import { useLocalSearchParams, useNavigation } from "expo-router";
+import { useChatList } from "app/store/chatList";
+// const toIdTemp = "65ca596cd90c67e46d6b01a7";
+// const toIdTemp = "65ca5993d90c67e46d6b01ac";
 const VideoCallRec = () => {
   const { userStore } = useUser();
+  const params = useLocalSearchParams<{
+    answer: boolean;
+    to: string;
+    from: string;
+  }>();
   const pusherContext = useContext(PusherContext);
   const socket = pusherContext.socket;
   const navigator = useNavigation();
   const userId = useMemo(() => userStore.userInfo?._id || "222", [userStore]);
-
+  const { chatListStore } = useChatList();
+  const toId = useMemo(() => {
+    console.log(params, "params-rec");
+    // 没有就取路由的 因为当前用户没有进入过信息页面 拿不到当前对话信息
+    // 接听后 拿到from from其实就是要发送回去的to 因为call是from打来的 然后要answer回去
+    if (!chatListStore.curConvo) {
+      return params.from;
+    }
+    return (
+      chatListStore.curConvo?.curReceiverInfo?._id ||
+      "curReceiverInfo?._id is null"
+    );
+  }, [chatListStore?.curConvo, params]);
   const [peer, setPeer] = useState(
     new RTCPeerConnection({
       iceServers: [
@@ -74,28 +92,35 @@ const VideoCallRec = () => {
         setRemote_stream(remoteStream);
       };
       // 发送 answer
-      console.log(offerData, "offerData", peer);
+      console.log(offerData, "offerData");
       // let offer = new RTCSessionDescription(offerData.offer);
       await peer.setRemoteDescription(offerData.offer);
       let answer = await peer.createAnswer();
       await peer.setLocalDescription(answer);
+      console.log("setLocalDescription(answer)");
 
       socket.emit("answer", {
-        to: offerData.from, // 呼叫端 Socket ID
+        to: toId, // 呼叫端 Socket ID
         from: userId, // 响应端 Socket ID
         answer,
       });
 
-      console.log("连接成功-answer-rec");
+      console.log("连接成功-answer-rec", toId + "-toId");
 
       try {
         // step3;
         peer.onicecandidate = (event) => {
-          console.log("onicecandidate");
+          console.log(
+            "onicecandidate-rec+toId+" + toId,'curReceiverInfo',
+            chatListStore.curConvo?.curReceiverInfo,
+            "params",
+            params
+          );
           if (event.candidate) {
             socket.emit("candid", {
-              to: offerData.from, // 接收端 Socket ID
+              to: toId, // 接收端 Socket ID
               candid: event.candidate,
+              from: userId,
             });
           }
         };
@@ -112,20 +137,20 @@ const VideoCallRec = () => {
         console.log(e, "eee");
       }
     },
-    [local_stream]
+    [local_stream, toId]
   );
   // 获取本地摄像头
   const getMedia = async () => {
-    console.log(socket, "getMedia");
+    console.log("getMedia");
     socket.on("end-call", (data) => {
-      console.log("end-call-send", peer);
+      console.log("end-call-rec", peer);
       setTimeout(() => {
-        navigator.goBack();
+        navigator.canGoBack() && navigator.goBack();
       }, 300);
     });
     socket.on("call", async (data) => {
       // call is offer
-      console.log("call");
+      console.log("call-rec");
       initRemote(data);
     });
     const localStream = await mediaDevices.getUserMedia({
@@ -143,17 +168,25 @@ const VideoCallRec = () => {
         style={{
           flex: 1,
           backgroundColor: "red",
-          gap: 20,
         }}
       >
-        <RTCView
-          style={{ height: 300, width: 150 }}
-          streamURL={local_stream?.toURL?.()}
-        />
-        <RTCView
-          style={{ height: 300, width: 150 }}
-          streamURL={remote_stream?.toURL?.()}
-        />
+        <View
+          style={{
+            flexDirection: "row",
+            gap: 12,
+            paddingTop: 40,
+            justifyContent: "space-between",
+          }}
+        >
+          <RTCView
+            style={{ height: 450, width: 250 }}
+            streamURL={local_stream?.toURL?.()}
+          />
+          <RTCView
+            style={{ height: 200, width: 130 }}
+            streamURL={remote_stream?.toURL?.()}
+          />
+        </View>
         <Button
           title="end-call"
           onPress={() => {
@@ -181,7 +214,9 @@ const VideoCallRec = () => {
 
   useEffect(() => {
     getMedia();
+    console.log(toId, "toId-rec");
     return () => {
+      peer.close();
       // socket.disconnect();
     };
   }, []);

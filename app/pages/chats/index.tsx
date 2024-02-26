@@ -159,37 +159,46 @@ const Chats = () => {
   const socket = pusherContext.socket;
   useEffect(() => {
     console.log(Dialog.confirm, "Dialog");
-    socket?.on("pre-call", async (preCallData) => {
-      console.log("pre-call", preCallData);
-      await Dialog.confirm({
-        cancelButtonText: "拒接",
-        confirmButtonText: "接听",
-        title: "from" + preCallData?.from,
-        message: "to" + preCallData?.to,
-      })
-        .then(() => {
-          navigate.navigate("pages/chats/screens/video-call-rec/index");
-
-          setTimeout(() => {
-            socket?.emit("pre-call-answer", {
-              answer: true,
-              to: preCallData?.from,
-              from: preCallData?.to,
-            });
-          }, 400);
-
-          // on confirm
+    socket?.on(
+      "pre-call",
+      async (preCallData: { to: string; from: string }) => {
+        console.log("pre-call", preCallData);
+        const { to, from } = preCallData;
+        await Dialog.confirm({
+          cancelButtonText: "拒接",
+          confirmButtonText: "接听",
+          title: "from" + preCallData?.from,
+          message: "to" + preCallData?.to,
         })
-        .catch(() => {
-          socket?.emit("pre-call-answer", {
-            answer: false,
-            to: preCallData?.from,
-            from: preCallData?.to,
-          });
+          .then(() => {
+            navigate.navigate("pages/chats/screens/video-call-rec/index", {
+              answer: true,
+              to,
+              from,
+            });
+            // pre-call-answer 需要交换 to=被叫人 from=发起人
+            setTimeout(() => {
+              socket?.emit("pre-call-answer", {
+                answer: true,
+                to: from,
+                from: to,
+              });
+            }, 400);
 
-          // on cancel
-        });
-    });
+            // on confirm
+          })
+          .catch(() => {
+            socket?.emit("pre-call-answer", {
+              answer: false,
+              to: from,
+              from: to,
+            });
+
+            // on cancel
+          });
+      }
+    );
+
     // navigate.navigate("pages/contacts/screens/send-friend-request/index");
   }, [socket]);
   return (

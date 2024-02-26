@@ -84,11 +84,6 @@ const Layout = () => {
     PortalRef.current = portal;
     return null;
   };
-  const answerHandler = () => {
-    socket?.emit("pre-call-answer", {
-      answered: true,
-    });
-  };
   useEffect(() => {
     console.log(Dialog.confirm, "Dialog");
 
@@ -140,6 +135,19 @@ const Layout = () => {
                             headerShown: false,
                           }}
                         />
+                        <Stack.Screen
+                          name="pages/chats/screens/video-call-rec/index"
+                          options={{
+                            headerShown: false,
+                          }}
+                        />
+                        <Stack.Screen
+                          name="pages/chats/screens/video-call-send/index"
+                          options={{
+                            headerShown: false,
+                          }}
+                        />
+
                         <Stack.Screen
                           name="pages/chats/screens/code-scanner/index"
                           options={{}}

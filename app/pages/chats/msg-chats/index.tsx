@@ -38,6 +38,8 @@ import config from "@/config/index";
 import { useChatList } from "app/store/chatList";
 import { PusherContext } from "@/hooks/usePusherProvider";
 import useSendMsg from "@/hooks/useSendMsg";
+import { useTranslation } from "react-i18next";
+import ActionSheet, { ActionSheetAction } from "@/component/base/ActionSheet";
 const Page = () => {
   const navigate = useNavigation();
   // 获取设备型号
@@ -193,7 +195,30 @@ const Page = () => {
         }
       });
   }, []);
+  const { t } = useTranslation();
+  const defaultActions: ActionSheetAction[] = [
+    {
+      name: t("Video Call"),
+      callback: () => {
+        console.log("Video");
+        navigate.navigate("pages/chats/screens/video-call-send/index", {
+          autoCall: true,
+        });
+      },
+    },
+    {
+      name: t("Voice Call"),
+      callback: () => {
+        console.log("Voice");
+        navigate.navigate("pages/chats/screens/video-call-send/index");
+      },
+    },
+  ];
+  const [visible, setVisible] = useState(false);
 
+  const onClose = () => {
+    setVisible(false);
+  };
   return (
     <SafeAreaView
       style={{
@@ -202,6 +227,14 @@ const Page = () => {
       }}
       edges={["bottom"]}
     >
+      <ActionSheet
+        style={{ backgroundColor: themeColor.white, borderRadius: 8 }}
+        visible={visible}
+        actions={defaultActions}
+        onClose={onClose}
+        cancelText={t("Cancel")}
+        onCancel={onClose}
+      />
       <KeyboardAvoidingView
         style={{
           // backgroundColor: "yellow",
@@ -275,6 +308,10 @@ const Page = () => {
                   convoId: convoId + "",
                   doneHandler: () => {},
                 });
+              } else if (type === FN_TYPE_MAPS.VideoCall) {
+                console.log(123);
+                setVisible(!visible);
+                setH();
               }
             }}
           />

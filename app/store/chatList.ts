@@ -3,7 +3,7 @@ import config from "../config";
 import DeviceInfo from "react-native-device-info";
 
 interface IConvo {
-  curConvo: { convoId: string } | undefined;
+  curConvo: { convoId: string; curReceiverInfo?: string } | undefined;
   chatListState?: any[] | undefined;
 }
 export const chatListState = atom<IConvo>({

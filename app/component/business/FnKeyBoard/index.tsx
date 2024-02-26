@@ -99,6 +99,9 @@ const FnKeyBoard = ({
       case "Camera":
         navigator.navigate("pages/chats/msg-chats/screens/camera/index");
         break;
+      case FN_TYPE_MAPS.VideoCall:
+        handlers?.({ type: FN_TYPE_MAPS.VideoCall });
+        break;
     }
   };
   const SvgText = ({ children }) => (
