@@ -23,15 +23,25 @@ import io from "socket.io-client";
 import config from "@/config/index";
 import { useUser } from "app/store/user";
 import { PusherContext } from "@/hooks/usePusherProvider";
-
+import { useNavigation } from "expo-router";
+// const toId = "65ca596cd90c67e46d6b01a7";
+const toId = "65ca5993d90c67e46d6b01ac";
 const VideoCallRec = () => {
   const { userStore } = useUser();
   const pusherContext = useContext(PusherContext);
   const socket = pusherContext.socket;
-
+  const navigator = useNavigation();
   const userId = useMemo(() => userStore.userInfo?._id || "222", [userStore]);
 
-  const [peers, setPeer] = useState([]);
+  const [peer, setPeer] = useState(
+    new RTCPeerConnection({
+      iceServers: [
+        {
+          urls: "stun:stun.l.google.com:19302",
+        },
+      ],
+    })
+  );
   const [local_stream, setLocal_stream] = useState();
   const [remote_stream, setRemote_stream] = useState();
   const [isFrontCamera, setIsFrontCamera] = useState(false);
@@ -46,14 +56,6 @@ const VideoCallRec = () => {
     async (offerData) => {
       // console.log("ok11111", socket);
       // 1. 创建实例
-      const peer = new RTCPeerConnection({
-        iceServers: [
-          {
-            urls: "stun:stun.l.google.com:19302",
-          },
-        ],
-      });
-      setPeer([...peers, peers]);
       localStream = await mediaDevices.getUserMedia({
         audio: true,
         video: { facingMode: isFrontCamera ? "environment" : "user" },
@@ -115,6 +117,12 @@ const VideoCallRec = () => {
   // 获取本地摄像头
   const getMedia = async () => {
     console.log(socket, "getMedia");
+    socket.on("end-call", (data) => {
+      console.log("end-call-send", peer);
+      setTimeout(() => {
+        navigator.goBack();
+      }, 300);
+    });
     socket.on("call", async (data) => {
       // call is offer
       console.log("call");
@@ -145,6 +153,21 @@ const VideoCallRec = () => {
         <RTCView
           style={{ height: 300, width: 150 }}
           streamURL={remote_stream?.toURL?.()}
+        />
+        <Button
+          title="end-call"
+          onPress={() => {
+            console.log(peer, "peer");
+            peer.close();
+            local_stream.getTracks().forEach((track) => {
+              track.stop();
+            });
+            navigator.goBack();
+            socket?.emit("end-call", {
+              to: toId, // 呼叫端 Socket ID
+              from: userId,
+            });
+          }}
         />
         <Button
           title="change camera"

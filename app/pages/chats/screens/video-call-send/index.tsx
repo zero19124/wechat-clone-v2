@@ -7,7 +7,7 @@
  */
 
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { View, Button, Dimensions } from "react-native";
+import { View, Button, Dimensions, ScrollView } from "react-native";
 
 import {
   RTCPeerConnection,
@@ -23,14 +23,17 @@ import {
 import config from "@/config/index";
 import { useUser } from "app/store/user";
 import { PusherContext } from "@/hooks/usePusherProvider";
+import { useNavigation } from "expo-router";
+// export const toId = "65ca5993d90c67e46d6b01ac";
+const toId = "65ca596cd90c67e46d6b01a7";
 
 const VideoCallSender = () => {
+  const navigator = useNavigation();
+
   const { userStore } = useUser();
   const pusherContext = useContext(PusherContext);
   const userId = useMemo(() => userStore.userInfo?._id || "222", [userStore]);
   const socket = pusherContext.socket;
-  // const toId = "65ca5993d90c67e46d6b01ac";
-  const toId = "65ca596cd90c67e46d6b01a7";
   // 1. 创建实例
   const [peer, setPeers] = useState(
     new RTCPeerConnection({
@@ -41,6 +44,7 @@ const VideoCallSender = () => {
       ],
     })
   );
+
   const [local_stream, setLocal_stream] = useState();
   const [remote_stream, setRemote_stream] = useState();
   const [isFrontCamera, setIsFrontCamera] = useState(false);
@@ -112,15 +116,14 @@ const VideoCallSender = () => {
     socket.on("answer", (data) => {
       console.log("连接成功-answer-send", peer);
 
-      setPeers((pre) => {
-        console.log("连接成功-answer-send-2", pre);
-        pre.setRemoteDescription(data.answer);
-
-        if (pre) {
-        } else {
-          console.log("pre-------------null");
-        }
-      });
+      console.log("连接成功-answer-send-2", peer);
+      peer.setRemoteDescription(data.answer);
+    });
+    socket.on("end-call", (data) => {
+      console.log("end-call-send", peer);
+      setTimeout(() => {
+        navigator.goBack();
+      }, 300);
     });
     const localStream = await mediaDevices.getUserMedia({
       audio: true,
@@ -168,6 +171,21 @@ const VideoCallSender = () => {
           }}
         />
         <Button
+          title="end-call"
+          onPress={() => {
+            console.log(peer, "peer");
+            peer.close();
+            local_stream.getTracks().forEach((track) => {
+              track.stop();
+            });
+            navigator.goBack();
+            socket?.emit("end-call", {
+              to: toId, // 呼叫端 Socket ID
+              from: userId,
+            });
+          }}
+        />
+        <Button
           title="pre-call"
           onPress={() => {
             preCall();
@@ -189,7 +207,11 @@ const VideoCallSender = () => {
       // socket.disconnect();
     };
   }, []);
-  return <Player />;
+  return (
+    <ScrollView>
+      <Player />
+    </ScrollView>
+  );
 };
 
 export default VideoCallSender;
