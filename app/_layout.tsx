@@ -2,9 +2,7 @@ import { Stack, useNavigation } from "expo-router";
 import * as light from "@/theme/light";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { RootSiblingParent } from "react-native-root-siblings";
-import Toast from "react-native-root-toast";
 import "react-native-gesture-handler";
-import { ToastProvider } from "react-native-toast-notifications";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { PortalProvider, usePortal } from "./component/business/Portal";
 import { ThemeProvider } from "@/theme/useTheme";
@@ -101,7 +99,6 @@ const Layout = () => {
         <PusherProvider>
           <ThemeProvider>
             <I18nextProvider i18n={i18n}>
-              <ToastProvider>
                 <BottomSheetModalProvider>
                   <ActionSheetProvider>
                     <RootSiblingParent>
@@ -231,11 +228,9 @@ const Layout = () => {
                           }}
                         />
                       </Stack>
-                      <Toast />
                     </RootSiblingParent>
                   </ActionSheetProvider>
                 </BottomSheetModalProvider>
-              </ToastProvider>
             </I18nextProvider>
           </ThemeProvider>
         </PusherProvider>

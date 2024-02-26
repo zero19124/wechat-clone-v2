@@ -10,7 +10,6 @@ import MeActiveIcon from "@/icons/tabs/me-active.svg";
 import MeIcon from "@/icons/tabs/me.svg";
 
 import { RootSiblingParent } from "react-native-root-siblings";
-import Toast from "react-native-root-toast";
 import { useTranslation } from "react-i18next";
 
 // import Slot from "expo-router/Slot";

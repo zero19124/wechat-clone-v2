@@ -11,7 +11,6 @@ import {
 import PanelSvgs from "@/icons/utils/svgs";
 import { convertCamelCaseToNormal, getSize } from "utils";
 import * as light from "@/theme/light";
-import { SwiperFlatList } from "react-native-swiper-flatlist";
 import { useNavigation, useRouter } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { pickImages } from "@/hooks/useImagePicker";
