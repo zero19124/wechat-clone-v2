@@ -11,13 +11,16 @@ import { ThemeProvider } from "@/theme/useTheme";
 import { RecoilRoot } from "recoil";
 import { PusherProvider } from "./hooks/usePusherProvider";
 import { useUser } from "./store/user";
-import { MutableRefObject, useEffect } from "react";
+import { MutableRefObject, useContext, useEffect } from "react";
 import { I18nextProvider, initReactI18next } from "react-i18next";
 import i18n from "i18next";
 import io from "socket.io-client";
 import React from "react";
 import { PortalService } from "./component/base/ConfigProvider/ConfigProvider";
 import { View, Text } from "react-native";
+import { PusherContext } from "@/hooks/usePusherProvider";
+import Dialog from "./component/base/Dialog";
+
 export const PortalRef =
   React.createRef<PortalService>() as MutableRefObject<PortalService>;
 
@@ -28,6 +31,8 @@ const Layout = () => {
   } else {
     console.log("App is running in production mode");
   }
+  const pusherContext = useContext(PusherContext);
+  const socket = pusherContext.socket;
   const navigate = useNavigation();
   // Translations
   const resources = {
@@ -73,16 +78,41 @@ const Layout = () => {
       escapeValue: false,
     },
   });
-  
 
   const InitializePortalRef = () => {
     const portal = usePortal();
     PortalRef.current = portal;
     return null;
   };
+  const answerHandler = () => {
+    socket?.emit("pre-call-answer", {
+      answered: true,
+    });
+  };
   useEffect(() => {
     // navigate.navigate("pages/contacts/screens/send-friend-request/index");
   }, []);
+  useEffect(() => {
+    console.log(Dialog.confirm, "Dialog", socket);
+    socket?.on("pre-call", async (preCallData) => {
+      console.log("pre-call", preCallData);
+      await Dialog.confirm({
+        title: "from" + preCallData?.from,
+        message: "to" + preCallData?.to,
+      })
+        .then(() => {
+          socket?.emit("pre-call-answer", { answer: true });
+
+          // on confirm
+        })
+        .catch(() => {
+          socket?.emit("pre-call-answer", { answer: false });
+
+          // on cancel
+        });
+    });
+    // navigate.navigate("pages/contacts/screens/send-friend-request/index");
+  }, [socket]);
   // return (
   //   <View style={{ backgroundColor: "blue" }}>
   //     <Text>3</Text>
@@ -131,8 +161,7 @@ const Layout = () => {
                         />
                         <Stack.Screen
                           name="pages/chats/screens/code-scanner/index"
-                          options={{
-                          }}
+                          options={{}}
                         />
                         <Stack.Screen
                           name="pages/chats/screens/transfer-receive/index"

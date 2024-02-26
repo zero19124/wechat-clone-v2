@@ -1,5 +1,11 @@
 import { useNavigation, useRouter } from "expo-router";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { TouchableOpacity, View, Text } from "react-native";
 import ChatIcon from "@/icons/tabs/chats.svg";
 import ChatActiveIcon from "@/icons/tabs/chats-active.svg";
@@ -20,6 +26,8 @@ import {
 } from "@/component/base/Popover";
 import { useTheme } from "@/theme/useTheme";
 import AppText from "./screens/code-scanner/index";
+import Dialog from "@/component/base/Dialog";
+import { PusherContext } from "@/hooks/usePusherProvider";
 const Chats = () => {
   // return <AppText />;
   const navigate = useNavigation();
@@ -147,8 +155,43 @@ const Chats = () => {
     });
   }, []);
   console.log("chats");
-  const [toolTipVisible, setToolTipVisible] = useState(false);
+  const pusherContext = useContext(PusherContext);
+  const socket = pusherContext.socket;
+  useEffect(() => {
+    console.log(Dialog.confirm, "Dialog");
+    socket?.on("pre-call", async (preCallData) => {
+      console.log("pre-call", preCallData);
+      await Dialog.confirm({
+        cancelButtonText: "拒接",
+        confirmButtonText: "接听",
+        title: "from" + preCallData?.from,
+        message: "to" + preCallData?.to,
+      })
+        .then(() => {
+          navigate.navigate("pages/chats/screens/video-call-rec/index");
 
+          setTimeout(() => {
+            socket?.emit("pre-call-answer", {
+              answer: true,
+              to: preCallData?.from,
+              from: preCallData?.to,
+            });
+          }, 400);
+
+          // on confirm
+        })
+        .catch(() => {
+          socket?.emit("pre-call-answer", {
+            answer: false,
+            to: preCallData?.from,
+            from: preCallData?.to,
+          });
+
+          // on cancel
+        });
+    });
+    // navigate.navigate("pages/contacts/screens/send-friend-request/index");
+  }, [socket]);
   return (
     <View style={{ backgroundColor: light.themeColor.white, flex: 1 }}>
       {/* <Text>Chats</Text>
