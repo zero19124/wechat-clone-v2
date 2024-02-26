@@ -90,29 +90,10 @@ const Layout = () => {
     });
   };
   useEffect(() => {
+    console.log(Dialog.confirm, "Dialog");
+
     // navigate.navigate("pages/contacts/screens/send-friend-request/index");
   }, []);
-  useEffect(() => {
-    console.log(Dialog.confirm, "Dialog", socket);
-    socket?.on("pre-call", async (preCallData) => {
-      console.log("pre-call", preCallData);
-      await Dialog.confirm({
-        title: "from" + preCallData?.from,
-        message: "to" + preCallData?.to,
-      })
-        .then(() => {
-          socket?.emit("pre-call-answer", { answer: true });
-
-          // on confirm
-        })
-        .catch(() => {
-          socket?.emit("pre-call-answer", { answer: false });
-
-          // on cancel
-        });
-    });
-    // navigate.navigate("pages/contacts/screens/send-friend-request/index");
-  }, [socket]);
   // return (
   //   <View style={{ backgroundColor: "blue" }}>
   //     <Text>3</Text>

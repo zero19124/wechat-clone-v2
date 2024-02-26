@@ -29,9 +29,18 @@ const VideoCallSender = () => {
   const pusherContext = useContext(PusherContext);
   const userId = useMemo(() => userStore.userInfo?._id || "222", [userStore]);
   const socket = pusherContext.socket;
-  const toId = "123";
-
-  const [peers, setPeers] = useState();
+  // const toId = "65ca5993d90c67e46d6b01ac";
+  const toId = "65ca596cd90c67e46d6b01a7";
+  // 1. 创建实例
+  const [peer, setPeers] = useState(
+    new RTCPeerConnection({
+      iceServers: [
+        {
+          urls: "stun:stun.l.google.com:19302",
+        },
+      ],
+    })
+  );
   const [local_stream, setLocal_stream] = useState();
   const [remote_stream, setRemote_stream] = useState();
   const [isFrontCamera, setIsFrontCamera] = useState(false);
@@ -44,15 +53,7 @@ const VideoCallSender = () => {
 
   const initRemote = useCallback(async () => {
     // console.log("ok11111", socket);
-    // 1. 创建实例
-    const peer = new RTCPeerConnection({
-      iceServers: [
-        {
-          urls: "stun:stun.l.google.com:19302",
-        },
-      ],
-    });
-    setPeers(peer);
+
     localStream = await mediaDevices.getUserMedia({
       audio: true,
       video: { facingMode: isFrontCamera ? "environment" : "user" },
@@ -81,7 +82,7 @@ const VideoCallSender = () => {
     });
 
     try {
-      console.log("offer-test");
+      console.log("offer-test", "84");
 
       peer.onicecandidate = (event) => {
         console.log("onicecandidate");
@@ -109,12 +110,16 @@ const VideoCallSender = () => {
   const getMedia = async () => {
     console.log(socket, "socket");
     socket.on("answer", (data) => {
-      console.log("连接成功-answer1", peers);
+      console.log("连接成功-answer-send", peer);
 
       setPeers((pre) => {
-        console.log("连接成功-answer", pre);
-
+        console.log("连接成功-answer-send-2", pre);
         pre.setRemoteDescription(data.answer);
+
+        if (pre) {
+        } else {
+          console.log("pre-------------null");
+        }
       });
     });
     const localStream = await mediaDevices.getUserMedia({
@@ -124,7 +129,20 @@ const VideoCallSender = () => {
     setLocal_stream(localStream);
     console.log(localStream, "localStream");
   };
-
+  const preCall = () => {
+    socket.emit("pre-call", {
+      to: toId, // 呼叫端 Socket ID
+      from: userId,
+    });
+    socket.on("pre-call-answer-result", (data) => {
+      console.log("pre-call-answer-result:", data);
+      if (data.answer) {
+        initRemote();
+      } else {
+        alert("rejected!");
+      }
+    });
+  };
   // 播放视频组件
   const Player = () => {
     return (
@@ -147,6 +165,12 @@ const VideoCallSender = () => {
           title="call"
           onPress={() => {
             initRemote();
+          }}
+        />
+        <Button
+          title="pre-call"
+          onPress={() => {
+            preCall();
           }}
         />
         <Button

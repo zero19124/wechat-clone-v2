@@ -27,8 +27,9 @@ import { PusherContext } from "@/hooks/usePusherProvider";
 const VideoCallRec = () => {
   const { userStore } = useUser();
   const pusherContext = useContext(PusherContext);
-  const userId = useMemo(() => userStore.userInfo?._id || "222", [userStore]);
   const socket = pusherContext.socket;
+
+  const userId = useMemo(() => userStore.userInfo?._id || "222", [userStore]);
 
   const [peers, setPeer] = useState([]);
   const [local_stream, setLocal_stream] = useState();
@@ -71,7 +72,7 @@ const VideoCallRec = () => {
         setRemote_stream(remoteStream);
       };
       // 发送 answer
-      console.log(offerData, "offerData");
+      console.log(offerData, "offerData", peer);
       // let offer = new RTCSessionDescription(offerData.offer);
       await peer.setRemoteDescription(offerData.offer);
       let answer = await peer.createAnswer();
@@ -83,7 +84,7 @@ const VideoCallRec = () => {
         answer,
       });
 
-      console.log("连接成功-answer");
+      console.log("连接成功-answer-rec");
 
       try {
         // step3;
