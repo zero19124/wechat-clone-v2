@@ -1,24 +1,44 @@
 import { useTheme } from "@/theme/useTheme";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { View } from "react-native";
+import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  TouchableOpacity,
+  TouchableOpacityProps,
+  Text,
+  View,
+} from "react-native";
+import { getSize } from "utils";
 const sizeMap: Record<string, any> = {
-  big: { size: 28, fontSize: 56 },
-  normal: { size: 24, fontSize: 48 },
+  big: { size: getSize(58) },
+  normal: { size: getSize(42) },
 };
-const HangUpBtn = ({ type = "normal" }: { type: string }) => {
+const HangUpBtn = ({
+  type = "normal",
+  text = "",
+  ...rest
+}: { type?: string; text?: string } & TouchableOpacityProps) => {
+  console.log(rest, "rest");
   const { themeColor } = useTheme();
+  const size = sizeMap[type].size;
   return (
-    <View
-      style={{
-        backgroundColor: themeColor.danger5,
-        flexDirection: "row",
-        alignItems: "center",
-      }}
-    >
-      <MaterialCommunityIcons
-        size={sizeMap[type].size}
-        color={themeColor.bg5}
-      />
+    <View style={{ alignItems: "center" }}>
+      <TouchableOpacity
+        {...rest}
+        style={{
+          backgroundColor: themeColor.magenta6,
+          width: getSize(75),
+          height: getSize(75),
+          alignItems: "center",
+          justifyContent: "center",
+          borderRadius: getSize(75),
+        }}
+      >
+        <MaterialCommunityIcons
+          size={size}
+          color={themeColor.white}
+          name="phone-hangup"
+        />
+      </TouchableOpacity>
+      <Text style={{ fontSize: 30, color: themeColor.white }}>{text}</Text>
     </View>
   );
 };

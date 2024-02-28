@@ -25,6 +25,7 @@ import { useUser } from "app/store/user";
 import { PusherContext } from "@/hooks/usePusherProvider";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useChatList } from "app/store/chatList";
+import VideoCallPlayer from "../component/VideoCallPlayer";
 // const toIdTemp = "65ca596cd90c67e46d6b01a7";
 // const toIdTemp = "65ca5993d90c67e46d6b01ac";
 const VideoCallRec = () => {
@@ -111,7 +112,8 @@ const VideoCallRec = () => {
         // step3;
         peer.onicecandidate = (event) => {
           console.log(
-            "onicecandidate-rec+toId+" + toId,'curReceiverInfo',
+            "onicecandidate-rec+toId+" + toId,
+            "curReceiverInfo",
             chatListStore.curConvo?.curReceiverInfo,
             "params",
             params
@@ -132,6 +134,8 @@ const VideoCallRec = () => {
           peer.addIceCandidate(candid);
           // 对接完 然后开始推
         });
+        setAwaiting(false);
+
         console.log("ok3");
       } catch (e) {
         console.log(e, "eee");
@@ -139,6 +143,8 @@ const VideoCallRec = () => {
     },
     [local_stream, toId]
   );
+  const [awaiting, setAwaiting] = useState(true);
+
   // 获取本地摄像头
   const getMedia = async () => {
     console.log("getMedia");
@@ -179,7 +185,8 @@ const VideoCallRec = () => {
           }}
         >
           <RTCView
-            style={{ height: 450, width: 250 }}
+            objectFit="cover"
+            style={{ flex: 1 }}
             streamURL={local_stream?.toURL?.()}
           />
           <RTCView
@@ -220,6 +227,33 @@ const VideoCallRec = () => {
       // socket.disconnect();
     };
   }, []);
+
+  return (
+    <VideoCallPlayer
+      awaiting={awaiting}
+      preCall={() => {
+        // preCall();
+      }}
+      hangUpHandler={() => {
+        console.log(peer, "peer");
+        peer.close();
+        local_stream.getTracks().forEach((track) => {
+          track.stop();
+        });
+        navigator.goBack();
+        // the same only the user who get in this page get toid
+        socket?.emit("end-call", {
+          to: toId, // 呼叫端 Socket ID
+          from: userId,
+        });
+      }}
+      switchHandler={() => {
+        setIsFrontCamera(!isFrontCamera);
+      }}
+      local_stream={local_stream}
+      remote_stream={remote_stream}
+    />
+  );
   return <Player />;
 };
 

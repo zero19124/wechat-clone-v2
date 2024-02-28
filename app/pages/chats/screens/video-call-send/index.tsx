@@ -14,37 +14,34 @@ import {
   useRef,
   useState,
 } from "react";
-import {
-  View,
-  Button,
-  Dimensions,
-  ScrollView,
-  Animated,
-  PanResponder,
-} from "react-native";
-
+import { View, Button, Text, Animated, PanResponder } from "react-native";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import {
   RTCPeerConnection,
   RTCIceCandidate,
-  RTCSessionDescription,
   RTCView,
-  MediaStream,
-  MediaStreamTrack,
   mediaDevices,
-  registerGlobals,
 } from "react-native-webrtc";
-
 import config from "@/config/index";
 import { useUser } from "app/store/user";
 import { PusherContext } from "@/hooks/usePusherProvider";
 import { useNavigation } from "expo-router";
 import { useChatList } from "app/store/chatList";
+import HangUpBtn from "@/component/complex/HangUpBtn";
+import { getSize } from "utils";
+import { useTranslation } from "react-i18next";
+import { useTheme } from "@/theme/useTheme";
+import VideoCallBtn, {
+  VideoCallBtnSize,
+} from "@/component/complex/VideoCallBtn";
+import VideoCallPlayer from "../component/VideoCallPlayer";
 // export const toIdTemp = "65ca5993d90c67e46d6b01ac";
 // const toIdTemp = "65ca596cd90c67e46d6b01a7";
 
 const VideoCallSender = () => {
   const navigator = useNavigation();
   const { userStore } = useUser();
+  const { themeColor } = useTheme();
   const pusherContext = useContext(PusherContext);
   const userId = useMemo(() => userStore.userInfo?._id || "222", [userStore]);
   const socket = pusherContext.socket;
@@ -125,8 +122,10 @@ const VideoCallSender = () => {
           console.log("candid-testcandid-testcandid-test");
           let candid = new RTCIceCandidate(data.candid);
           peer.addIceCandidate(candid);
+          setAwaiting(false);
           // 对接完 然后开始推
         });
+
         console.log("ok3");
       } catch (e) {
         console.log(e, "eee");
@@ -172,86 +171,6 @@ const VideoCallSender = () => {
       from: userId,
     });
   };
-  const pan = useRef(new Animated.ValueXY()).current;
-  const panResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: () => true,
-      onPanResponderMove: (e, gestureState) => {
-        console.log(gestureState, "gestureState", pan);
-        pan.y.setValue(gestureState.dy);
-        pan.x.setValue(gestureState.dx);
-      },
-    })
-  ).current;
-  // 播放视频组件
-  const Player = () => {
-    return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: "red",
-          height: "100%",
-        }}
-      >
-        <View
-          style={{
-            flex: 1,
-            flexDirection: "row",
-          }}
-        >
-          <RTCView style={{ flex: 1 }} streamURL={local_stream?.toURL?.()} />
-          <Animated.View
-            style={{
-              transform: [{ translateX: pan.x }, { translateY: pan.y }],
-            }}
-            {...panResponder.panHandlers}
-          >
-            <RTCView
-              style={{
-                height: 300,
-                width: 130,
-                position: "absolute",
-                bottom: 0,
-                right: 16,
-                zIndex: 2,
-              }}
-              streamURL={remote_stream?.toURL?.()}
-            />
-          </Animated.View>
-        </View>
-        <View style={{ position: "absolute", bottom: 48, left: 32 }}>
-          <Button
-            title="end-call"
-            onPress={() => {
-              console.log(peer, "peer");
-              peer.close();
-              local_stream.getTracks().forEach((track) => {
-                track.stop();
-              });
-              navigator.goBack();
-              // the same only the user who get in this page get toid
-              socket?.emit("end-call", {
-                to: toId, // 呼叫端 Socket ID
-                from: userId,
-              });
-            }}
-          />
-          <Button
-            title="pre-call"
-            onPress={() => {
-              preCall();
-            }}
-          />
-          <Button
-            title="change camera"
-            onPress={() => {
-              setIsFrontCamera(!isFrontCamera);
-            }}
-          />
-        </View>
-      </View>
-    );
-  };
 
   useEffect(() => {
     getMedia();
@@ -261,7 +180,35 @@ const VideoCallSender = () => {
       peer.close();
     };
   }, []);
-  return <Player />;
+  const [awaiting, setAwaiting] = useState(true);
+
+  // setIsFrontCamera(!isFrontCamera);
+  return (
+    <VideoCallPlayer
+      awaiting={awaiting}
+      preCall={() => {
+        preCall();
+      }}
+      hangUpHandler={() => {
+        console.log(peer, "peer");
+        peer.close();
+        local_stream.getTracks().forEach((track) => {
+          track.stop();
+        });
+        navigator.goBack();
+        // the same only the user who get in this page get toid
+        socket?.emit("end-call", {
+          to: toId, // 呼叫端 Socket ID
+          from: userId,
+        });
+      }}
+      switchHandler={() => {
+        setIsFrontCamera(!isFrontCamera);
+      }}
+      local_stream={local_stream}
+      remote_stream={remote_stream}
+    />
+  );
 };
 
 export default VideoCallSender;
