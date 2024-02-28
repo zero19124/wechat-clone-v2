@@ -32,7 +32,6 @@ import FnKeyBoard, { FN_TYPE_MAPS } from "@/component/business/FnKeyBoard";
 import PrivateChatList from "./component/ChatList";
 import ChatInput from "./component/ChatInput";
 import { useTheme } from "@/theme/useTheme";
-import { PusherEvent } from "@pusher/pusher-websocket-react-native";
 import { useUser } from "app/store/user";
 import config from "@/config/index";
 import { useChatList } from "app/store/chatList";
@@ -40,6 +39,8 @@ import { PusherContext } from "@/hooks/usePusherProvider";
 import useSendMsg from "@/hooks/useSendMsg";
 import { useTranslation } from "react-i18next";
 import ActionSheet, { ActionSheetAction } from "@/component/base/ActionSheet";
+import { TNavigationOptions } from "@/component/complex/CommonNavigateTitle";
+import { getHeight, getSize } from "utils";
 const Page = () => {
   const navigate = useNavigation();
   // 获取设备型号
@@ -51,7 +52,9 @@ const Page = () => {
   const convoId = useMemo(() => {
     return chatListStore.curConvo?.convoId;
   }, [params]);
-  console.log(convoId, "paramsparams");
+  const curReceiverInfo = useMemo(() => {
+    return chatListStore.curConvo?.curReceiverInfo;
+  }, [chatListStore]);
   const [dataOut, setDataOut] = useState<any[]>([]);
   useLayoutEffect(() => {
     navigate.setOptions({
@@ -59,7 +62,8 @@ const Page = () => {
       headerShadowVisible: false,
       headerRight: () => <ThreeDot />,
       headerLeftContainerStyle: { paddingLeft: 12 },
-      headerTitle: userInfo?.act,
+      title: curReceiverInfo?.act,
+      headerTitleAlign: "center",
       headerLeft: () => (
         <View>
           <TouchableOpacity
@@ -86,7 +90,7 @@ const Page = () => {
         </View>
       ),
       headerRightContainerStyle: { paddingRight: 12 },
-    });
+    } as TNavigationOptions);
   }, []);
   const { toggleTheme, themeColor, themeName } = useTheme();
   const [msg, setMsg] = useState("");
@@ -106,7 +110,7 @@ const Page = () => {
     startAnimation(0);
   });
 
-  const _270 = 220;
+  const _270 = getSize(220);
   const setH = () => {
     console.log(heightValue, "cH.current");
     Keyboard.dismiss();

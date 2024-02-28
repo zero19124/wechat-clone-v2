@@ -1,9 +1,15 @@
 import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
 import config from "../config";
 import DeviceInfo from "react-native-device-info";
-
+export interface IUser {
+  __v: number;
+  _id: string;
+  act: string;
+  image: string;
+  psw: string;
+}
 interface IConvo {
-  curConvo: { convoId: string; curReceiverInfo?: string } | undefined;
+  curConvo: { convoId: string; curReceiverInfo?: IUser } | undefined;
   chatListState?: any[] | undefined;
 }
 export const chatListState = atom<IConvo>({

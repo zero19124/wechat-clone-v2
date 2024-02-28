@@ -17,3 +17,9 @@ modal 需要
      |        ^ no such module 'EXBarCodeScanner'    fix 》 pod install 
  <!-- 部署   -->
 eas submit -p ios
+
+# 4
+pod install Error: EACCES: permission denied
+fix ≥ sudo  chown -R Zhuanz: node_modules/
+
+<!-- lightningcss-darwin-arm64 -->

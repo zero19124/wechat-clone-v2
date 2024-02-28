@@ -76,6 +76,7 @@ const MomentsCard = (props: IMomentsCard) => {
                 // ref={video}
                 style={{ width: "80%", height: 200 }}
                 // style={styles.video}
+                
                 source={{
                   uri: "https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
                 }}

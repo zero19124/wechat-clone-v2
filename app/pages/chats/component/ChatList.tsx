@@ -14,7 +14,6 @@ import config from "@/config/index";
 import { useUser } from "app/store/user";
 import { formatDateToString } from "@/utils/date";
 import { useChatList } from "app/store/chatList";
-import { PusherEvent } from "@pusher/pusher-websocket-react-native";
 import { PusherContext } from "@/hooks/usePusherProvider";
 import DeviceInfo from "react-native-device-info";
 import { TThemeType, useTheme } from "@/theme/useTheme";
