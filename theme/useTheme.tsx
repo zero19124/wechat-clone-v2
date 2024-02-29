@@ -1,7 +1,6 @@
 import { useState, useContext, createContext } from "react";
 import * as light from "./light";
 import * as dark from "./dark";
-
 export type TThemeType = {
   themeColor: typeof light.themeColor;
   text: typeof light.text;
@@ -12,6 +11,10 @@ export type TThemeType = {
 
 export type TThemeName = "dark" | "light";
 const getCommonStyle = (theme: TThemeType["themeColor"]) => {
+  if (!theme) {
+    console.log("theme is ll getCommonStyle");
+    return {};
+  }
   return {
     commonBorderBottom: {
       borderBottomColor: theme.fillColor,
@@ -55,6 +58,7 @@ export const useTheme = () => {
     setTheme(theme === "light" ? light : dark);
     console.log(themeName, "state", themes.themeColor.white);
   };
+  console.log(themes.themeColor, "themeColor-------111");
 
   return {
     ...themes,

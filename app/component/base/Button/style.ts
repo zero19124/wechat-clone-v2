@@ -20,9 +20,10 @@ type Styles = {
 
 const createStyle = (
   theme: DiceUI.Theme,
+  themeColor: any,
   { type, size, plain }: Params
 ): Styles => {
-  const { themeColor } = useTheme();
+  console.log(themeColor, "themeColor-------");
   const buttonTypeStyleMaps: Record<ButtonType, ViewStyle> = {
     default: {
       backgroundColor: theme.button_default_background_color,
@@ -107,9 +108,7 @@ const createStyle = (
         : theme.button_danger_color,
     },
     primary: {
-      color: plain
-        ? themeColor.white
-        : themeColor.white,
+      color: plain ? themeColor.white : themeColor.white,
     },
     success: {
       color: plain

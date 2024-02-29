@@ -15,7 +15,6 @@ const PrivateChatList = (props: {
   // console.log(dataOut, "dataOut-userInfo");
   const renderItem = ({ item }: { item: (typeof data)[0] }) => {
     const isMe = item.userId === userInfo?._id;
-    console.log(item, "item");
     const ItemWrapper = () => {
       return (
         <View

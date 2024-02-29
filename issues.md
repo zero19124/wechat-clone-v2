@@ -23,3 +23,6 @@ pod install Error: EACCES: permission denied
 fix ≥ sudo  chown -R Zhuanz: node_modules/
 
 <!-- lightningcss-darwin-arm64 -->
+
+<!-- themeColor is null,  ThemeProvider没包到portalproveider  -->
+          </ThemeProvider>

@@ -93,11 +93,11 @@ const Layout = () => {
   //   </View>
   // );
   return (
-    <PortalProvider>
-      <InitializePortalRef />
-      <RecoilRoot>
-        <PusherProvider>
-          <ThemeProvider>
+    <ThemeProvider>
+      <PortalProvider>
+        <InitializePortalRef />
+        <RecoilRoot>
+          <PusherProvider>
             <I18nextProvider i18n={i18n}>
               <BottomSheetModalProvider>
                 <ActionSheetProvider>
@@ -226,10 +226,10 @@ const Layout = () => {
                 </ActionSheetProvider>
               </BottomSheetModalProvider>
             </I18nextProvider>
-          </ThemeProvider>
-        </PusherProvider>
-      </RecoilRoot>
-    </PortalProvider>
+          </PusherProvider>
+        </RecoilRoot>
+      </PortalProvider>
+    </ThemeProvider>
   );
 };
 export default Layout;

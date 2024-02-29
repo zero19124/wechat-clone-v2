@@ -164,7 +164,7 @@ const VideoCallRec = () => {
       video: { facingMode: isFrontCamera ? "environment" : "user" },
     });
     setLocal_stream(localStream);
-    console.log(localStream, "localStream");
+    // console.log(localStream, "localStream");
   };
 
   // 播放视频组件

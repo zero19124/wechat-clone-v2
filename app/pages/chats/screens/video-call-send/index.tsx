@@ -161,7 +161,7 @@ const VideoCallSender = () => {
       video: { facingMode: isFrontCamera ? "environment" : "user" },
     });
     setLocal_stream(localStream);
-    console.log(localStream, "localStream");
+    // console.log(localStream, "localStream");
   };
   // if the user can call preCall then they must be on the page
   const preCall = () => {

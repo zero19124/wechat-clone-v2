@@ -5,6 +5,9 @@ import { useThemeFactory } from "../Theme";
 // import Loading from '../Loading';
 import createStyle from "./style";
 import type { ButtonProps } from "./type";
+import { useTheme } from "@/theme/useTheme";
+import * as THEME_VARIABLE from "@/theme/styles/variables";
+import { defaultTheme } from "@/theme/styles/defaultTheme";
 
 const Button: FC<ButtonProps> = memo((props) => {
   const {
@@ -25,7 +28,10 @@ const Button: FC<ButtonProps> = memo((props) => {
     children,
     ...rest
   } = props;
-  const { styles } = useThemeFactory(createStyle, { type, size, plain });
+  const { themeColor } = useTheme();
+
+  // const { styles } = useThemeFactory(createStyle, { type, size, plain });
+  const styles = createStyle(defaultTheme, themeColor, { type, size, plain });
   const text = loading ? loadingText : children;
 
   const textFlattenStyle = StyleSheet.flatten<TextStyle>([
