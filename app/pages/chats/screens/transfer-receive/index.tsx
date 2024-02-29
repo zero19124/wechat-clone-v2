@@ -12,6 +12,7 @@ import { useTheme } from "@/theme/useTheme";
 import { useChatList } from "app/store/chatList";
 import { useUser } from "app/store/user";
 import ClockOutlineIcon from "@/icons/chats/clock-outline.svg";
+import ClockFilledIcon from "@/icons/chats/clock-filled.svg";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useLayoutEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -23,12 +24,14 @@ import {
   View,
 } from "react-native";
 import { getSize } from "utils";
+import { getToday } from "@/utils/date";
 const TransferReceive = () => {
   const { userStore } = useUser();
   const { themeColor } = useTheme();
   const { t } = useTranslation();
   const navigator = useNavigation();
   const params = useLocalSearchParams<{
+    //  the id who  fired the transfer
     msgSenderId: string;
     transId: string;
     amount: string;
@@ -148,12 +151,8 @@ const TransferReceive = () => {
       </View>
     );
   };
-  return (
-    <SafeAreaView style={{ backgroundColor: themeColor.white, flex: 1 }}>
-      {params.msgSenderId === userStore.userInfo?._id && (
-        <Text>msgSenderId</Text>
-      )}
-
+  const HeadIcon = ({ children }) => {
+    return (
       <View
         style={{
           alignItems: "center",
@@ -161,32 +160,87 @@ const TransferReceive = () => {
           paddingTop: "15%",
         }}
       >
-        <ClockOutlineIcon
-          width={getSize(68)}
-          height={getSize(68)}
-          fill={themeColor.blue3}
-        />
+        {children}
       </View>
-      <Text style={{ textAlign: "center", fontSize: 16 }}>
-        {t("Await Receipt")}
-      </Text>
+    );
+  };
+  const HeadText = ({ children }) => {
+    return (
+      <Text style={{ textAlign: "center", fontSize: 16 }}>{children}</Text>
+    );
+  };
+  const AmountWrapper = ({ children }) => {
+    return (
       <View style={{ marginBottom: "12%", marginTop: 8, alignItems: "center" }}>
-        <AmountText amount={params.amount} />
+        {children}
       </View>
-      <View style={{ marginHorizontal: 32 }}>
-        <Divider thickness={StyleSheet.hairlineWidth} />
-        <View
-          style={{
-            flexDirection: "row",
-            paddingTop: 12,
-            justifyContent: "space-between",
-          }}
-        >
-          <Text>{t("Transfer Time")}</Text>
-          <Text>{"2022-03-02"}</Text>
+    );
+  };
+  const TransferTime = () => {
+    return (
+      <View
+        style={{
+          flexDirection: "row",
+          paddingTop: 12,
+          justifyContent: "space-between",
+        }}
+      >
+        <Text>{t("Transfer Time")}</Text>
+        <Text>{getToday("DD/YY/YYYY, HH:mm:ss" )}</Text>
+      </View>
+    );
+  };
+
+  const getTransferBody = () => {
+    if (params.msgSenderId === userStore.userInfo?._id) {
+      return (
+        <>
+          <HeadIcon>
+            <ClockFilledIcon
+              width={getSize(68)}
+              height={getSize(68)}
+              fill={themeColor.blue4}
+            />
+          </HeadIcon>
+          <HeadText>{t("Awaiting Receipt By the user")}</HeadText>
+
+          <AmountWrapper>
+            <AmountText amount={params.amount} />
+          </AmountWrapper>
+
+          <View style={{ marginHorizontal: 32 }}>
+            <Divider thickness={StyleSheet.hairlineWidth} />
+            <TransferTime />
+          </View>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <HeadIcon>
+          <ClockOutlineIcon
+            width={getSize(68)}
+            height={getSize(68)}
+            fill={themeColor.blue3}
+          />
+        </HeadIcon>
+        <HeadText>{t("Await Receipt")}</HeadText>
+        <AmountWrapper>
+          <AmountText amount={params.amount} />
+        </AmountWrapper>
+
+        <View style={{ marginHorizontal: 32 }}>
+          <Divider thickness={StyleSheet.hairlineWidth} />
+          <TransferTime />
         </View>
-      </View>
-      <BottomSection />
+        <BottomSection />
+      </>
+    );
+  };
+  return (
+    <SafeAreaView style={{ backgroundColor: themeColor.white, flex: 1 }}>
+      {getTransferBody()}
     </SafeAreaView>
   );
 };
