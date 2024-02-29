@@ -23,7 +23,6 @@ const createStyle = (
   themeColor: any,
   { type, size, plain }: Params
 ): Styles => {
-  console.log(themeColor, "themeColor-------");
   const buttonTypeStyleMaps: Record<ButtonType, ViewStyle> = {
     default: {
       backgroundColor: theme.button_default_background_color,

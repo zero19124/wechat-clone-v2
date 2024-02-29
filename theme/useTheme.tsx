@@ -58,7 +58,6 @@ export const useTheme = () => {
     setTheme(theme === "light" ? light : dark);
     console.log(themeName, "state", themes.themeColor.white);
   };
-  console.log(themes.themeColor, "themeColor-------111");
 
   return {
     ...themes,

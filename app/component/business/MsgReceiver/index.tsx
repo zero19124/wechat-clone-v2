@@ -8,13 +8,15 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+import ImagePreview from "@/component/base/ImagePreview";
+
 import TransferOutlineIcon from "@/icons/chats/transfer-outline.svg";
 import { getSize } from "utils";
 import { useNavigation } from "expo-router";
 import { useTranslation } from "react-i18next";
 import Divider from "@/component/complex/BottomWidthDivider";
 import { useTheme } from "@/theme/useTheme";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAimgwesome } from "@expo/vector-icons";
 import { useUser } from "app/store/user";
 import TransferCard from "./component/TransferCard";
 export const getMsgTypeMap = (
@@ -85,6 +87,7 @@ const MsgWrapper = ({
   const userInfo = useUser().userStore.userInfo;
   const msgTypeMap = getMsgTypeMap(themeColor);
   const navigator = useNavigation();
+
   const { t } = useTranslation();
   const TextWrapper = ({ children }) => {
     return (
@@ -133,8 +136,30 @@ const MsgWrapper = ({
       );
     }
     if (msgType === "img") {
+      console.log(text, "text-img");
+
+      const openPreview = () => {
+        console.log(text, "text-im1g");
+
+        ImagePreview.open({
+          showIndex: false,
+          showIndicators: false,
+          images: [text],
+          onChange: (index) => console.log(`当前展示第${index + 1}张`),
+        });
+      };
       return (
-        <Image source={{ uri: text }} style={{ width: 180, height: 100 }} />
+        <TouchableOpacity onPress={openPreview}>
+          <Image
+            source={{
+              uri:
+                // "https://placekitten.com/302/302"
+                // ||
+                text,
+            }}
+            style={{ width: 180, height: 100 }}
+          />
+        </TouchableOpacity>
       );
     }
     return (

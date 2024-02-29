@@ -16,13 +16,15 @@ import { useTranslation } from "react-i18next";
 import { useTheme } from "@/theme/useTheme";
 import MoneyOutline from "@/icons/chats/money-outline.svg";
 import WalletOutline from "@/icons/chats/wallet-outline.svg";
+import Loading from "@/component/base/Loading";
+import { getSize } from "utils";
 
 const Wallet = () => {
   const navigate = useNavigation();
   const { userStore } = useUser();
   const { t } = useTranslation();
   const { themeColor } = useTheme();
-  const [wallet, setWallet] = useState({ balance: 0, miniFund: 0 });
+  const [wallet, setWallet] = useState({ balance: -1, miniFund: 0 });
   useLayoutEffect(() => {
     const navigatorProps = useCommonNavigateProps({
       title: t("Service"),
@@ -60,6 +62,27 @@ const Wallet = () => {
     console.log(i18n.language);
   }, []);
   const getItem = (icon: any, text: string, amount?: number) => {
+    const AmountText = () => {
+      if (text === "Money") {
+        return null;
+      }
+      return wallet.balance !== -1 ? (
+        <Text
+          style={{
+            width: 100,
+            textAlign: "center",
+            color: themeColor.fill4,
+            position: "absolute",
+            bottom: -16,
+            fontSize: 12,
+          }}
+        >
+          ¥ {amount}
+        </Text>
+      ) : (
+        <Loading size={16} style={{ position: "absolute", bottom: getSize(-20) }} />
+      );
+    };
     return (
       <View
         style={{
@@ -77,20 +100,7 @@ const Wallet = () => {
         >
           {text}
         </Text>
-        {amount && (
-          <Text
-            style={{
-              width: 100,
-              textAlign: "center",
-              color: themeColor.fill4,
-              position: "absolute",
-              bottom: -16,
-              fontSize: 12,
-            }}
-          >
-            ¥ {amount}
-          </Text>
-        )}
+        <AmountText />
       </View>
     );
   };
