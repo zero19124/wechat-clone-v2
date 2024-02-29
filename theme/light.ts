@@ -3,10 +3,10 @@ import { parseThemeColors, parseThemeText, parseThemeBorder } from "./utils";
 
 const fillColor = "rgb(237,237,237)";
 
-
 export const themeColor = {
   primary: "#07C160",
   fillColor,
+  transferOrange: "#eea351",
   textBlue: "#576B95",
   bg1: "#FFFFFF",
   white: "#FFFFFF",
@@ -37,6 +37,7 @@ export const themeColor = {
   brandLight: "#DEFAF5",
   iconBlue: "#4d89d4",
   iconYellow: "#eac653",
+
   // text1: "#FFFFFF",
 
   line1: "#F2F3F5",

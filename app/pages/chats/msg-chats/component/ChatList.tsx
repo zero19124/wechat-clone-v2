@@ -4,6 +4,7 @@ import UserAvatar from "app/component/complex/UserAvatar";
 import { FlatList, View } from "react-native";
 import data from "@/mocks/msgList.json";
 import { useUser } from "app/store/user";
+import { getSize } from "utils";
 
 const PrivateChatList = (props: {
   dataOut: any[];
@@ -14,6 +15,7 @@ const PrivateChatList = (props: {
   // console.log(dataOut, "dataOut-userInfo");
   const renderItem = ({ item }: { item: (typeof data)[0] }) => {
     const isMe = item.userId === userInfo?._id;
+    console.log(item, "item");
     const ItemWrapper = () => {
       return (
         <View
@@ -31,6 +33,7 @@ const PrivateChatList = (props: {
               }}
             >
               <MsgReceiver
+                msgId={item._id}
                 msgType={item.type}
                 msgSenderId={item.userId}
                 type="right"
@@ -38,7 +41,11 @@ const PrivateChatList = (props: {
               />
               <UserAvatar
                 source={{ uri: userInfo?.image }}
-                style={{ marginLeft: 8 }}
+                style={{
+                  marginLeft: 8,
+                  width: getSize(45),
+                  height: getSize(45),
+                }}
               />
             </View>
           ) : (
@@ -51,9 +58,14 @@ const PrivateChatList = (props: {
             >
               <UserAvatar
                 source={{ uri: item.image }}
-                style={{ marginRight: 8 }}
+                style={{
+                  marginRight: 8,
+                  width: getSize(45),
+                  height: getSize(45),
+                }}
               />
               <MsgReceiver
+                msgId={item.msgId}
                 msgSenderId={item.userId}
                 msgType={item.type}
                 text={item.latestMessage}

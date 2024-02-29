@@ -33,6 +33,9 @@ const Page = () => {
   });
   useEffect(() => {
     const handleAppStateChange = (nextAppState) => {
+      // 安卓会一直触发？ todo
+      return;
+      console.log(nextAppState, "nextAppState");
       if (nextAppState === "active") {
         getLatestPhoto();
         // 用户从其他应用切换回来时执行的操作
@@ -44,7 +47,9 @@ const Page = () => {
     // 订阅 AppState 的改变事件
     const appStateSubscription = AppState.addEventListener(
       "change",
-      handleAppStateChange
+      (state) => {
+        handleAppStateChange(state);
+      }
     );
     getLatestPhoto();
 

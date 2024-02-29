@@ -80,6 +80,8 @@ const Wallet = () => {
         {amount && (
           <Text
             style={{
+              width: 100,
+              textAlign: "center",
               color: themeColor.fill4,
               position: "absolute",
               bottom: -16,
@@ -120,7 +122,7 @@ const Wallet = () => {
             fill={themeColor.white}
           />,
           t("Wallet"),
-          1 || wallet.balance
+          (Number(wallet?.balance).toFixed(2) || 5340300.03) as number
         )}
       </View>
       {i18n.language === "cn" ? (

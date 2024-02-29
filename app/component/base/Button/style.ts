@@ -1,6 +1,7 @@
-import { StyleSheet } from 'react-native';
-import type { ViewStyle, TextStyle } from 'react-native';
-import type { ButtonType, ButtonSize } from './type';
+import { StyleSheet } from "react-native";
+import type { ViewStyle, TextStyle } from "react-native";
+import type { ButtonType, ButtonSize } from "./type";
+import { useTheme } from "@/theme/useTheme";
 
 type Params = {
   type: ButtonType;
@@ -17,36 +18,40 @@ type Styles = {
   text: TextStyle;
 };
 
-const createStyle = (theme: DiceUI.Theme, { type, size, plain }: Params): Styles => {
+const createStyle = (
+  theme: DiceUI.Theme,
+  { type, size, plain }: Params
+): Styles => {
+  const { themeColor } = useTheme();
   const buttonTypeStyleMaps: Record<ButtonType, ViewStyle> = {
     default: {
       backgroundColor: theme.button_default_background_color,
       borderColor: theme.button_default_border_color,
-      borderStyle: 'solid',
+      borderStyle: "solid",
       borderWidth: theme.button_border_width,
     },
     danger: {
       backgroundColor: theme.button_danger_background_color,
       borderColor: theme.button_danger_border_color,
-      borderStyle: 'solid',
+      borderStyle: "solid",
       borderWidth: theme.button_border_width,
     },
     primary: {
-      backgroundColor: theme.button_primary_background_color,
-      borderColor: theme.button_primary_border_color,
-      borderStyle: 'solid',
+      backgroundColor: themeColor.primary,
+      borderColor: themeColor.primary,
+      borderStyle: "solid",
       borderWidth: theme.button_border_width,
     },
     success: {
       backgroundColor: theme.button_success_background_color,
       borderColor: theme.button_success_border_color,
-      borderStyle: 'solid',
+      borderStyle: "solid",
       borderWidth: theme.button_border_width,
     },
     warning: {
       backgroundColor: theme.button_warning_background_color,
       borderColor: theme.button_warning_border_color,
-      borderStyle: 'solid',
+      borderStyle: "solid",
       borderWidth: theme.button_border_width,
     },
   };
@@ -58,7 +63,6 @@ const createStyle = (theme: DiceUI.Theme, { type, size, plain }: Params): Styles
     },
     large: {
       height: theme.button_large_height,
-      width: '100%',
     },
     mini: {
       height: theme.button_mini_height,
@@ -80,16 +84,16 @@ const createStyle = (theme: DiceUI.Theme, { type, size, plain }: Params): Styles
 
   const textSizeStyleMaps: Record<ButtonSize, TextStyle> = {
     normal: {
-      fontSize: theme.button_normal_font_size,
+      fontSize: 14,
     },
     large: {
-      fontSize: theme.button_default_font_size,
+      fontSize: 18,
     },
     mini: {
-      fontSize: theme.button_mini_font_size,
+      fontSize: 8,
     },
     small: {
-      fontSize: theme.button_small_font_size,
+      fontSize: 12,
     },
   };
 
@@ -98,28 +102,36 @@ const createStyle = (theme: DiceUI.Theme, { type, size, plain }: Params): Styles
       color: theme.button_default_color,
     },
     danger: {
-      color: plain ? theme.button_danger_background_color : theme.button_danger_color,
+      color: plain
+        ? theme.button_danger_background_color
+        : theme.button_danger_color,
     },
     primary: {
-      color: plain ? theme.button_primary_background_color : theme.button_primary_color,
+      color: plain
+        ? themeColor.white
+        : themeColor.white,
     },
     success: {
-      color: plain ? theme.button_success_background_color : theme.button_success_color,
+      color: plain
+        ? theme.button_success_background_color
+        : theme.button_success_color,
     },
     warning: {
-      color: plain ? theme.button_warning_background_color : theme.button_warning_color,
+      color: plain
+        ? theme.button_warning_background_color
+        : theme.button_warning_color,
     },
   };
 
   return StyleSheet.create<Styles>({
     button: {
-      alignItems: 'center',
-      borderRadius: theme.button_border_radius,
-      flexDirection: 'row',
+      alignItems: "center",
+      borderRadius: 8,
+      flexDirection: "row",
       height: theme.button_default_height,
-      justifyContent: 'center',
-      overflow: 'hidden',
-      position: 'relative',
+      justifyContent: "center",
+      overflow: "hidden",
+      position: "relative",
       ...buttonTypeStyleMaps[type],
       ...buttonSizeStyleMaps[size],
       ...contentPadding[size],

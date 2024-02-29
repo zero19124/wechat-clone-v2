@@ -1,19 +1,24 @@
-import type { StyleProp, TextStyle, ViewProps } from 'react-native';
+import type { StyleProp, TextStyle, ViewProps } from "react-native";
 // import type { TouchableOpacityProps } from '../TouchableOpacity/type';
 // import type Loading from '../Loading';
 
-export type ButtonType = 'primary' | 'success' | 'warning' | 'danger' | 'default';
-export type ButtonSize = 'large' | 'small' | 'mini' | 'normal';
+export type ButtonType =
+  | "primary"
+  | "success"
+  | "warning"
+  | "danger"
+  | "default";
+export type ButtonSize = "large" | "small" | "mini" | "normal";
 
 // type LoadingProps = React.ComponentProps<typeof Loading>;
 
-export interface ButtonProps
-  extends Pick<ViewProps, 'style' | 'testID'>,
-    Pick<any, 'onPress' | 'onLongPress' | 'onPressIn' | 'onPressOut'> {
+export interface ButtonProps extends Pick<ViewProps, "style" | "testID"> {
+  onPress: any;
   /**
    * 类型，可选值为 primary success warning danger
    * @default default
    */
+  children: string;
   type?: ButtonType;
   /**
    * 尺寸，可选值为 large small mini
@@ -32,7 +37,7 @@ export interface ButtonProps
    * 图标展示位置，可选值为 right
    * @default left
    */
-  iconPosition?: 'left' | 'right';
+  iconPosition?: "left" | "right";
   /**
    * 是否为朴素按钮
    */

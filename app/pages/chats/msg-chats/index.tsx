@@ -152,12 +152,21 @@ const Page = () => {
   const pusherContext = useContext(PusherContext);
   useEffect(() => {
     // 有新消息就更新会话列表
-    pusherContext.socket?.on("messages", (data) => {
-      console.log(data, "msgList");
+    pusherContext.socket?.on("messages", (messagesData) => {
+      const data = messagesData.newMsgData;
+      const type = messagesData.type;
+      console.log(data, "messagesData-context");
+
       try {
         const latestMessage = data.msg;
         //     // 这里会重新调对话窗口列表
         updateConvoLatestMsgById(convoId + "", latestMessage);
+        // 如果有转账的 更新对应的信息转账状态
+        // 直接重新拉新数据 后面再优化状态更新问题
+        if (type && type === "isTransferAccepted") {
+          getMsgList();
+          return;
+        }
         // 插入信息列表
         const newMsg = {
           userId: data.user._id,
@@ -172,10 +181,7 @@ const Page = () => {
       }
     });
   }, [pusherContext.socket]);
-
-  useEffect(() => {
-    console.log(heightValue, "heightValue._value");
-
+  const getMsgList = () => {
     fetch(config.apiDomain + `/api/msg/allMsgByConvoId?convoId=${convoId}`)
       .then((res) => res.json())
       .then((res) => {
@@ -198,6 +204,11 @@ const Page = () => {
           console.log(res?.msg);
         }
       });
+  };
+  useEffect(() => {
+    console.log(heightValue, "heightValue._value");
+
+    getMsgList();
   }, []);
   const { t } = useTranslation();
   const defaultActions: ActionSheetAction[] = [

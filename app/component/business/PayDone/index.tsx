@@ -66,7 +66,7 @@ const PayDone = () => {
             return;
           }
           sendMsgHandler({
-            val: "tranferid+" + amount,
+            val: "transferId+" + amount,
             userId: userInfo?._id + "",
             type: "transfer",
             convoId: chatListStore.curConvo?.convoId + "",

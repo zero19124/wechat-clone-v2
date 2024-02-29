@@ -149,13 +149,7 @@ const Layout = () => {
                         name="pages/chats/screens/code-scanner/index"
                         options={{ headerShown: false }}
                       />
-                      <Stack.Screen
-                        name="pages/chats/screens/transfer-receive/index"
-                        options={{
-                          presentation: "fullScreenModal",
-                          headerShown: false,
-                        }}
-                      />
+                      <Stack.Screen name="pages/chats/screens/transfer-receive/index" />
                       <Stack.Screen name="pages/chats/screens/money-qrcode/index" />
 
                       {/* contacts  */}
