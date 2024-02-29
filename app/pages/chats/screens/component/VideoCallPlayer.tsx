@@ -8,9 +8,11 @@ import { RTCView } from "react-native-webrtc";
 import { getSize } from "utils";
 import VideoCallIcon from "@/icons/keyboard-panel/video-call.svg";
 import HangUpBtn from "@/component/complex/HangUpBtn";
+import Loading from "@/component/base/Loading";
 
 // 播放视频组件
 const Player = ({
+  type = "caller",
   preCall,
   hangUpHandler,
   awaiting = true,
@@ -18,7 +20,6 @@ const Player = ({
   local_stream,
   remote_stream,
 }) => {
-  
   const { t } = useTranslation();
   const { themeColor } = useTheme();
   const [cameraOn, setCameraOn] = useState(true);
@@ -81,23 +82,29 @@ const Player = ({
           alignItems: "center",
         }}
       >
-        <Button
-          title="pre-call"
-          onPress={() => {
-            preCall?.();
-          }}
-        />
+        {type === "caller" && awaiting && (
+          <Button
+            title="call"
+            onPress={() => {
+              preCall?.();
+            }}
+          />
+        )}
 
         {awaiting && (
-          <Text
-            style={{
-              color: themeColor.text3,
-              marginVertical: getSize(12),
-              fontSize: getSize(14),
-            }}
-          >
-            {t("Awaiting response...")}
-          </Text>
+          <View className="justify-center items-center flex-row">
+            <Text
+              style={{
+                marginRight: 4,
+                color: themeColor.text3,
+                marginVertical: getSize(12),
+                fontSize: getSize(16),
+              }}
+            >
+              {t("Awaiting response")}
+            </Text>
+            <Loading size={getSize(16)} />
+          </View>
         )}
 
         <View

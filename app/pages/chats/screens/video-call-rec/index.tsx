@@ -230,6 +230,7 @@ const VideoCallRec = () => {
 
   return (
     <VideoCallPlayer
+      type="receiver"
       awaiting={awaiting}
       preCall={() => {
         // preCall();

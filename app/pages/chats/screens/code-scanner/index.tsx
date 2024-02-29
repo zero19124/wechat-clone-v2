@@ -16,11 +16,13 @@ import { defaultImageUrl } from "@/const/index";
 import LinearGradient from "react-native-linear-gradient";
 // import { LinearGradient } from "expo-linear-gradient";
 import { useTheme } from "@/theme/useTheme";
+import { RTCView, mediaDevices } from "react-native-webrtc";
 const CodeScanner = () => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [text, setText] = useState("");
   const navigator = useNavigation();
+  const [local_stream, setLocal_stream] = useState();
   const { themeColor } = useTheme();
   const verticalPosition = new Animated.Value(-200);
   const fadeAnim = new Animated.Value(1);
@@ -68,9 +70,16 @@ const CodeScanner = () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === "granted");
     };
-
+    const get = async () => {
+      const localStream = await mediaDevices.getUserMedia({
+        audio: true,
+        video: { facingMode: true ? "environment" : "user" },
+      });
+      setLocal_stream(localStream);
+    };
     getBarCodeScannerPermissions();
     // Detect QR code in image
+    get();
 
     // RNQRGenerator.detect({
     //   uri: require("@/assets/qrcode.png"),
@@ -97,6 +106,11 @@ const CodeScanner = () => {
 
   return (
     <View style={styles.container}>
+      <RTCView
+        objectFit="cover"
+        style={{ width: 200, height: 100, backgroundColor: "red" }}
+        streamURL={local_stream?.toURL?.()}
+      />
       <Animated.View
         style={[
           { width: "100%", position: "absolute", zIndex: 1 },
