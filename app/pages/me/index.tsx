@@ -68,15 +68,19 @@ const Me = () => {
             height: 60,
             borderRadius: 4,
           }}
-          source={{
-            uri: userInfo?.image,
-          }}
+          source={
+            userInfo?.image
+              ? {
+                  uri: userInfo?.image,
+                }
+              : require("@/assets/avatar-default.png")
+          }
         />
         <View className="flex-1">
           <Text style={{ fontSize: 24, marginBottom: 8 }}>{userInfo?.act}</Text>
           <View className="flex-row justify-between items-center">
             <Text style={{ fontSize: 18, color: themeColor.text3 }}>
-              Wechat Id: {userInfo?._id}
+              Wechat Id: {userInfo?.wechatId}
             </Text>
             <TouchableOpacity
               onPress={() => {

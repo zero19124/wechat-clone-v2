@@ -127,7 +127,7 @@ const Page = () => {
     console.log(val, "val");
   }, []);
   useEffect(() => {
-    getLatestPhoto();
+    // getLatestPhoto();
   }, []);
   console.log("individual-payment", new Date().getTime());
 

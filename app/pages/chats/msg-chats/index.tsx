@@ -84,7 +84,7 @@ const Page = () => {
                 borderRadius: 22,
               }}
             >
-              <Text>3</Text>
+              <Text>{parseInt(Math.random() * 10 + "")}</Text>
             </View>
           </TouchableOpacity>
         </View>

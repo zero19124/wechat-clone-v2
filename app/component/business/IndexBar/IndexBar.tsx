@@ -116,28 +116,32 @@ const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref) => {
   const onScroll: ScrollViewProps["onScroll"] = async () => {
     if (isPanResponderMoving.current) return;
 
-    const rects = await getAnchorRects();
-    const { top: scrollViewTop, left: scrollViewLeft } =
-      await getScrollViewOffset();
+    try {
+      const rects = await getAnchorRects();
+      const { top: scrollViewTop, left: scrollViewLeft } =
+        await getScrollViewOffset();
 
-    const active = getActiveAnchor(scrollViewTop, rects);
-    setActive(indexList[active]);
+      const active = getActiveAnchor(scrollViewTop, rects);
+      setActive(indexList[active]);
 
-    if (sticky) {
-      Object.values(refs).forEach((item, index) => {
-        const currentRect = rects[index];
-        const currentState = item.state;
-        const isActive = active === index;
-        if (isActive === currentState.active) return;
+      if (sticky) {
+        Object.values(refs).forEach((item, index) => {
+          const currentRect = rects[index];
+          const currentState = item.state;
+          const isActive = active === index;
+          if (isActive === currentState.active) return;
 
-        item.updateState({
-          top: scrollViewTop,
-          left: scrollViewLeft,
-          width: currentRect.width,
-          height: currentRect.height,
-          active: isActive,
+          item.updateState({
+            top: scrollViewTop,
+            left: scrollViewLeft,
+            width: currentRect.width,
+            height: currentRect.height,
+            active: isActive,
+          });
         });
-      });
+      }
+    } catch (e) {
+      console.log('onScroll is error');
     }
   };
   // 这里用英文字母找到对应索引 然后用ref跳到对应的索引
@@ -166,11 +170,12 @@ const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref) => {
   const handleMapChildren = ($children: ReactNode): any => {
     return React.Children.toArray($children)
       .filter(React.isValidElement)
-      .map((child: ReactElement) => {
+      .map((child: ReactElement, index) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         if (child.type?.[COMPONENT_TYPE_KEY] === INDEX_ANCHORE_KEY) {
           return React.cloneElement(child, {
+            key: index,
             ref: setRefs(child.props.index),
           });
         }
@@ -317,6 +322,7 @@ const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref) => {
 
           return (
             <View
+              key={index}
               {...panResponder.panHandlers}
               style={{
                 // backgroundColor: "red",

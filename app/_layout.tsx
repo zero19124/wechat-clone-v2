@@ -17,7 +17,6 @@ import React from "react";
 import { PortalService } from "./component/base/ConfigProvider/ConfigProvider";
 import { View, Text } from "react-native";
 import { PusherContext } from "@/hooks/usePusherProvider";
-import Dialog from "./component/base/Dialog";
 
 export const PortalRef =
   React.createRef<PortalService>() as MutableRefObject<PortalService>;
@@ -83,7 +82,6 @@ const Layout = () => {
     return null;
   };
   useEffect(() => {
-    console.log(Dialog.confirm, "Dialog");
 
     // navigate.navigate("pages/contacts/screens/send-friend-request/index");
   }, []);

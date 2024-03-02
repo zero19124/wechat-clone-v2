@@ -26,3 +26,9 @@ fix ≥ sudo  chown -R Zhuanz: node_modules/
 
 <!-- themeColor is null,  ThemeProvider没包到portalproveider  -->
           </ThemeProvider>
+
+
+issue     >  handleBarCodeScanned this fn called after useeffect called 
+ useEffect(() => {
+    console.log(text, "ttt");
+  }, [text]);   为什么 setText('xx'). useeffect 里拿不到最新的值？ 每次打印都是空的

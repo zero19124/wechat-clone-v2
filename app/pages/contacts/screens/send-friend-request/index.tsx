@@ -9,7 +9,7 @@ import { useTheme } from "@/theme/useTheme";
 import { useUser } from "app/store/user";
 import ArrowRightIcon from "@/icons/common/arrow-right.svg";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { useLayoutEffect, useMemo } from "react";
+import { useLayoutEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   SafeAreaView,
@@ -27,6 +27,7 @@ const FriendInfoConfirm = () => {
   const { t } = useTranslation();
   const { userStore } = useUser();
   const params = useLocalSearchParams();
+  const [extraData, setExtraData] = useState({ aliasName: "", remark: "" });
   console.log(params, "params");
   const friendId = useMemo(() => params.friendId, [params]);
   const userId = useMemo(() => userStore.userInfo?._id, [userStore]);
@@ -44,11 +45,12 @@ const FriendInfoConfirm = () => {
     const data = {
       userId,
       friendId,
+      ...extraData,
     };
     console.log(params, "prams", data);
 
     if (params?.sendFriendRequestTitle) {
-      // confirm add friend  and create a convo
+      // confirm add friend  and create a convo and add msg say hi
       fetch(config.apiDomain + "/api/friends/requestFriendUpdate", {
         method: "POST",
         headers: {
@@ -70,6 +72,7 @@ const FriendInfoConfirm = () => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
+              type:'added-new-friend',
               participants: [userId, friendId],
             }),
           }).then(() => {
@@ -105,7 +108,15 @@ const FriendInfoConfirm = () => {
             borderRadius: 8,
           }}
         >
-          <TextInput selectionColor={themeColor.primary} value="i m ssss" />
+          <TextInput
+            selectionColor={themeColor.primary}
+            onChangeText={(v: string) => {
+              setExtraData((preData) => {
+                return { ...preData, remark: v };
+              });
+            }}
+            placeholder={t("say something...")}
+          />
         </View>
         <Text
           style={{ color: themeColor.text4, marginBottom: 8, marginTop: 24 }}
@@ -120,7 +131,15 @@ const FriendInfoConfirm = () => {
             borderRadius: 8,
           }}
         >
-          <TextInput selectionColor={themeColor.primary} value="i m ssss" />
+          <TextInput
+            onChangeText={(v: string) => {
+              setExtraData((preData) => {
+                return { ...preData, aliasName: v };
+              });
+            }}
+            selectionColor={themeColor.primary}
+            placeholder={t("set aliasName")}
+          />
         </View>
         <Text
           style={{ color: themeColor.text4, marginBottom: 8, marginTop: 24 }}
@@ -145,9 +164,8 @@ const FriendInfoConfirm = () => {
             <ArrowRightIcon />
           </View>
         </View>
-        <Text>
-          ===== friendId:{friendId}/n==== userId:{userId}
-        </Text>
+        <Text>===== friendId:{friendId}</Text>
+        <Text>===== curUserId:{userId}</Text>
         <View
           style={{
             position: "absolute",
@@ -167,7 +185,11 @@ const FriendInfoConfirm = () => {
             }}
           >
             <View
-              style={{ borderRadius: 8, backgroundColor: themeColor.primary }}
+              style={{
+                borderRadius: 8,
+                backgroundColor: themeColor.primary,
+                marginBottom: 40,
+              }}
             >
               <Text
                 style={{

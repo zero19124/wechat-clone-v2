@@ -6,7 +6,7 @@ import UserAvatar from "@/component/complex/UserAvatar";
 import config from "@/config/index";
 import { useUser } from "app/store/user";
 import { useFocusEffect, useNavigation } from "expo-router";
-
+import { useGetSameApiOfGet } from "@/hooks/useSameApi";
 import MobilePhoneIcon from "@/icons/discover/mobile-phone.svg";
 import {
   useCallback,
@@ -21,6 +21,8 @@ import { themeColor } from "@/theme/light";
 import SearchBar from "@/component/complex/SearchBar";
 import BottomWidthDivider from "@/component/complex/BottomWidthDivider";
 import Toast from "@/component/base/Toast";
+import ItemCard from "@/component/complex/ItemCard";
+import { AntDesign } from "@expo/vector-icons";
 const NewFriends = () => {
   const navigate = useNavigation();
   const { t } = useTranslation();
@@ -40,28 +42,18 @@ const NewFriends = () => {
     });
     navigate.setOptions(navigatorProps as TNavigationOptions);
   });
+  const { getFriendRequestListByUserId } = useGetSameApiOfGet();
   const getFriendRequestingList = () => {
-    fetch(
-      config.apiDomain +
-        `/api/friends/getFriendRequestListByUserId?userId=${userId}`
-    )
-      .then((res) => {
-        try {
-          return res.json();
-        } catch (e) {
-          return {};
-        }
-      })
-      .then((res) => {
-        console.log(res, "res1");
-        if (res.code === 200) {
-          if (!res.data) return;
-          setFriendRequestList(res.data.friendRequestList);
-          console.log(res.data.friendRequestList, "friendRequestList");
-        } else {
-          Toast.fail(res.data);
-        }
-      });
+    getFriendRequestListByUserId(userId + "").then((res) => {
+      console.log(res, "res1");
+      if (res.code === 200) {
+        if (!res.data) return;
+        setFriendRequestList(res.data.friendRequestList);
+        console.log(res.data.friendRequestList, "friendRequestList");
+      } else {
+        Toast.fail(res.data);
+      }
+    });
   };
 
   useFocusEffect(
@@ -92,11 +84,11 @@ const NewFriends = () => {
           paddingRight: 0,
         }}
       >
-        {friendRequestList?.map((request) => {
-          const { status, userId: user, confirm } = request;
+        {friendRequestList?.map((request, index) => {
+          const { status, userId: user, confirm, remark } = request;
           console.log(user._id, "user._id");
           return (
-            <TouchableOpacity
+            <ItemCard
               onPress={() => {
                 navigate.navigate("pages/contacts/screens/friend-info/index", {
                   status,
@@ -105,22 +97,61 @@ const NewFriends = () => {
                   type: "new",
                 });
               }}
-            >
-              <View style={{ flexDirection: "row" }}>
-                <UserAvatar source={{ uri: user?.image }} />
-                <View
-                  style={{
-                    flex: 1,
-                    // backgroundColor: "red",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text>{user?.act}</Text>
-                  <Text>{status}</Text>
-                </View>
-              </View>
-            </TouchableOpacity>
+              key={index}
+              showRightComp={true}
+              textComp={() => {
+                return (
+                  <View style={{}}>
+                    <Text
+                      style={{
+                        fontSize: 18,
+                      }}
+                    >
+                      {user.act}
+                    </Text>
+                    <Text
+                      style={{
+                        marginTop: 2,
+                        color: themeColor.text3,
+                      }}
+                    >
+                      {remark || t("Hi I want to add u")}
+                    </Text>
+                  </View>
+                );
+              }}
+              leftComp={() => {
+                return <UserAvatar source={{ uri: user?.image }} />;
+              }}
+              rightComp={() => {
+                return (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginRight: 12,
+                    }}
+                  >
+                    <AntDesign
+                      style={{ transform: [{ rotate: "-60deg" }] }}
+                      name="arrowright"
+                      size={18}
+                      color={themeColor.text2}
+                    />
+                    <Text
+                      style={{
+                        color: themeColor.text1,
+                        marginLeft: 8,
+                        fontSize: 16,
+                      }}
+                    >
+                      {status}
+                    </Text>
+                  </View>
+                );
+              }}
+            />
           );
         })}
       </View>

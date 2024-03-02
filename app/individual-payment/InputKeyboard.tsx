@@ -114,7 +114,7 @@ const InputKeyboard = (props) => {
               dismiss();
             }}
           >
-            <CloseIcon />
+            <CloseIcon width={getSize(28)} height={getSize(28)} />
           </Pressable>
           <View style={{ alignItems: "center" }}>
             <Pressable

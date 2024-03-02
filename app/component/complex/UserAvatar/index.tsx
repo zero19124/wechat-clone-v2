@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import { getSize } from "utils";
 import { themeColor } from "@/theme/light";
+import { useMemo } from "react";
 const UserAvatar = ({
   source,
   style,
@@ -14,9 +15,18 @@ const UserAvatar = ({
   source?: ImageSourcePropType;
   style?: StyleProp<ImageStyle>;
 }) => {
+  const finalSource = useMemo(() => {
+    if (typeof source === "object") {
+      if (!source?.uri) {
+        return require("@/assets/avatar-default.png");
+      }
+      return source;
+    }
+    return source;
+  }, [source]);
   return (
     <Image
-      source={source || require("@/assets/bella.png")}
+      source={finalSource}
       style={[avatarStyle.itemContainerAvatar, style]}
     />
   );

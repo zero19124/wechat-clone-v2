@@ -1,74 +1,19 @@
 import {
-  StyleProp,
   Text,
   View,
-  ViewStyle,
   Image,
-  Button,
   TouchableOpacity,
-  StyleSheet,
 } from "react-native";
 import ImagePreview from "@/component/base/ImagePreview";
 
-import TransferOutlineIcon from "@/icons/chats/transfer-outline.svg";
 import { getSize } from "utils";
 import { useNavigation } from "expo-router";
 import { useTranslation } from "react-i18next";
-import Divider from "@/component/complex/BottomWidthDivider";
 import { useTheme } from "@/theme/useTheme";
-import { FontAimgwesome } from "@expo/vector-icons";
 import { useUser } from "app/store/user";
 import TransferCard from "./component/TransferCard";
-export const getMsgTypeMap = (
-  themeColor: ReturnType<typeof useTheme>["themeColor"]
-) => {
-  const msgTypeMap: Record<string, StyleProp<ViewStyle>> = {
-    itemRightWrapper: {
-      backgroundColor: themeColor.brand2,
-      marginRight: 4,
-    },
-    itemRight: {
-      position: "absolute",
-      right: 0,
-      // top: "50%",
-      top: getSize(16),
-      // backgroundColor: "red",
-      // borderTopStartRadius: 4,
-      // borderTopRightRadius: 4,
-      backgroundColor: themeColor.brand2,
-      width: 10,
-      height: 10,
-      transform: [
-        { translateX: 5 },
-        {
-          translateY: -5,
-        },
-        { rotate: "45deg" },
-      ],
-    },
-    itemLeftWrapper: {
-      marginLeft: 4,
-      backgroundColor: themeColor.white,
-    },
-    itemLeft: {
-      position: "absolute",
-      left: 0,
-      top: getSize(16),
-      backgroundColor: themeColor.white,
-      zIndex: 1,
-      width: 10,
-      height: 10,
-      transform: [
-        { translateX: -5 },
-        {
-          translateY: -5,
-        },
-        { rotate: "45deg" },
-      ],
-    },
-  };
-  return msgTypeMap;
-};
+import { getMsgTypeMap } from "./component/common";
+
 
 const MsgWrapper = ({
   msgType = "text",

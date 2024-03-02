@@ -6,10 +6,10 @@ import { getSize } from "utils";
 import Divider from "@/component/complex/BottomWidthDivider";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
-import { getMsgTypeMap } from "..";
 import { useTranslation } from "react-i18next";
 import { useUser } from "app/store/user";
 import { useMemo } from "react";
+import { getMsgTypeMap } from "./common";
 const TransferCard = ({
   transId,
   accepted,

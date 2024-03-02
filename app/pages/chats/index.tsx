@@ -56,18 +56,18 @@ const Chats = () => {
         <ScanFilled style={{ width: 22, height: 22 }} fill={themeColor.white} />
       ),
     },
-    {
-      text: t("rec"),
-      icon: (
-        <ScanFilled style={{ width: 22, height: 22 }} fill={themeColor.white} />
-      ),
-    },
-    {
-      text: t("send"),
-      icon: (
-        <ScanFilled style={{ width: 22, height: 22 }} fill={themeColor.white} />
-      ),
-    },
+    // {
+    //   text: t("rec"),
+    //   icon: (
+    //     <ScanFilled style={{ width: 22, height: 22 }} fill={themeColor.white} />
+    //   ),
+    // },
+    // {
+    //   text: t("send"),
+    //   icon: (
+    //     <ScanFilled style={{ width: 22, height: 22 }} fill={themeColor.white} />
+    //   ),
+    // },
     {
       text: t("Money"),
       icon: (
@@ -113,37 +113,49 @@ const Chats = () => {
       headerLeftContainerStyle: { paddingLeft: 12 },
       headerTitle: "Weixin(331)",
       headerRight: () => (
-        <Popover ref={popover} theme="dark" reference={<CirclePlus />}>
-          <View>
-            {iconActions.map((action) => {
-              return (
-                <TouchableOpacity
-                  onPress={() => {
-                    select(action);
-                  }}
-                  key={action.text}
-                  style={{
-                    padding: 12,
-                    flexDirection: "row",
-                    justifyContent: "flex-start",
-                    alignItems: "center",
-                  }}
-                >
-                  {action.icon}
-                  <Text
+        <View style={{}}>
+          <Popover
+            ref={popover}
+            theme="dark"
+            reference={
+              <TouchableOpacity
+                style={{ padding: 12, paddingBottom: 6, paddingRight: 6 }}
+              >
+                <CirclePlus />
+              </TouchableOpacity>
+            }
+          >
+            <View>
+              {iconActions.map((action) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      select(action);
+                    }}
+                    key={action.text}
                     style={{
-                      fontSize: 16,
-                      marginLeft: 8,
-                      color: themeColor.white,
+                      padding: 12,
+                      flexDirection: "row",
+                      justifyContent: "flex-start",
+                      alignItems: "center",
                     }}
                   >
-                    {action.text}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-        </Popover>
+                    {action.icon}
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        marginLeft: 8,
+                        color: themeColor.white,
+                      }}
+                    >
+                      {action.text}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </Popover>
+        </View>
       ),
       headerRightContainerStyle: { paddingRight: 12 },
       tabBarIcon: ({ size, color, focused }) => {

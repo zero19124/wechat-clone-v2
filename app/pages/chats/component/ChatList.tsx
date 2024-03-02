@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { getSize } from "utils";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useId, useMemo, useState } from "react";
 import config from "@/config/index";
 import { useUser } from "app/store/user";
 import { formatDateToString } from "@/utils/date";
@@ -17,6 +17,7 @@ import { useChatList } from "app/store/chatList";
 import { PusherContext } from "@/hooks/usePusherProvider";
 import DeviceInfo from "react-native-device-info";
 import { TThemeType, useTheme } from "@/theme/useTheme";
+import { goToMsgChat } from "@/hooks/useSameRouter";
 // const data = [
 //   {
 //     id: 1,
@@ -172,24 +173,13 @@ const ConvoList = () => {
     return (
       <TouchableOpacity
         onPress={() => {
-          const convoId = item._id + "";
-          let curReceiverInfo;
-          if (item.isGroup) {
-          } else {
-            curReceiverInfo =
-              item.participants?.filter(
-                (userItem) => userItem._id !== userId
-              )?.[0] || null;
-          }
-          console.log(curReceiverInfo, "curReceiverInfo");
-          setChatListStoreV2({
-            chatListState: chatListStore.chatListState,
-            curConvo: { convoId, curReceiverInfo },
-          });
-
-          navigate.navigate("pages/chats/msg-chats/index", {
-            convoId,
-          });
+          goToMsgChat(
+            item,
+            userId + "",
+            navigate,
+            chatListStore,
+            setChatListStoreV2
+          );
         }}
       >
         <View style={style.itemContainer}>

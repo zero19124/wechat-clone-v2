@@ -68,7 +68,7 @@ const AddContacts = () => {
               justifyContent: "center",
             }}
           >
-            <MyQrcode />
+            <MyQrcode type="friend" />
           </View>
         </Overlay>
         <Image

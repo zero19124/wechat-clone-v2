@@ -18,9 +18,9 @@ import { useUser } from "app/store/user";
 
 const MyQrcode = ({
   style,
-  type = "add",
+  type,
 }: {
-  type?: "add" | "transfer";
+  type?: "friend" | "transfer" | "me-page";
   style?: StyleProp<ViewStyle>;
 }) => {
   const navigate = useNavigation();

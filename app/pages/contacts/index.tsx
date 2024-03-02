@@ -2,7 +2,7 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 import * as light from "@/theme/light";
 import ItemCard from "@/component/complex/ItemCard";
 import { useEffect, useLayoutEffect, useState } from "react";
-import { useNavigation } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import AddFriendIcon from "@/icons/add-friend.svg";
 import IndexBar from "@/component/business/IndexBar";
 import pinyin from "pinyin";
@@ -15,6 +15,9 @@ import { useUser } from "app/store/user";
 import SearchBar from "@/component/complex/SearchBar";
 import UserAvatar from "@/component/complex/UserAvatar";
 import { isNumber } from "@/utils/typeof";
+import { useGetSameApiOfGet } from "@/hooks/useSameApi";
+import { goToMsgChat } from "@/hooks/useSameRouter";
+import { useChatList } from "app/store/chatList";
 const _ = require("lodash");
 const indexList: string[] = [];
 const customIndexList = [1, 2, 3, 4, 5, 6, 8, 9, 10];
@@ -25,9 +28,15 @@ for (let i = 0; i < tempNavigatorCount; i += 1) {
 }
 indexList.push("#");
 const Contacts = () => {
+  const { chatListStore, getChatList, setChatListStoreV2 } = useChatList();
+  const [friendList, setFriendList] = useState([]);
+  const router = useRouter();
+  const [listMap, setListMap] = useState(new Map());
   const { themeColor } = useTheme();
   const { userStore } = useUser();
+  const { getConvoIdByCurUserIdAndByFriendId } = useGetSameApiOfGet();
   const navigate = useNavigation();
+
   useLayoutEffect(() => {
     navigate.setOptions({
       headerRight: () => (
@@ -42,8 +51,6 @@ const Contacts = () => {
     });
   });
 
-  const [friendList, setFriendList] = useState([]);
-  const [listMap, setListMap] = useState(new Map());
   useEffect(() => {
     setFriendList([]);
     setListMap(new Map());
@@ -54,6 +61,10 @@ const Contacts = () => {
     )
       .then((res) => res.json())
       .then((friendList) => {
+        if (!friendList || !friendList?.length) {
+          console.log("friendList?.length is null");
+          return;
+        }
         console.log(friendList[0], "friendList");
         setFriendList(friendList[0].friendsArray);
 
@@ -95,9 +106,7 @@ const Contacts = () => {
         });
       });
   }, [userStore.userInfo]);
-  // useEffect(() => {
-  //   console.log(listMap, "listMap.-effet");
-  // }, [listMap]);
+
   return (
     <>
       <View
@@ -148,7 +157,7 @@ const Contacts = () => {
             if (!itemList?.length) return null;
             return (
               <View key={index}>
-                <IndexBar.Anchor index={item} />
+                <IndexBar.Anchor key={index} index={item} />
                 {itemList?.map((_item, _index) => {
                   // console.log(_item);
                   // if (index % 2) {
@@ -156,6 +165,34 @@ const Contacts = () => {
                   // }
                   return (
                     <ItemCard
+                      onPress={() => {
+                        const curUserId = userStore.userInfo?._id + "";
+                        // find the convo and go there
+                        getConvoIdByCurUserIdAndByFriendId(
+                          curUserId,
+                          _item?._id + ""
+                        ).then((res) => {
+                          navigate.navigate(
+                            "pages/contacts/screens/friend-info/index",
+                            {
+                              status: "done",
+                              confirm: true,
+                              friendId: _item?._id,
+                              type: "new",
+                            }
+                          );
+
+                          // const convoItem = res.data;
+                          // goToMsgChat(
+                          //   convoItem,
+                          //   curUserId,
+                          //   navigate,
+                          //   chatListStore,
+                          //   setChatListStoreV2
+                          // );
+                        });
+                      }}
+                      key={index}
                       showRightComp={false}
                       textComp={() => {
                         return (
@@ -180,7 +217,12 @@ const Contacts = () => {
                         );
                       }}
                       leftComp={() => {
-                        return <UserAvatar source={{ uri: _item.image }} />;
+                        return (
+                          <UserAvatar
+                            style={{ marginLeft: 16 }}
+                            source={{ uri: _item.image }}
+                          />
+                        );
                       }}
                       text={_item.act}
                     />

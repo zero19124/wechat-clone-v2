@@ -19,6 +19,7 @@ import "../../global.css";
 import { useUser } from "app/store/user";
 import { useEffect } from "react";
 import SimpleLogin from "@/pages/me/components/SimpleLogin";
+import { useTheme } from "@/theme/useTheme";
 
 // export default Slot
 
@@ -26,7 +27,7 @@ const Layout = () => {
   console.log("tabs");
   const { t } = useTranslation();
   const { userStore } = useUser();
-
+  const { themeColor } = useTheme();
   if (!userStore.userInfo?._id) {
     // return (
     //   <SafeAreaView style={{ backgroundColor: "yellow", flex: 1 }}>
@@ -43,9 +44,9 @@ const Layout = () => {
         initialRouteName="Contacts"
         screenOptions={{
           headerStyle: {
-            backgroundColor: light.themeColor.fillColor,
+            backgroundColor: themeColor.fillColor,
           },
-          tabBarActiveTintColor: light.themeColor.primary,
+          tabBarActiveTintColor: themeColor.primary,
         }}
       >
         <Tabs.Screen
