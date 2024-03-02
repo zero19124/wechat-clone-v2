@@ -7,14 +7,18 @@ import useSendMsg from "@/hooks/useSendMsg";
 import { useUser } from "app/store/user";
 import { useChatList } from "app/store/chatList";
 import Toast from "@/component/base/Toast";
+import { useTranslation } from "react-i18next";
+import { useRouter } from "expo-router";
+import config from "@/config/index";
 const PayDone = () => {
   const navigator = useNavigation();
   const { amount } = useLocalSearchParams();
   const { userInfo } = useUser().userStore;
+  const router = useRouter();
   const { chatListStore } = useChatList();
-
+  const { t } = useTranslation();
   const { sendMsgHandler } = useSendMsg();
-
+  const params = useLocalSearchParams<{ type: string }>();
   return (
     <SafeAreaView style={{ alignItems: "center" }}>
       <View
@@ -34,7 +38,7 @@ const PayDone = () => {
             fontSize: 18,
           }}
         >
-          Payment Successful
+          {t("Payment Successful")}
         </Text>
       </View>
       <View
@@ -52,7 +56,7 @@ const PayDone = () => {
             marginBottom: 24,
           }}
         >
-          Awaiting receipt by the recipient
+          {t(" Awaiting receipt by the recipient")}
         </Text>
         {/* amount  */}
         <AmountText amount={amount} type={"big"} />
@@ -60,11 +64,19 @@ const PayDone = () => {
       {/* button  */}
       <TouchableOpacity
         onPress={() => {
+          navigator.goBack();
+          console.log(params?.type, "params?.type");
+          if (params?.type && params?.type === "direct") {
+            // router.replace("/pages/chats/");
+            navigator.navigate("(tabs)");
+            return;
+          }
           console.log(chatListStore, "chatListStore.curConvo");
           if (!chatListStore.curConvo?.convoId) {
             Toast.fail("convoId is null");
             return;
           }
+
           sendMsgHandler({
             val: "transferId+" + amount,
             userId: userInfo?._id + "",
@@ -91,7 +103,7 @@ const PayDone = () => {
             fontSize: 18,
           }}
         >
-          Done
+          {t("Done")}
         </Text>
       </TouchableOpacity>
     </SafeAreaView>

@@ -40,8 +40,8 @@ const CodeScanner = () => {
       };
       const goToTransfer = () => {
         navigator.navigate("individual-payment/index", {
-          userId,
-          transfer: "direct",
+          recipientId: userId,
+          type: "direct",
         });
       };
 

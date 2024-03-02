@@ -24,6 +24,7 @@ import SimpleLogin from "./components/SimpleLogin";
 import { useUser } from "app/store/user";
 import { useNavigation } from "expo-router";
 import Loading from "@/component/base/Loading";
+import config from "@/config/index";
 const Me = () => {
   // return <PusherTester />;
   const avatars = [
@@ -44,7 +45,7 @@ const Me = () => {
       icon: <AlbumIcon width={24} height={24} fill={themeColor.iconBlue} />,
     },
     {
-      text: "Cards & Offres",
+      text: "Cards & Offers",
       icon: (
         <CardsOffersIcon width={24} height={24} fill={themeColor.primary} />
       ),
@@ -186,9 +187,21 @@ const Me = () => {
       {serviceList.map((service) => {
         return (
           <ItemCard
-            onPress={() =>
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
-            }
+            onLongPress={() => {
+              if (service.text === "Cards & Offers") {
+                fetch(
+                  config.apiDomain +
+                    "/api/wallet/AddMoneyByUserId?userId=" +
+                    userInfo?._id
+                ).then(() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+                });
+              }
+            }}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+            }}
             key={service.text}
             leftComp={() => {
               return <View style={{ marginLeft: 24 }}>{service.icon}</View>;

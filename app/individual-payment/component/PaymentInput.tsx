@@ -5,6 +5,7 @@ import { getSize } from "utils";
 
 const PaymentKeyBoard = ({
   onChange,
+
   onDelete,
 }: {
   onChange: (num: number) => void;

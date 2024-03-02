@@ -7,7 +7,6 @@ import {
   Pressable,
 } from "react-native";
 import * as Clipboard from "expo-clipboard";
-import * as light from "../../theme/light";
 import { getSize } from "../../utils";
 import CloseIcon from "@/icons/common/close.svg";
 import CoinIcon from "@/icons/common/coin.svg";
@@ -20,21 +19,31 @@ import {
 } from "@gorhom/bottom-sheet";
 import PaymentKeyBoard from "./component/PaymentInput";
 import AmountText from "app/component/complex/AmountText";
-const defaultPayTo = "Pay to Bella (***)";
+import { useTheme } from "@/theme/useTheme";
+import config from "../config";
+import { useUser } from "app/store/user";
+import { useTranslation } from "react-i18next";
+import Toast from "@/component/base/Toast";
+const defaultPayTo = () => {
+  return "Pay to Bella (***)";
+};
+
 const InputKeyboard = (props) => {
-  console.log("InputKeyboard", new Date().getTime());
-  const { onChange, onDelete, amount } = props;
-  const [payTo, setPayTo] = useState(defaultPayTo);
+  const { onChange, onDelete, amount, type, recipientId } = props;
+  console.log("InputKeyboard", new Date().getTime(), type);
+  const userInfo = useUser().userStore.userInfo;
+  const { t } = useTranslation();
+  const [payTo, setPayTo] = useState(t("Pay to") + " " + userInfo?.act);
   const [psw, setPsw] = useState("");
   const navigator = useNavigation();
   const numberList = Array.from({ length: 9 }, (_, i) => i + 1); // [1, 2, 3, 4, 5, 6, 7, 8, 9]
   numberList.push(0);
   numberList.push(".");
   const bottomSheetRef = useRef<BottomSheetModal>(null);
-
+  const { themeColor } = useTheme();
   const openModal = () => {
     setPsw("");
-    setPayTo(defaultPayTo);
+    // setPayTo(defaultPayTo);
     bottomSheetRef.current?.present();
   };
   const snapPoints = useMemo(() => ["65%"], []);
@@ -53,7 +62,7 @@ const InputKeyboard = (props) => {
     return (
       <View
         style={{
-          backgroundColor: light.themeColor.bg3,
+          backgroundColor: themeColor.bg3,
           width: 40,
           height: 40,
           justifyContent: "center",
@@ -64,7 +73,7 @@ const InputKeyboard = (props) => {
         {psw.length > num && (
           <View
             style={{
-              backgroundColor: "black",
+              backgroundColor: themeColor.bg5,
               width: 8,
               height: 8,
               borderRadius: 4,
@@ -80,18 +89,11 @@ const InputKeyboard = (props) => {
         paddingVertical: 8,
         flexDirection: "row",
         paddingBottom: 48,
-        backgroundColor: light.themeColor.fillColor,
+        backgroundColor: themeColor.fillColor,
       }}
     >
       <BottomSheetModal
         handleIndicatorStyle={{ display: "none" }}
-        backgroundStyle={
-          {
-            // backgroundColor: light.themeColor.fillColor,
-            // borderRadius: 0,
-          }
-        }
-        // containerStyle={{ flex: 1 }}
         overDragResistanceFactor={0}
         ref={bottomSheetRef}
         snapPoints={snapPoints}
@@ -102,8 +104,7 @@ const InputKeyboard = (props) => {
             padding: 12,
             paddingTop: 0,
             paddingBottom: 0,
-            backgroundColor: light.themeColor.white,
-            // marginBottom: 12,
+            backgroundColor: themeColor.white,
           }}
         >
           <Pressable
@@ -131,7 +132,7 @@ const InputKeyboard = (props) => {
           {/* paymethod  */}
           <View
             style={{
-              borderTopColor: light.themeColor.fillColor,
+              borderTopColor: themeColor.fillColor,
               borderTopWidth: StyleSheet.hairlineWidth,
               justifyContent: "space-between",
               flexDirection: "row",
@@ -139,21 +140,20 @@ const InputKeyboard = (props) => {
               marginTop: 12,
             }}
           >
-            <Text style={{ color: light.themeColor.text1 }}>
-              Payment Method
+            <Text style={{ color: themeColor.text1 }}>
+              {t("Payment Method")}
             </Text>
             <View
               style={{
                 flexDirection: "row",
-                // justifyContent: "center",
                 alignItems: "center",
               }}
             >
               <CoinIcon />
-              <Text style={{ color: light.themeColor.text1, marginRight: 2 }}>
-                Balance
+              <Text style={{ color: themeColor.text1, marginRight: 2 }}>
+                {t("Balance")}
               </Text>
-              <AntDesign name="down" size={10} color={light.themeColor.text1} />
+              <AntDesign name="down" size={10} color={themeColor.text1} />
             </View>
           </View>
         </View>
@@ -161,7 +161,7 @@ const InputKeyboard = (props) => {
         <View
           style={{
             paddingBottom: 24,
-            backgroundColor: light.themeColor.white,
+            backgroundColor: themeColor.white,
             flexDirection: "row",
             justifyContent: "center",
             columnGap: 8,
@@ -177,11 +177,34 @@ const InputKeyboard = (props) => {
         {/* keyboard  */}
         <PaymentKeyBoard
           onChange={(num: number) => {
+            // pay money
             if (psw.length === 5) {
               dismiss();
+              // scan qrcode and pay directly
+              if (type === "direct") {
+                const requestData = {
+                  senderId: userInfo?._id,
+                  recipientId,
+                  amount,
+                };
+                console.log(
+                  requestData,
+                  "requestData",
+                  JSON.stringify(requestData)
+                );
+                fetch(config.apiDomain + "/api/wallet/transfer", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(requestData),
+                });
+              }
               // todo why push cannot find the page?
+
               navigator.navigate("component/business/PayDone/index", {
                 amount,
+                type,
               });
               return;
             }
@@ -214,7 +237,7 @@ const InputKeyboard = (props) => {
               alignItems: "center",
               width: item === 0 ? getSize(183) : getSize(87),
               height: getSize(50),
-              backgroundColor: "#fff",
+              backgroundColor: themeColor.white,
             }}
           >
             <Text style={{ fontWeight: "bold" }}>{item}</Text>
@@ -229,7 +252,7 @@ const InputKeyboard = (props) => {
           style={{
             height: getSize(50),
             justifyContent: "center",
-            backgroundColor: "#fff",
+            backgroundColor: themeColor.white,
             marginBottom: 8,
             borderRadius: 4,
             alignItems: "center",
@@ -237,9 +260,30 @@ const InputKeyboard = (props) => {
         >
           <FontAwesome5 name="backspace" size={24} color="black" />
         </TouchableOpacity>
-        {/* <Toast /> */}
         <TouchableOpacity
-          onPress={() => {
+          onPress={async () => {
+            // check if have enough money
+            const userWallet = await fetch(
+              config.apiDomain +
+                `/api/wallet/getWalletByUserId?userId=${userInfo?._id}`
+            )
+              .then((res) => {
+                return res.json();
+              })
+              .then((res) => {
+                console.log(res, "res");
+                return res.data;
+              });
+            console.log(userWallet, "userWallet", amount);
+            if (amount > userWallet.balance) {
+              Toast.info(
+                t("insufficient balance : ") +
+                  t("u have") +
+                  " " +
+                  userWallet.balance
+              );
+              return;
+            }
             openModal();
           }}
           style={{
@@ -247,10 +291,10 @@ const InputKeyboard = (props) => {
             justifyContent: "center",
             alignItems: "center",
             flex: 1,
-            backgroundColor: light.themeColor.primary,
+            backgroundColor: themeColor.primary,
           }}
         >
-          <Text style={{ color: "#fff" }}>Pay</Text>
+          <Text style={{ color: themeColor.white }}>Pay</Text>
         </TouchableOpacity>
       </View>
     </View>

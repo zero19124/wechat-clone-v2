@@ -14,6 +14,7 @@ const ItemCard = (props: any) => {
     uniqueKey,
     style,
     onPress = null,
+    onLongPress = null,
     borderVisible = true,
     showRightComp = true,
     leftComp = null,
@@ -56,6 +57,7 @@ const ItemCard = (props: any) => {
 
   return (
     <TouchableOpacity
+      onLongPress={() => onLongPress?.()}
       onPress={() => {
         onPress?.();
         console.log("press");
