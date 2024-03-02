@@ -2,10 +2,7 @@ import { useState, useEffect } from "react";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { useNavigation } from "expo-router";
-import { defaultImageUrl } from "@/const/index";
 // import RNQRGenerator from "rn-qr-generator";
-import LinearGradient from "react-native-linear-gradient";
-// import { LinearGradient } from "expo-linear-gradient";
 import { useTheme } from "@/theme/useTheme";
 import CloseIcon from "@/icons/common/close.svg";
 
@@ -13,7 +10,6 @@ import { getSize } from "utils";
 import LinearLight from "./component/LinearLight";
 import Dialog from "@/component/base/Dialog";
 import { useTranslation } from "react-i18next";
-import { useUser } from "app/store/user";
 const CodeScanner = () => {
   // const { _id: userId } = useUser().userStore.userInfo!;
   const [hasPermission, setHasPermission] = useState(null);
@@ -92,7 +88,6 @@ const CodeScanner = () => {
     //     console.log(values, "values");
     //   })
     //   .catch((error) => console.log("Cannot detect QR code in image", error));
-    // startAnimation();
   }, []);
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);

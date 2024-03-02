@@ -12,6 +12,9 @@ import { createStyle, imagePreviewDefaultVars } from "./style";
 import type { ImagePreviewProps } from "./type";
 import { defaultTheme } from "@/theme/styles";
 import * as THEME_VARIABLE from "@/theme/styles/variables";
+import { BarCodeScanner } from "expo-barcode-scanner";
+import Dialog from "../Dialog";
+import { useTranslation } from "react-i18next";
 
 const defaultProps = {
   overlay: true,
@@ -30,6 +33,7 @@ const defaultProps = {
 const ImagePreview = (_props: ImagePreviewProps): JSX.Element => {
   const props = { ...defaultProps, ..._props };
   const { beforeClose, closeIcon } = props;
+  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const [visible, setVisible] = useState(() => props.visible);
   const [active, setActive] = useState(() => props.startPosition);
@@ -55,6 +59,31 @@ const ImagePreview = (_props: ImagePreviewProps): JSX.Element => {
   console.log(props.images, "props.images");
   const renderImages = () => {
     const getSwiperItem = () => {
+      const getQrCodeData = async (img: string) => {
+        const barCodeResult = await BarCodeScanner.scanFromURLAsync(img);
+        console.log(
+          barCodeResult[0].data,
+          "BarCodeScanner-datadatadatadata--------"
+        );
+        if (barCodeResult[0].data) {
+          console.log(
+            barCodeResult[0].data,
+            "barCodeResult--------"
+          );
+          Dialog.confirm({
+            title: t("Detected QrCode"),
+            message: t("Do u wanna go to Check?"),
+            cancelButtonText: t("No thanks"),
+            confirmButtonText: t("Yes do it"),
+          })
+            .then(() => {
+              // on confirm
+            })
+            .catch(() => {
+              // on cancel
+            });
+        }
+      };
       if (props.images.length === 1) {
         const image = props.images[0];
         return (
@@ -62,6 +91,9 @@ const ImagePreview = (_props: ImagePreviewProps): JSX.Element => {
             key={image}
             style={{ height: constants.screenHeight }}
             onPress={() => handleClose()}
+            onLongPress={async () => {
+              getQrCodeData(image);
+            }}
           >
             <Image
               source={{ uri: image }}
@@ -76,6 +108,9 @@ const ImagePreview = (_props: ImagePreviewProps): JSX.Element => {
           key={image + index}
           style={{ height: constants.screenHeight }}
           onPress={() => handleClose()}
+          onLongPress={async () => {
+            getQrCodeData(image);
+          }}
         >
           <Image
             source={{ uri: image }}
