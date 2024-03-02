@@ -77,7 +77,7 @@ const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref) => {
     onSelect,
     ...rest
   } = props;
-  console.log(indexList, "indexList");
+  // console.log(indexList, "indexList");
   const headerHeight = useHeaderHeight();
   const theme = useTheme();
   const fadeAmimation = useRef(new Animated.Value(0)).current;

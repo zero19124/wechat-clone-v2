@@ -1,4 +1,4 @@
-import { useNavigation } from "expo-router";
+import { useFocusEffect, useNavigation } from "expo-router";
 import {
   FlatList,
   Text,
@@ -60,16 +60,18 @@ const ConvoList = () => {
 
   const pusherContext = useContext(PusherContext);
   const deviceModel = DeviceInfo.getModel();
-
-  useEffect(() => {
+  useFocusEffect(() => {
     if (!userId) return;
-    getChatList(userId);
+    // getChatList(userId);
+  });
+  useEffect(() => {
     // 有新消息就更新会话列表
     pusherContext.socket?.on("convo:update", (data) => {
-      console.log(data, "getChatList");
+      console.log(data, "getChatList-convo:update", userId);
       if (!userId) return;
       getChatList(userId);
     });
+    getChatList(userId + "");
   }, [pusherContext.socket, userId]);
   const renderItem = ({ item }: { item: any }) => {
     {

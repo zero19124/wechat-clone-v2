@@ -3,7 +3,9 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Image,
+  Platform,
   SafeAreaView,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -45,7 +47,12 @@ const AddContactsSearch = () => {
   // 使用 debounce 包装处理文本变化的函数，延迟执行 500 毫秒
   const debouncedHandleTextChange = _.debounce(handleTextChange, 500);
   return (
-    <SafeAreaView style={{ backgroundColor: themeColor.fillColor }}>
+    <SafeAreaView
+      style={{
+        backgroundColor: themeColor.fillColor,
+        paddingTop: Platform.OS === "android" ? 50 : 0,
+      }}
+    >
       <View
         style={{
           backgroundColor: themeColor.fillColor,
@@ -85,13 +92,6 @@ const AddContactsSearch = () => {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity
-        onPress={() => {
-          Toast.loading("加载中...");
-        }}
-      >
-        <Text>{text}</Text>
-      </TouchableOpacity>
       <View
         style={{
           backgroundColor: themeColor.white,
@@ -103,29 +103,36 @@ const AddContactsSearch = () => {
           {t("Contacts")}
         </Text>
         <BottomWidthDivider />
-        {resultList.map((user, index) => {
-          return (
-            <ItemCard
-              onPress={() => {
-                navigate.navigate("pages/contacts/screens/friend-info/index", {
-                  friendId: user._id,
-                  type: "search",
-                });
-              }}
-              borderVisible={false}
-              rightComp={() => <View></View>}
-              leftComp={() => {
-                return (
-                  <UserAvatar
-                    style={{ borderColor: "transparent" }}
-                    source={{ uri: user?.image }}
-                  />
-                );
-              }}
-              text={user.act}
-            />
-          );
-        })}
+        <ScrollView style={{}}>
+          {resultList.map((user, index) => {
+            return (
+              <ItemCard
+                uniqueKey={index}
+                style={{ marginVertical: 12 }}
+                onPress={() => {
+                  navigate.navigate(
+                    "pages/contacts/screens/friend-info/index",
+                    {
+                      friendId: user._id,
+                      type: "search",
+                    }
+                  );
+                }}
+                borderVisible={false}
+                rightComp={() => <View></View>}
+                leftComp={() => {
+                  return (
+                    <UserAvatar
+                      style={{ borderColor: "transparent" }}
+                      source={{ uri: user?.image }}
+                    />
+                  );
+                }}
+                text={user.act}
+              />
+            );
+          })}
+        </ScrollView>
       </View>
     </SafeAreaView>
   );

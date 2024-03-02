@@ -11,6 +11,7 @@ import ArrowRightIcon from "@/icons/common/arrow-right.svg";
 import { themeColor } from "@/theme/light";
 const ItemCard = (props: any) => {
   const {
+    uniqueKey,
     style,
     onPress = null,
     borderVisible = true,
@@ -30,6 +31,7 @@ const ItemCard = (props: any) => {
   const renderRight = () => {
     return (
       <View
+        key={uniqueKey}
         style={[
           {
             flexDirection: "row",

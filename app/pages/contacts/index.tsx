@@ -1,14 +1,14 @@
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import * as light from "@/theme/light";
 import ItemCard from "@/component/complex/ItemCard";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { useNavigation, useRouter } from "expo-router";
 import AddFriendIcon from "@/icons/add-friend.svg";
 import IndexBar from "@/component/business/IndexBar";
 import pinyin from "pinyin";
 import { PortalHost } from "@/component/business/Portal";
 import { tempNavigatorCount } from "@/component/business/IndexBar/style";
-import { cardList, originalList } from "./data/contacts-mocks";
+import { cardList } from "./data/contacts-mocks";
 import { useTheme } from "@/theme/useTheme";
 import config from "@/config/index";
 import { useUser } from "app/store/user";
@@ -16,8 +16,7 @@ import SearchBar from "@/component/complex/SearchBar";
 import UserAvatar from "@/component/complex/UserAvatar";
 import { isNumber } from "@/utils/typeof";
 import { useGetSameApiOfGet } from "@/hooks/useSameApi";
-import { goToMsgChat } from "@/hooks/useSameRouter";
-import { useChatList } from "app/store/chatList";
+import { PusherContext } from "@/hooks/usePusherProvider";
 const _ = require("lodash");
 const indexList: string[] = [];
 const customIndexList = [1, 2, 3, 4, 5, 6, 8, 9, 10];
@@ -28,7 +27,6 @@ for (let i = 0; i < tempNavigatorCount; i += 1) {
 }
 indexList.push("#");
 const Contacts = () => {
-  const { chatListStore, getChatList, setChatListStoreV2 } = useChatList();
   const [friendList, setFriendList] = useState([]);
   const router = useRouter();
   const [listMap, setListMap] = useState(new Map());
@@ -51,7 +49,7 @@ const Contacts = () => {
     });
   });
 
-  useEffect(() => {
+  const getFriendList = () => {
     setFriendList([]);
     setListMap(new Map());
     fetch(
@@ -60,27 +58,34 @@ const Contacts = () => {
         userStore.userInfo?._id
     )
       .then((res) => res.json())
-      .then((friendList) => {
-        if (!friendList || !friendList?.length) {
+      .then((friendData) => {
+        if (!friendData || !friendData?.length) {
           console.log("friendList?.length is null");
           return;
         }
-        console.log(friendList[0], "friendList");
-        setFriendList(friendList[0].friendsArray);
+        const friendList = friendData[0].friendsArray;
+        console.log(friendList, "friendList");
+        setFriendList(friendList);
 
         // console.log(pinyin("岩雀", { style: pinyin.STYLE_NORMAL }), "pinyin");
         // 将数据列表转化为拼音存储，以便于拼音搜索
 
-        friendList[0].friendsArray.forEach((item, index, arr) => {
+        friendList.forEach((item, index, arr) => {
           // 将Item的名称转为拼音数组
-          console.log(1111111111, item);
+          // console.log(1111111111, item);
           if (!item.act) return;
-          console.log(1111111111333);
+          // console.log(1111111111333);
           if (isNumber(Number(item.act))) {
-            console.log(111111);
-            console.log("pinyinArr");
+            // console.log(111111);
+            // console.log("pinyinArr");
+            if (listMap.has("#")) {
+              const preData = listMap.get("#");
+              preData.push(item);
+            } else {
+              listMap.set("#", [item]);
+            }
+
             const newMap = new Map(listMap);
-            newMap.set("#", [item]);
             setListMap(newMap);
             return;
           }
@@ -95,7 +100,6 @@ const Contacts = () => {
           const newMap = new Map(listMap);
           newMap.set(initial, [item]);
           setListMap(newMap);
-
           // 将拼音数组转化为一个字符串，以支持拼音搜索
           // for (let i = 0; i < pinyinArr.length; i++) {
           //   for (let j = 0; j < pinyinArr[i].length; j++) {
@@ -104,7 +108,22 @@ const Contacts = () => {
           // }
           // item.pinyinArrStr = pinyinArrStr;
         });
+        console.log(listMap, "listMap-------");
       });
+  };
+  const pusherContext = useContext(PusherContext);
+
+  useEffect(() => {
+    if (!pusherContext.socket) return;
+    // 有新消息就更新会话列表
+    pusherContext.socket?.on("friend:new", (data) => {
+      console.log("riend:new");
+      getFriendList();
+    });
+  }, [pusherContext.socket]);
+
+  useEffect(() => {
+    getFriendList();
   }, [userStore.userInfo]);
 
   return (
@@ -165,6 +184,10 @@ const Contacts = () => {
                   // }
                   return (
                     <ItemCard
+                      uniqueKey={_item?._id + ""}
+                      style={{
+                        marginTop: 16,
+                      }}
                       onPress={() => {
                         const curUserId = userStore.userInfo?._id + "";
                         // find the convo and go there
@@ -181,15 +204,6 @@ const Contacts = () => {
                               type: "new",
                             }
                           );
-
-                          // const convoItem = res.data;
-                          // goToMsgChat(
-                          //   convoItem,
-                          //   curUserId,
-                          //   navigate,
-                          //   chatListStore,
-                          //   setChatListStoreV2
-                          // );
                         });
                       }}
                       key={index}

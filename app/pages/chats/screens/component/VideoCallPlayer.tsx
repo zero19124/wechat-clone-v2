@@ -64,7 +64,7 @@ const Player = ({
               height: 300,
               width: 130,
               position: "absolute",
-              bottom: 0,
+              top: 50,
               right: 16,
               zIndex: 100,
             }}

@@ -65,17 +65,17 @@ const FriendInfoConfirm = () => {
         .then((res) => {
           console.log(res, "requestFriendUpdate");
           // confirm go to chat?
-          navigate.goBack();
           fetch(config.apiDomain + "/api/convo/add-convo", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              type:'added-new-friend',
+              type: "added-new-friend",
               participants: [userId, friendId],
             }),
           }).then(() => {
+            navigate.goBack();
             console.log("add-convo");
           });
         });
