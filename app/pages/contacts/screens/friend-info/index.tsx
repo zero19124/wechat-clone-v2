@@ -2,10 +2,7 @@ import {
   TNavigationOptions,
   useCommonNavigateProps,
 } from "@/component/complex/CommonNavigateTitle";
-import {
-  useLocalSearchParams,
-  useNavigation,
-} from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ThreeDot from "@/icons/three-dot.svg";
@@ -17,12 +14,13 @@ import UserAvatar from "@/component/complex/UserAvatar";
 import config from "@/config/index";
 import AddConfirmBtn from "./components/AddConfirmBtn";
 import { useTheme } from "@/theme/useTheme";
+import { useUser } from "app/store/user";
 const FriendInfo = () => {
   const navigate = useNavigation();
   const { t } = useTranslation();
   const { themeColor } = useTheme();
   const [user, setUser] = useState();
-
+  const { userInfo } = useUser().userStore;
   const params = useLocalSearchParams();
   const routeParams = useMemo<{
     friendId: string;
@@ -59,11 +57,12 @@ const FriendInfo = () => {
     });
     navigate.setOptions(navigatorProps as TNavigationOptions);
   });
- 
+
   useEffect(() => {
     console.log(routeParams, "routeParams");
 
     if (!routeParams.friendId) return;
+    // get the friend info
     fetch(
       config.apiDomain + `/api/user/getUserById?userId=${routeParams.friendId}`
     )
@@ -148,12 +147,13 @@ const FriendInfo = () => {
           </Text>
         </View>
       </View>
-      {}
-      <AddConfirmBtn
-        confirm={routeParams.confirm}
-        friendId={routeParams?.friendId}
-        status={routeParams?.status}
-      />
+      {routeParams?.friendId !== userInfo?._id && (
+        <AddConfirmBtn
+          confirm={routeParams.confirm}
+          friendId={routeParams?.friendId}
+          status={routeParams?.status}
+        />
+      )}
     </View>
   );
 };

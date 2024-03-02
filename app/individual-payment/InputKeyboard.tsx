@@ -33,7 +33,7 @@ const InputKeyboard = (props) => {
   console.log("InputKeyboard", new Date().getTime(), type);
   const userInfo = useUser().userStore.userInfo;
   const { t } = useTranslation();
-  const [payTo, setPayTo] = useState(t("Pay to") + " " + userInfo?.act);
+  const [payTo, setPayTo] = useState(t("Pay to") + " ");
   const [psw, setPsw] = useState("");
   const navigator = useNavigation();
   const numberList = Array.from({ length: 9 }, (_, i) => i + 1); // [1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -41,9 +41,13 @@ const InputKeyboard = (props) => {
   numberList.push(".");
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const { themeColor } = useTheme();
-  const openModal = () => {
+  const openModal = async () => {
     setPsw("");
-    // setPayTo(defaultPayTo);
+    const userInfo = await fetch(
+      config.apiDomain + "/api/user/getUserById?userId=" + recipientId
+    ).then((res) => res.json());
+    console.log(userInfo, "userInfo");
+    setPayTo((pre) => (pre += userInfo.data?.act));
     bottomSheetRef.current?.present();
   };
   const snapPoints = useMemo(() => ["65%"], []);

@@ -1,13 +1,20 @@
-import React, { memo } from 'react';
-import Overlay from '../Overlay';
-import View from '../View';
-import DismissibleView from './DismissibleView';
-import  useMemoizedFn  from '@/hooks/useMemoizedFn';
-import { PanningProvider, PanListenerView, PanningDirections } from '../PanningViews';
-import type { DialogProps, PopupPosition } from './type';
-import { getOverlayStyle } from './style';
+import React, { memo } from "react";
+import Overlay from "../Overlay";
+import View from "../View";
+import DismissibleView from "./DismissibleView";
+import useMemoizedFn from "@/hooks/useMemoizedFn";
+import {
+  PanningProvider,
+  PanListenerView,
+  PanningDirections,
+} from "../PanningViews";
+import type { DialogProps, PopupPosition } from "./type";
+import { getOverlayStyle } from "./style";
 
-const DirecationMap: Record<Exclude<PopupPosition, 'center'>, PanningDirections> = {
+const DirecationMap: Record<
+  Exclude<PopupPosition, "center">,
+  PanningDirections
+> = {
   bottom: PanningProvider.Directions.DOWN,
   left: PanningProvider.Directions.LEFT,
   right: PanningProvider.Directions.RIGHT,
@@ -17,7 +24,7 @@ const DirecationMap: Record<Exclude<PopupPosition, 'center'>, PanningDirections>
 const Dialog = (props: DialogProps): JSX.Element => {
   const {
     visible,
-    position = 'bottom',
+    position = "bottom",
     overlay = true,
     duration = 300,
     renderPannableHeader,
@@ -34,7 +41,7 @@ const Dialog = (props: DialogProps): JSX.Element => {
   const Container = renderPannableHeader ? View : PanListenerView;
 
   const renderPanning = () => {
-    if (position === 'center') {
+    if (position === "center") {
       return props.children;
     }
 
@@ -53,7 +60,9 @@ const Dialog = (props: DialogProps): JSX.Element => {
         >
           <Container directions={[direction]}>
             {renderPannableHeader && (
-              <PanListenerView directions={[direction]}>{renderPannableHeader()}</PanListenerView>
+              <PanListenerView directions={[direction]}>
+                {renderPannableHeader()}
+              </PanListenerView>
             )}
             {props.children}
           </Container>
@@ -76,6 +85,6 @@ const Dialog = (props: DialogProps): JSX.Element => {
   );
 };
 
-Dialog.displayName = 'Dialog';
+Dialog.displayName = "Dialog";
 
 export default memo(Dialog);

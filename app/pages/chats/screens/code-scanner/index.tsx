@@ -10,6 +10,7 @@ import { getSize } from "utils";
 import LinearLight from "./component/LinearLight";
 import Dialog from "@/component/base/Dialog";
 import { useTranslation } from "react-i18next";
+import { jumpSomeWhereAfterGotQrcodeData } from "@/utils/saveToImg";
 const CodeScanner = () => {
   // const { _id: userId } = useUser().userStore.userInfo!;
   const [hasPermission, setHasPermission] = useState(null);
@@ -19,57 +20,7 @@ const CodeScanner = () => {
   const { themeColor } = useTheme();
   const { t } = useTranslation();
   useEffect(() => {
-    const [barCodeType, data] = text.split("///");
-    try {
-      console.log("type+text", text);
-      if (!data) {
-        return;
-      }
-      const [dataType, userIdField, userId] = data.split("+");
-      // qrcode in me
-
-      const goToFriendAdd = () => {
-        navigator.navigate("pages/contacts/screens/friend-info/index", {
-          friendId: userId,
-          type: "new",
-        });
-      };
-      const goToTransfer = () => {
-        navigator.navigate("individual-payment/index", {
-          recipientId: userId,
-          type: "direct",
-        });
-      };
-
-      if (dataType === "me-page") {
-        Dialog.confirm({
-          closeable: true,
-          cancelButtonText: t("Transfer"),
-          confirmButtonText: t("Add Friend"),
-          title: t("Detected Qrcode"),
-          message: t("do u wanna add as a friend or make a transfer?"),
-        })
-          .then(() => {
-            goToFriendAdd();
-          })
-          .catch(() => {
-            goToTransfer();
-          })
-          .finally(() => {
-            reset();
-          });
-      }
-      // qrcode in money accept
-      if (dataType === "transfer") {
-        goToTransfer();
-      }
-      // qrcode in friend
-      if (dataType === "friend") {
-        goToFriendAdd();
-      }
-    } catch (e) {
-      console.log("error-", e);
-    }
+    jumpSomeWhereAfterGotQrcodeData(text, navigator, t, reset);
   }, [text, setText]);
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {

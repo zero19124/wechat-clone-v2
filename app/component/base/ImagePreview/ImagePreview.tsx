@@ -15,6 +15,9 @@ import * as THEME_VARIABLE from "@/theme/styles/variables";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import Dialog from "../Dialog";
 import { useTranslation } from "react-i18next";
+import Toast from "../Toast";
+import { useNavigation } from "expo-router";
+import { jumpSomeWhereAfterGotQrcodeData } from "@/utils/saveToImg";
 
 const defaultProps = {
   overlay: true,
@@ -32,6 +35,7 @@ const defaultProps = {
 
 const ImagePreview = (_props: ImagePreviewProps): JSX.Element => {
   const props = { ...defaultProps, ..._props };
+  const navigator = useNavigation();
   const { beforeClose, closeIcon } = props;
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
@@ -65,23 +69,40 @@ const ImagePreview = (_props: ImagePreviewProps): JSX.Element => {
           barCodeResult[0].data,
           "BarCodeScanner-datadatadatadata--------"
         );
-        if (barCodeResult[0].data) {
-          console.log(
-            barCodeResult[0].data,
-            "barCodeResult--------"
-          );
-          Dialog.confirm({
-            title: t("Detected QrCode"),
-            message: t("Do u wanna go to Check?"),
-            cancelButtonText: t("No thanks"),
-            confirmButtonText: t("Yes do it"),
-          })
-            .then(() => {
-              // on confirm
+        const qrcodeTextData = `///${barCodeResult[0].data}/// `;
+        if (qrcodeTextData) {
+          console.log(qrcodeTextData, "barCodeResult--------");
+          // Toast.info("222");
+          handleClose();
+          let dialogTitle = t("Detected QrCode");
+          // todo  if dont close it Dialog wont show ???
+          setTimeout(() => {
+            const dataType = jumpSomeWhereAfterGotQrcodeData(
+              qrcodeTextData + ` (((getType)))`
+            );
+            console.log(dataType, "dataType------");
+            if (dataType === "friend") {
+              dialogTitle = t("Detected FriendQdCode");
+            } else if (dataType === "transfer") {
+              dialogTitle = t("Detected TransferQdCode");
+            }
+
+            Dialog.confirm({
+              title: dialogTitle,
+              message: t("Do u wanna go to Check?"),
+              cancelButtonText: t("No thanks"),
+              confirmButtonText: t("Yes do it"),
             })
-            .catch(() => {
-              // on cancel
-            });
+              .then(() => {
+                // on confirm
+                setTimeout(() => {
+                  jumpSomeWhereAfterGotQrcodeData(qrcodeTextData, navigator, t);
+                }, 700);
+              })
+              .catch(() => {
+                // on cancel
+              });
+          });
         }
       };
       if (props.images.length === 1) {
