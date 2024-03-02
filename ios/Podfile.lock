@@ -484,6 +484,8 @@ PODS:
   - react-native-theme-switch-animation (0.6.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
+  - react-native-view-shot (3.8.0):
+    - React-Core
   - react-native-webrtc (118.0.1):
     - JitsiWebRTC (~> 118.0.0)
     - React-Core
@@ -706,6 +708,7 @@ DEPENDENCIES:
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-tcp-socket (from `../node_modules/react-native-tcp-socket`)
   - react-native-theme-switch-animation (from `../node_modules/react-native-theme-switch-animation`)
+  - react-native-view-shot (from `../node_modules/react-native-view-shot`)
   - react-native-webrtc (from `../node_modules/react-native-webrtc`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
@@ -872,6 +875,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-tcp-socket"
   react-native-theme-switch-animation:
     :path: "../node_modules/react-native-theme-switch-animation"
+  react-native-view-shot:
+    :path: "../node_modules/react-native-view-shot"
   react-native-webrtc:
     :path: "../node_modules/react-native-webrtc"
   react-native-webview:
@@ -1001,6 +1006,7 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: 36cc67648134e89465663b8172336a19eeda493d
   react-native-tcp-socket: e724380c910c2e704816ec817ed28f1342246ff7
   react-native-theme-switch-animation: 220f883f7be290e79f2ab022093ed1a7a5929e6d
+  react-native-view-shot: 6b7ed61d77d88580fed10954d45fad0eb2d47688
   react-native-webrtc: 7adbde4b2ad20fb2b804fb11f329425c9323dccc
   react-native-webview: b8ec89966713985111a14d6e4bf98d8b54bced0d
   React-NativeModulesApple: c3e696ff867e4bc212266cbdf7e862e48a0166fd
