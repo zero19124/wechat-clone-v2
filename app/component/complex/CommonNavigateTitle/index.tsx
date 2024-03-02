@@ -1,31 +1,27 @@
-import { useTranslation } from "react-i18next";
-import { Pressable, Text, View } from "react-native";
+import { Pressable } from "react-native";
 import GoBack from "../GoBack";
-const CommonNavigateTitle = () => {
-  return (
-    <View>
-      <Text>CommonNavigateTitle</Text>
-    </View>
-  );
-};
+
 import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 export type TNavigationOptions = NativeStackNavigationOptions;
 export const useCommonNavigateProps = (props: {
   title?: string;
   rightComp: () => React.ReactNode;
+  goBackColor?: string;
   goBackHandler?: () => void;
   rightHandler?: () => void;
 }): TNavigationOptions => {
-  const { title, rightComp, goBackHandler, rightHandler } = props;
+  const { title, rightComp, goBackColor, goBackHandler, rightHandler } = props;
   return {
     title: title,
+    headerTitleAlign: "center",
+
     headerLeft: () => (
       <Pressable
         onPress={() => {
           goBackHandler?.();
         }}
       >
-        <GoBack />
+        <GoBack color={goBackColor} />
       </Pressable>
     ),
     headerRight: () => (
@@ -39,4 +35,3 @@ export const useCommonNavigateProps = (props: {
     ),
   };
 };
-export default CommonNavigateTitle;

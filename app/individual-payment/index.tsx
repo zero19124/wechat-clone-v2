@@ -40,6 +40,7 @@ const Page = () => {
   console.log(params, "params-individual-payment");
   useLayoutEffect(() => {
     navigation.setOptions({
+      headerTitleAlign: "center",
       headerShadowVisible: false,
       title: t("Payment"),
       headerLeft: () => <GoBack />,

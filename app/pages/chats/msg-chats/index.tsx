@@ -72,7 +72,7 @@ const Page = () => {
               router.back();
             }}
           >
-            <GoBack />
+            <GoBack width={24} height={24} />
             <View
               style={{
                 marginLeft: 4,

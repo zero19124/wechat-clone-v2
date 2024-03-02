@@ -43,7 +43,10 @@ const Layout = () => {
       <Tabs
         initialRouteName="Contacts"
         screenOptions={{
+      headerTitleAlign: "center",
+
           headerStyle: {
+            
             backgroundColor: themeColor.fillColor,
           },
           tabBarActiveTintColor: themeColor.primary,
@@ -52,6 +55,7 @@ const Layout = () => {
         <Tabs.Screen
           name="index"
           options={{
+
             // headerShown: false,
             tabBarLabel: ({ color }) => {
               return <TabText color={color}>{t("Chats")}</TabText>;
@@ -64,6 +68,7 @@ const Layout = () => {
             tabBarLabel: ({ color }) => {
               return <TabText color={color}>{t("Contacts")}</TabText>;
             },
+
             headerTitle: "Contacts",
             tabBarIcon: ({ size, color, focused }) => {
               if (focused) {
@@ -79,6 +84,7 @@ const Layout = () => {
             tabBarLabel: ({ color }) => {
               return <TabText color={color}>{t("Discover")}</TabText>;
             },
+
             headerTitle: "Discover",
             tabBarIcon: ({ size, color, focused }) => {
               if (focused) {

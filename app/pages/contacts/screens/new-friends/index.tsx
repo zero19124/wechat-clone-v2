@@ -17,21 +17,24 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { themeColor } from "@/theme/light";
 import SearchBar from "@/component/complex/SearchBar";
 import BottomWidthDivider from "@/component/complex/BottomWidthDivider";
 import Toast from "@/component/base/Toast";
 import ItemCard from "@/component/complex/ItemCard";
 import { AntDesign } from "@expo/vector-icons";
+import { useTheme } from "@/theme/useTheme";
 const NewFriends = () => {
   const navigate = useNavigation();
   const { t } = useTranslation();
+  const {themeColor} = useTheme()
   const { userStore } = useUser();
   const userId = useMemo(() => userStore.userInfo?._id, [userStore]);
   const [friendRequestList, setFriendRequestList] = useState([]);
   useLayoutEffect(() => {
     const navigatorProps = useCommonNavigateProps({
       title: t("New Friends"),
+      headerTitleAlign: "center",
+
       rightComp: () => (
         <Text style={{ fontSize: 16 }}>{t("Add Contacts")}</Text>
       ),

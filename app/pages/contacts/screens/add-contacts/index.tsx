@@ -24,6 +24,8 @@ const AddContacts = () => {
   useLayoutEffect(() => {
     const navigatorProps = useCommonNavigateProps({
       title: t("Add Contacts"),
+      headerTitleAlign: "center",
+
       rightComp: () => <Text></Text>,
     });
     navigate.setOptions(navigatorProps as TNavigationOptions);

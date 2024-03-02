@@ -2,7 +2,7 @@ import { useRouter } from "expo-router";
 import GoBackIcon from "@/icons/common/go-back.svg";
 
 import { Pressable, Text, View } from "react-native";
-const GoBack = () => {
+const GoBack = ({ color }) => {
   const router = useRouter();
 
   return (
@@ -12,7 +12,7 @@ const GoBack = () => {
         router.back();
       }}
     >
-      <GoBackIcon />
+      <GoBackIcon width={24} height={24} fill={color} />
     </Pressable>
   );
 };

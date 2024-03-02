@@ -28,6 +28,7 @@ const Layout = () => {
   } else {
     console.log("App is running in production mode");
   }
+
   const pusherContext = useContext(PusherContext);
   const socket = pusherContext.socket;
   const navigate = useNavigation();
@@ -36,6 +37,7 @@ const Layout = () => {
     en: {
       translation: {
         greeting: "Hello!",
+        "Receive Money": "Receive Money",
         like: "Like",
         comment: "Comment",
         Chats: "Chats",
@@ -50,6 +52,7 @@ const Layout = () => {
     },
     cn: {
       translation: {
+        "Receive Money": "收钱码",
         like: "赞",
         comment: "评论",
         Chats: "微信",
@@ -82,7 +85,6 @@ const Layout = () => {
     return null;
   };
   useEffect(() => {
-
     // navigate.navigate("pages/contacts/screens/send-friend-request/index");
   }, []);
   // return (
