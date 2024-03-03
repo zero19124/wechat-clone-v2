@@ -19,6 +19,13 @@
       -setting
         i18n
         theme
+    -others
+      detect qrcode
+       make a transfer or add friend by qrcode
+       save money qrcode and personal qrcode to album and make features above via qrcode
+
+      
+
 
 
     compare with real one on iphone
