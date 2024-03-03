@@ -12,6 +12,7 @@ import { useMemo } from "react";
 import { getMsgTypeMap } from "./common";
 const TransferCard = ({
   transId,
+  onLongPress,
   accepted,
   msgSenderId,
   amount,
@@ -40,6 +41,7 @@ const TransferCard = ({
   );
   return (
     <TouchableOpacity
+      onLongPress={onLongPress}
       style={{
         borderRadius: 4,
         backgroundColor,

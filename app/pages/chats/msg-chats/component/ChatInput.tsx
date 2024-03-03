@@ -6,7 +6,7 @@ import VoiceRecord from "@/icons/keyboard-panel/voice-record.svg";
 import CirclePlus from "@/icons/circle-plus.svg";
 import { getSize } from "utils";
 import AudioRecorder from "@/component/business/AudioRecorder";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const ChatInput = ({
   value,
@@ -19,6 +19,10 @@ const ChatInput = ({
   plusPress,
 }) => {
   const [voiceInput, setVoiceInput] = useState(false);
+  const [init, setInit] = useState(true);
+  useEffect(() => {
+    setInit(true);
+  });
   return (
     <View
       style={{
@@ -40,6 +44,7 @@ const ChatInput = ({
       <TouchableOpacity
         onPress={() => {
           chatPress?.();
+          setInit(false);
           setVoiceInput(!voiceInput);
         }}
       >
@@ -54,7 +59,7 @@ const ChatInput = ({
           selectionColor={themeColor.primary}
           onChangeText={onChangeText}
           onFocus={onFocus}
-          autoFocus={!voiceInput}
+          autoFocus={!voiceInput && !init}
           onSubmitEditing={onEndEditing}
           blurOnSubmit={false}
           returnKeyType="send"

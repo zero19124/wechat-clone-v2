@@ -1,20 +1,24 @@
      -chat
         -texing img voice emoji
-          take pic or video to send
-          -voice msg smooth change and autofocus details of the length
-          -key panel
+        -taking pic or video to send (video autio compress)
+        -voice msg smooth change and autofocus details of the length
+        -key panel
         -video call
+        - msg recall
         -transfer
           accept page
+        -Location Sharing(real time by socket)
     -contacts
       - add friends or add by qrcode
       - search friend
+      - friend status controll
       - index bar
     - discover
       -moments
         post pics or video
         like or comment
         who can see
+      -People NearBy
     -me
       wallet
       login
@@ -26,7 +30,7 @@
        make a transfer or add friend by qrcode
        save money qrcode and personal qrcode to album and make features above via qrcode
 
-      
+
 
 
 

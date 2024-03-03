@@ -12,8 +12,11 @@ const PrivateChatList = (props: {
 }) => {
   const { dataOut, flatListRef } = props;
   const { userInfo } = useUser().userStore;
-  // console.log(dataOut, "dataOut-userInfo");
+  console.log(dataOut, "dataOut-userInfo");
   const renderItem = ({ item }: { item: (typeof data)[0] }) => {
+    if (item.type === "recalledMsg") {
+      return <></>;
+    }
     const isMe = item.userId === userInfo?._id;
     const ItemWrapper = () => {
       return (
@@ -32,7 +35,7 @@ const PrivateChatList = (props: {
               }}
             >
               <MsgReceiver
-                msgId={item._id}
+                msgId={item.msgId}
                 msgType={item.type}
                 msgSenderId={item.userId}
                 type="right"
@@ -79,7 +82,7 @@ const PrivateChatList = (props: {
   return (
     <FlatList
       // style={{ paddingBottom: 58 }}
-      ref={flatListRef}
+      // ref={flatListRef}
       inverted
       contentContainerStyle={{
         backgroundColor: themeColor.fillColor,

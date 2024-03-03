@@ -9,9 +9,23 @@ import { useUser } from "app/store/user";
 import TransferCard from "./component/TransferCard";
 import { getMsgTypeMap } from "./component/common";
 import { Audio } from "expo-av";
-import { useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
+import ChatIcon from "@/icons/tabs/chats.svg";
+import ChatActiveIcon from "@/icons/tabs/chats-active.svg";
+import CirclePlus from "@/icons/circle-plus.svg";
+import AddContactsFilled from "@/icons/chats/add-contacts-filled.svg";
+import ChatFilled from "@/icons/chats/chat-filled.svg";
+import MoneyFilled from "@/icons/chats/money-filled.svg";
+import ScanFilled from "@/icons/chats/scan-filled.svg";
+import {
+  Popover,
+  PopoverAction,
+  PopoverInstance,
+} from "@/component/base/Popover";
+import Toast from "@/component/base/Toast";
+import useSendMsg from "@/hooks/useSendMsg";
+import { useChatList } from "app/store/chatList";
 const MsgWrapper = ({
   msgType = "text",
   type = "left",
@@ -25,15 +39,77 @@ const MsgWrapper = ({
   msgSenderId: string;
   msgType: string;
 }) => {
+  const { sendMsgHandler } = useSendMsg();
+  const { chatListStore } = useChatList();
   const { themeColor } = useTheme();
   const userInfo = useUser().userStore.userInfo;
   const msgTypeMap = getMsgTypeMap(themeColor);
   const navigator = useNavigation();
   const [durationMillis, setDurationMillis] = useState(0);
   const { t } = useTranslation();
+  const popover = useRef<PopoverInstance>(null);
+  const iconActions: PopoverAction[] = useMemo(() => {
+    const iconActionsList = [
+      {
+        text: t("Recall"),
+        icon: (
+          <ChatFilled
+            style={{ width: 22, height: 22 }}
+            fill={themeColor.white}
+          />
+        ),
+      },
+      {
+        text: t("Add Contacts"),
+        icon: (
+          <AddContactsFilled
+            style={{ width: 22, height: 22 }}
+            fill={themeColor.white}
+          />
+        ),
+      },
+      {
+        text: t("Scan"),
+        icon: (
+          <ScanFilled
+            style={{ width: 22, height: 22 }}
+            fill={themeColor.white}
+          />
+        ),
+      },
+
+      {
+        text: t("Money"),
+        icon: (
+          <MoneyFilled
+            style={{ width: 22, height: 22 }}
+            fill={themeColor.white}
+          />
+        ),
+      },
+    ];
+    if (msgSenderId + "" !== userInfo?._id + "") {
+      iconActionsList.shift();
+    }
+    return iconActionsList;
+  }, [msgSenderId]);
+  const select = (option: PopoverAction) => {
+    Toast.info(option.text);
+    if (option.text === "Recall") {
+      sendMsgHandler({
+        val: "recallMsg+" + "recalled+" + msgId,
+        userId: userInfo?._id + "",
+        type: "recallMsg",
+        convoId: chatListStore.curConvo?.convoId + "",
+        doneHandler: () => {},
+      });
+    }
+    popover.current?.hide();
+  };
   const TextWrapper = ({ children }) => {
     return (
       <View
+        key={msgId}
         style={[
           msgTypeMap[type === "left" ? "itemLeftWrapper" : "itemRightWrapper"],
           {
@@ -51,6 +127,14 @@ const MsgWrapper = ({
   };
   // transId+amount+userid
   const getContent = () => {
+    console.log(msgType, "msgType");
+    if (msgType === "recallMsg") {
+      return (
+        <Text style={{ padding: 12, justifyContent: "center" }}>
+          {t("recalled a message")}
+        </Text>
+      );
+    }
     if (msgType === "voice") {
       const sound = new Audio.Sound();
       const getSta = async () => {
@@ -59,7 +143,7 @@ const MsgWrapper = ({
         await sound.loadAsync({ uri: text + "" });
         // 获取音频状态
         sound.getStatusAsync().then((status) => {
-          console.log(status, "status11");
+          // console.log(status, "status11");
           if (status.isLoaded) {
             const tempDurationMillis = status.durationMillis; // 音频总时长，以毫秒为单位
             setDurationMillis(Number(tempDurationMillis) / 1000);
@@ -80,8 +164,11 @@ const MsgWrapper = ({
                 : getSize(230),
             flexDirection: "row",
             padding: 12,
-            justifyContent: 'flex-end',
+            justifyContent: "flex-end",
             alignItems: "center",
+          }}
+          onLongPress={() => {
+            popover.current?.show();
           }}
           onPress={async () => {
             try {
@@ -123,6 +210,9 @@ const MsgWrapper = ({
 
       return (
         <TransferCard
+          onLongPress={() => {
+            popover.current?.show();
+          }}
           originMsgId={msgId}
           accepted={accepted}
           amount={amount}
@@ -146,7 +236,12 @@ const MsgWrapper = ({
         });
       };
       return (
-        <TouchableOpacity onPress={openPreview}>
+        <TouchableOpacity
+          onLongPress={() => {
+            popover.current?.show();
+          }}
+          onPress={openPreview}
+        >
           <Image
             source={{
               uri:
@@ -164,18 +259,60 @@ const MsgWrapper = ({
         <View
           style={msgTypeMap[type === "left" ? "itemLeft" : "itemRight"]}
         ></View>
-        <Text
-          style={{
-            alignSelf: "flex-start",
-            marginVertical: 8,
-            marginHorizontal: 12,
+        <TouchableOpacity
+          onLongPress={() => {
+            popover.current?.show();
           }}
         >
-          {text}
-        </Text>
+          <Text
+            style={{
+              alignSelf: "flex-start",
+              marginVertical: 8,
+              marginHorizontal: 12,
+            }}
+          >
+            {text}
+          </Text>
+        </TouchableOpacity>
       </>
     );
   };
-  return <TextWrapper>{getContent()}</TextWrapper>;
+
+  return (
+    <>
+      <Popover ref={popover} theme="dark">
+        <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+          {iconActions.map((action) => {
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  select(action);
+                }}
+                key={action.text}
+                style={{
+                  padding: 12,
+                  flexDirection: "row",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                }}
+              >
+                {action.icon}
+                <Text
+                  style={{
+                    fontSize: 16,
+                    marginLeft: 8,
+                    color: themeColor.white,
+                  }}
+                >
+                  {action.text}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      </Popover>
+      <TextWrapper>{getContent()}</TextWrapper>
+    </>
+  );
 };
 export default MsgWrapper;

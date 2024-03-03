@@ -164,6 +164,10 @@ const Page = () => {
         updateConvoLatestMsgById(convoId + "", latestMessage);
         // 如果有转账的 更新对应的信息转账状态
         // 直接重新拉新数据 后面再优化状态更新问题
+        if (data.type === "recallMsg") {
+          getMsgList();
+          return;
+        }
         if (type && type === "isTransferAccepted") {
           getMsgList();
           return;
@@ -189,15 +193,19 @@ const Page = () => {
         if (res?.code === 200) {
           // console.log(res.data, "dadad");
           setDataOut([
-            ...res.data?.map((item) => {
-              return {
-                type: item.type,
-                userId: item.userId,
-                msgId: item._id,
-                image: item.user.image,
-                latestMessage: item.msg,
-              };
-            }),
+            ...res.data
+              // ?.filter((item) => {
+              //   return item.type !== "recalledMsg";
+              // })
+              .map((item) => {
+                return {
+                  type: item.type,
+                  userId: item.userId,
+                  msgId: item._id,
+                  image: item.user.image,
+                  latestMessage: item.msg,
+                };
+              }),
           ]);
           // 接受完后 清空输入框
           setMsg("");
@@ -271,7 +279,11 @@ const Page = () => {
           }}
         >
           {/* 聊天列表 */}
-          <PrivateChatList dataOut={dataOut} flatListRef={flatListRef} />
+          {dataOut.length ? (
+            <PrivateChatList dataOut={dataOut} flatListRef={flatListRef} />
+          ) : (
+            <></>
+          )}
         </TouchableWithoutFeedback>
         {/* keyboard 内容 */}
         <ChatInput
