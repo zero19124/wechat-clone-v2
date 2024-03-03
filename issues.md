@@ -33,4 +33,6 @@ issue     >  handleBarCodeScanned this fn called after useeffect called
     console.log(text, "ttt");
   }, [text]);   为什么 setText('xx'). useeffect 里拿不到最新的值？ 每次打印都是空的
 
-  # 录音难点 点击的时候切换录音画面无法触发到panresponder
+  issue> 录音难点 点击的时候切换录音画面无法触发到panresponder
+  发现触摸的同时改变state不会中断
+  

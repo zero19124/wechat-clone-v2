@@ -1,21 +1,11 @@
 import {
-  Button,
   PanResponderInstance,
-  StyleSheet,
   View,
   Text,
   PanResponder,
   TouchableOpacity,
-  TouchableWithoutFeedback,
 } from "react-native";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
-import { useNavigation } from "expo-router";
+import { useCallback, useEffect, useRef, useState } from "react";
 import _ from "lodash";
 
 import { useTranslation } from "react-i18next";
@@ -23,20 +13,29 @@ import { useTheme } from "@/theme/useTheme";
 import { getSize } from "utils";
 import { Audio } from "expo-av";
 import { uploadImages } from "@/hooks/useImagePicker";
+import { PortalRef } from "app/_layout";
+import { Portal } from "../Portal";
+import Button from "@/component/base/Button/Button";
+import Toast from "@/component/base/Toast";
+import { RecordingObject } from "expo-av/build/Audio";
 const debouncedHandleTextChange = _.debounce((handler) => {
   handler();
 }, 200);
 const AudioRecorder = () => {
+  const { themeColor } = useTheme();
   const elementsRef = useRef([]);
   const [tempUri, setTempUri] = useState();
+  const { t } = useTranslation();
   const [panResponderRef, setPanResponderRef] =
     useState<PanResponderInstance | null>(null);
-  const [recording, setRecording] = useState(null);
-  const isOnCancelBtn = useRef(false);
+  const [recording, setRecording] =
+    useState<RecordingObject["recording"]>(null);
+  const durationMillis = useRef(-1);
+  const [isOnCancelBtn, setIsOnCancelBtn] = useState(false);
   const [isOnCheckBtn, setIsOnCheckBtn] = useState(false);
-  const setIsOnCancelBtn = (val: boolean) => {
-    isOnCancelBtn.current = val;
-  };
+  useEffect(() => {
+    console.log(tempUri, "tempUri");
+  }, [tempUri]);
   const cleanRecState = (cleanType: "normal" | "onCheck" = "normal") => {
     console.log("cleanRecState");
     if (cleanType === "normal") {
@@ -46,7 +45,6 @@ const AudioRecorder = () => {
     }
     if (cleanType === "onCheck") {
       setIsOnCancelBtn(false);
-      setRecording(null);
     }
   };
   const stopRecordingHandler = useCallback(
@@ -57,6 +55,12 @@ const AudioRecorder = () => {
         recording ? "yes" : "false",
         stopType
       );
+      // recording.setOnRecordingStatusUpdate(null);
+      // if (durationMillis.current < 1500) {
+      //   Toast.info(t("too short"));
+      //   cleanRecState();
+      //   return;
+      // }
       // this line is critical for routing audio back through the speaker instead of the earpiece
       // await Audio.setAudioModeAsync({
       //   allowsRecordingIOS: false,
@@ -71,7 +75,7 @@ const AudioRecorder = () => {
         console.log("取消录音");
         cleanRecState();
       } else {
-        console.log("结束录音");
+        console.log("结束录音", isOnCheckBtn);
         const uri = recording.getURI();
         setTempUri(uri);
         if (onCheckState) {
@@ -94,7 +98,7 @@ const AudioRecorder = () => {
         }
       }
     },
-    [isOnCheckBtn, isOnCancelBtn.current, recording]
+    [isOnCheckBtn, isOnCancelBtn, recording]
   );
 
   const startRecordingHandler = async (type = "press") => {
@@ -113,6 +117,13 @@ const AudioRecorder = () => {
     const { recording } = await Audio.Recording.createAsync(
       Audio.RecordingOptionsPresets.HIGH_QUALITY
     );
+    // 设置状态更新回调函数
+    recording.setOnRecordingStatusUpdate((status) => {
+      if (!status.isRecording) return;
+      // status.durationMillis 包含了当前录音的时长（毫秒）
+      durationMillis.current = status.durationMillis;
+      console.log("当前录音时长（毫秒）:", status.durationMillis);
+    });
     setRecording(recording);
     // console.log(recording, "setRecording");
   };
@@ -121,6 +132,25 @@ const AudioRecorder = () => {
       PanResponder.create({
         onStartShouldSetPanResponder: () => true,
         onMoveShouldSetPanResponder: () => true,
+        onPanResponderMove: async (evt, gestureState) => {
+          console.log("onPanResponderMove");
+          const touchIndex = await getTouchedElementIndex(
+            evt.nativeEvent.pageX,
+            evt.nativeEvent.pageY,
+            "onPanResponderRelease"
+          );
+          if (touchIndex === 0) {
+            setIsOnCheckBtn(true);
+          } else {
+            setIsOnCheckBtn(false);
+          }
+          // 如果在第二个元素上
+          if (touchIndex === 1) {
+            setIsOnCancelBtn(true);
+          } else {
+            setIsOnCancelBtn(false);
+          }
+        },
         onPanResponderRelease: async (evt, gestureState) => {
           console.log("onPanResponderRelease");
           // 检测手指移动过程中是否触碰到了元素5
@@ -132,22 +162,20 @@ const AudioRecorder = () => {
           console.log("onPanResponderRelease2", touchIndex);
           // 如果在第一个元素上
           let onCheckState;
+          let onCancelState;
           if (touchIndex === 0) {
             onCheckState = true;
             setIsOnCheckBtn(true);
           } // 如果在第二个元素上
           if (touchIndex === 1) {
+            onCancelState = true;
             setIsOnCancelBtn(true);
           }
-          console.log(
-            isOnCancelBtn.current,
-            "isOnCancelBtn.current",
-            isOnCheckBtn
-          );
+          console.log(isOnCancelBtn, "isOnCancelBtn.current", isOnCheckBtn);
           console.log("onPanResponderRelease3", touchIndex);
           // 松开手指时结束录音并尝试播放
           //  if on the second ele than cancel the recording
-          if (isOnCancelBtn.current && recording) {
+          if (onCancelState && recording) {
             stopRecordingHandler("cancel");
             return;
           }
@@ -157,7 +185,7 @@ const AudioRecorder = () => {
         },
       })
     );
-  }, [recording, isOnCancelBtn.current, isOnCheckBtn]);
+  }, [recording, isOnCancelBtn, isOnCheckBtn]);
 
   // 功能函数：根据触摸位置判断触碰到的元素索引
   const getTouchedElementIndex = (pageX, pageY, type) => {
@@ -211,9 +239,7 @@ const AudioRecorder = () => {
     });
   };
 
-  const playSound = async () => {
-    // 创建一个新的音频对象
-
+  const playSound = useCallback(async () => {
     const sound = new Audio.Sound();
     try {
       console.log(tempUri, "tempUri");
@@ -231,51 +257,122 @@ const AudioRecorder = () => {
       // 错误处理
       console.error("播放音频时发生错误", error);
     }
-  };
-
+  }, [tempUri]);
   return (
-    <View style={{ position: "absolute", bottom: 0, right: 0, left: 0 }}>
-      <Text>{tempUri}</Text>
-      <View>
-        {/* 点击按钮播放音频 */}
-        {isOnCheckBtn && (
-          <View>
-            <Button title="播放录音" onPress={playSound} />
-            <Button
-              title="send"
-              onPress={() => {
-                setTempUri("");
-                setIsOnCheckBtn(false);
-              }}
-            />
-          </View>
-        )}
-      </View>
-      {recording && (
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          {Array.from({ length: 2 }, (_, index) => (
+    <View style={{ flex: 1 }}>
+      <View {...panResponderRef?.panHandlers}>
+        {recording && (
+          <Portal>
             <View
-              key={index}
-              ref={(el) => (elementsRef.current[index] = el)}
               style={{
-                width: 50,
-                height: 50,
-                margin: 10,
-                backgroundColor: "gray",
+                backgroundColor: themeColor.overlay4,
+                position: "absolute",
+                height: "100%",
+                width: "100%",
+                bottom: 0,
               }}
             >
-              <Text>{index ? "cancel" : "check it"}</Text>
-            </View>
-          ))}
-        </View>
-      )}
+              <View
+                style={{
+                  position: "absolute",
+                  bottom: getSize(100),
+                  left: 0,
+                  right: 0,
+                  paddingHorizontal: getSize(32),
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                {/* 点击按钮播放音频 */}
+                {isOnCheckBtn && tempUri && (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      position: "absolute",
+                      width: "100%",
+                      bottom: getSize(130),
+                    }}
+                  >
+                    {
+                      <Button
+                        type="primary"
+                        style={{ marginBottom: 12 }}
+                        onPress={() => {
+                          console.log(tempUri);
+                          playSound();
 
-      <View
-        {...panResponderRef?.panHandlers}
-        style={{ backgroundColor: "red" }}
-      >
+                          return;
+                        }}
+                      >
+                        {t("播放录音")}
+                      </Button>
+                    }
+                    <Button
+                      type="primary"
+                      onPress={() => {
+                        setTempUri("");
+                        cleanRecState();
+                      }}
+                    >
+                      {t("send")}
+                    </Button>
+                    <Button
+                      type="primary"
+                      onPress={() => {
+                        setTempUri("");
+                        cleanRecState();
+                      }}
+                    >
+                      {t("cancel")}
+                    </Button>
+                  </View>
+                )}
+                <View
+                  ref={(el) => (elementsRef.current[0] = el)}
+                  style={{
+                    borderRadius: getSize(75),
+                    width: getSize(75),
+                    height: getSize(75),
+                    margin: 10,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: isOnCheckBtn
+                      ? themeColor.white
+                      : themeColor.text3,
+                  }}
+                >
+                  <Text>{t("check it")}</Text>
+                </View>
+                <View
+                  ref={(el) => (elementsRef.current[1] = el)}
+                  style={{
+                    borderRadius: getSize(75),
+                    width: getSize(75),
+                    height: getSize(75),
+                    margin: 10,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: isOnCancelBtn
+                      ? themeColor.white
+                      : themeColor.text3,
+                  }}
+                >
+                  <Text>{t("cancel")}</Text>
+                </View>
+              </View>
+            </View>
+          </Portal>
+        )}
         <TouchableOpacity
-          style={{ backgroundColor: "blue", width: "100%", height: 59 }}
+          style={{
+            borderRadius: 4,
+            paddingVertical: 12,
+            backgroundColor: themeColor.fill2,
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+          }}
           onPress={() => {
             stopRecordingHandler();
             console.log("onPress");
@@ -285,7 +382,10 @@ const AudioRecorder = () => {
             await startRecordingHandler();
           }}
         >
-          <Text>startRecord {recording ? "true" : "false"}</Text>
+          <Text style={{ fontSize: 16 }}>
+            {" "}
+            {recording ? t("Release to Send") : t("Hold to Talk")}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

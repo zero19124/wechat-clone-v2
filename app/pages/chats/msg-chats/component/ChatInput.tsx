@@ -5,6 +5,9 @@ import Emoji from "@/icons/keyboard-panel/emoji-icon.svg";
 import VoiceRecord from "@/icons/keyboard-panel/voice-record.svg";
 import CirclePlus from "@/icons/circle-plus.svg";
 import { getSize } from "utils";
+import AudioRecorder from "@/component/business/AudioRecorder";
+import { useState } from "react";
+
 const ChatInput = ({
   value,
   onEndEditing,
@@ -14,6 +17,7 @@ const ChatInput = ({
   emojiPress,
   plusPress,
 }) => {
+  const [voiceInput, setVoiceInput] = useState(false);
   return (
     <View
       style={{
@@ -35,32 +39,39 @@ const ChatInput = ({
       <TouchableOpacity
         onPress={() => {
           chatPress?.();
+          setVoiceInput(!voiceInput);
         }}
       >
         <VoiceRecord style={{ marginRight: 4 }} width={28} height={28} />
       </TouchableOpacity>
-      <TextInput
-        value={value}
-        selectionColor={themeColor.primary}
-        onChangeText={onChangeText}
-        onFocus={onFocus}
-        onSubmitEditing={onEndEditing}
-        blurOnSubmit={false}
-        returnKeyType="send"
-        style={{
-          borderRadius: 4,
-          height: getSize(38),
 
-          // position: "absolute",
-          // bottom: -410,
-          paddingLeft: 8,
-          fontSize: 18,
-          paddingVertical: 8,
-          flex: 1,
-          // fontSize: 22,
-          backgroundColor: themeColor.white,
-        }}
-      ></TextInput>
+      {voiceInput ? (
+        <AudioRecorder />
+      ) : (
+        <TextInput
+          value={value}
+          selectionColor={themeColor.primary}
+          onChangeText={onChangeText}
+          onFocus={onFocus}
+          onSubmitEditing={onEndEditing}
+          blurOnSubmit={false}
+          returnKeyType="send"
+          style={{
+            borderRadius: 4,
+            height: getSize(38),
+
+            // position: "absolute",
+            // bottom: -410,
+            paddingLeft: 8,
+            fontSize: 18,
+            paddingVertical: 8,
+            flex: 1,
+            // fontSize: 22,
+            backgroundColor: themeColor.white,
+          }}
+        ></TextInput>
+      )}
+
       <TouchableOpacity
         onPress={() => {
           emojiPress?.();

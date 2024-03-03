@@ -27,7 +27,6 @@ import { useNavigation } from "expo-router";
 import Loading from "@/component/base/Loading";
 import config from "@/config/index";
 import { useState } from "react";
-import AudioRecorder from "@/component/business/AudioRecorder";
 const Me = () => {
   // return <PusherTester />;
   const avatars = [
@@ -60,7 +59,7 @@ const Me = () => {
   ];
 
   return (
-    <SafeAreaView style={{ backgroundColor: themeColor.white ,flex:1}}>
+    <SafeAreaView style={{ backgroundColor: themeColor.white, flex: 1 }}>
       <View
         className="flex-row"
         style={{ paddingTop: "16%", paddingBottom: 32 }}
@@ -164,7 +163,7 @@ const Me = () => {
           </View>
         </View>
       </View>
-      {/* <SimpleLogin />
+      <SimpleLogin />
 
       <Divider />
 
@@ -185,56 +184,55 @@ const Me = () => {
           );
         }}
         text={"Services"}
-      /> */}
-      {/* <Divider /> */}
+      />
+      <Divider />
 
-      {/* {serviceList.map((service) => {
+      {serviceList.map((service) => {
+        return (
+          <ItemCard
+            onLongPress={() => {
+              if (service.text === "Cards & Offers") {
+                fetch(
+                  config.apiDomain +
+                    "/api/wallet/AddMoneyByUserId?userId=" +
+                    userInfo?._id
+                ).then(() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+                });
+              }
+            }}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+            }}
+            key={service.text}
+            leftComp={() => {
+              return <View style={{ marginLeft: 24 }}>{service.icon}</View>;
+            }}
+            text={service.text}
+          />
+        );
+      })}
+      <Divider />
+      <ItemCard
+        onPress={() => {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+          // Haptics.selectionAsync();
+          navigator.navigate("pages/me/setting/index");
+        }}
+        borderVisible={false}
+        leftComp={() => {
           return (
-            <ItemCard
-              onLongPress={() => {
-                if (service.text === "Cards & Offers") {
-                  fetch(
-                    config.apiDomain +
-                      "/api/wallet/AddMoneyByUserId?userId=" +
-                      userInfo?._id
-                  ).then(() => {
-                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-                  });
-                }
-              }}
-              onPress={() => {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-              }}
-              key={service.text}
-              leftComp={() => {
-                return <View style={{ marginLeft: 24 }}>{service.icon}</View>;
-              }}
-              text={service.text}
+            <SettingIcon
+              style={{ marginLeft: 24 }}
+              width={24}
+              height={24}
+              fill={themeColor.iconBlue}
             />
           );
-        })} */}
-      {/* <Divider /> */}
-      {/* <ItemCard
-          onPress={() => {
-            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-            // Haptics.selectionAsync();
-            navigator.navigate("pages/me/setting/index");
-          }}
-          borderVisible={false}
-          leftComp={() => {
-            return (
-              <SettingIcon
-                style={{ marginLeft: 24 }}
-                width={24}
-                height={24}
-                fill={themeColor.iconBlue}
-              />
-            );
-          }}
-          text={"Setting"}
-        /> */}
-      <AudioRecorder />
+        }}
+        text={"Setting"}
+      />
     </SafeAreaView>
   );
 };
