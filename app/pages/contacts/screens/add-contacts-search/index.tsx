@@ -2,15 +2,14 @@ import { useNavigation } from "expo-router";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Image,
-  Platform,
-  SafeAreaView,
   ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+
 import SearchIcon from "@/icons/common/search.svg";
 import { useTheme } from "@/theme/useTheme";
 import { Toast } from "@/component/base/Toast";
@@ -50,7 +49,6 @@ const AddContactsSearch = () => {
     <SafeAreaView
       style={{
         backgroundColor: themeColor.fillColor,
-        paddingTop: Platform.OS === "android" ? 50 : 0,
       }}
     >
       <View

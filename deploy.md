@@ -13,6 +13,10 @@ prod
 eas build --platform ios
 eas build --platform android
 
+
+
+if  Execution failed for task ':react-native-view-shot:compileDebugLibraryResources'
+
 cd android && ./gradlew clean
 
 

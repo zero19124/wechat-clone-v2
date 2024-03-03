@@ -3,7 +3,7 @@ import config from "../config";
 import Toast from "@/component/base/Toast";
 export type TImageIns = {
   uri: string;
-  type: "image" | "video" | undefined;
+  type: "image" | "video" | undefined | "audio/mpeg";
   name: string | null | undefined;
 };
 export const pickImages = async () => {
@@ -34,7 +34,10 @@ export const pickImages = async () => {
     return [];
   }
 };
-export const uploadImages = async (images: TImageIns[]) => {
+export const uploadImages = async (
+  images: TImageIns[],
+  type: "img" | "audio/mpeg" | "video" = "img"
+) => {
   const formData = new FormData();
   console.log(images.length, "images.length");
   images.forEach((image, index) => {
@@ -44,6 +47,7 @@ export const uploadImages = async (images: TImageIns[]) => {
       type: image.type,
     } as any);
   });
+
   console.log(formData, "formData");
   try {
     const response = await fetch(config.apiDomain + "/api/utils/upload", {

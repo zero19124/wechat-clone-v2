@@ -119,7 +119,7 @@ const MomentsComment = (props: { momentData: IMomentsCard["momentData"] }) => {
       >
         <Image
           style={style.momentsCardBottomImg}
-          source={require("@/assets/icon/discover/two-dot-moments.png")}
+          source={require("@/assets/icon/discover/two-dot-moments.jpeg")}
         />
       </TouchableOpacity>
     </View>

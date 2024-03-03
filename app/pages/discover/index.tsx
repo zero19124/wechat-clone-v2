@@ -13,7 +13,7 @@ const Discover = () => {
   const cardList = [
     {
       text: t("moments"),
-      url: require("@/icons/discover/moments.png"),
+      url: require("@/icons/discover/moments.jpeg"),
       onPressHandler: () => {
         // router.push('pages/discover/moments/index')
         navigator.navigate("pages/discover/moments/index");
@@ -21,39 +21,39 @@ const Discover = () => {
     },
     {
       text: "Channels",
-      url: require("@/icons/discover/channels.png"),
+      url: require("@/icons/discover/channels.jpeg"),
     },
     {
       text: "Live",
-      url: require("@/icons/discover/live.png"),
+      url: require("@/icons/discover/live.jpeg"),
     },
     {
       text: "Scan",
-      url: require("@/icons/discover/scan-v2.png"),
+      url: require("@/icons/discover/scan-v2.jpeg"),
     },
     {
       text: "Shake",
-      url: require("@/icons/discover/shake.png"),
+      url: require("@/icons/discover/shake.jpeg"),
     },
     {
       text: "Top Stories",
-      url: require("@/icons/discover/top-stories.png"),
+      url: require("@/icons/discover/top-stories.jpeg"),
     },
     {
       text: "Search",
-      url: require("@/icons/discover/search.png"),
+      url: require("@/icons/discover/search.jpeg"),
     },
     {
       text: "Nearby",
-      url: require("@/icons/discover/nearby.png"),
+      url: require("@/icons/discover/nearby.jpeg"),
     },
     {
       text: "Games",
-      url: require("@/icons/discover/games.png"),
+      url: require("@/icons/discover/games.jpeg"),
     },
     {
       text: "Mini Programs",
-      url: require("@/icons/discover/mini-programs.png"),
+      url: require("@/icons/discover/mini-programs.jpeg"),
     },
   ];
   return (
