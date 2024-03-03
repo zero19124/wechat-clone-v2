@@ -41,6 +41,7 @@ import { useTranslation } from "react-i18next";
 import ActionSheet, { ActionSheetAction } from "@/component/base/ActionSheet";
 import { TNavigationOptions } from "@/component/complex/CommonNavigateTitle";
 import { getHeight, getSize } from "utils";
+import { uploadImages } from "@/hooks/useImagePicker";
 const Page = () => {
   const navigate = useNavigation();
   // 获取设备型号
@@ -274,6 +275,26 @@ const Page = () => {
         </TouchableWithoutFeedback>
         {/* keyboard 内容 */}
         <ChatInput
+          onVoiceEnd={async (uri) => {
+            console.log(111, uri);
+            const uploadedphotos = await uploadImages([
+              {
+                uri: uri,
+                name: "audio-" + Math.random() + ".m4a",
+                type: "audio/mpeg",
+              },
+            ]);
+            console.log(uploadedphotos, "uploadedphotos");
+            sendMsgHandler({
+              val: uploadedphotos[0],
+              userId: userInfo?._id + "",
+              type: "voice",
+              convoId: convoId + "",
+              doneHandler: () => {
+                // setMsg("");
+              },
+            });
+          }}
           value={msg}
           onChangeText={(val: string) => {
             setMsg(() => val);

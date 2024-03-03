@@ -11,6 +11,7 @@ import { useState } from "react";
 const ChatInput = ({
   value,
   onEndEditing,
+  onVoiceEnd,
   onChangeText,
   chatPress,
   onFocus,
@@ -46,13 +47,14 @@ const ChatInput = ({
       </TouchableOpacity>
 
       {voiceInput ? (
-        <AudioRecorder />
+        <AudioRecorder onVoiceEnd={onVoiceEnd} />
       ) : (
         <TextInput
           value={value}
           selectionColor={themeColor.primary}
           onChangeText={onChangeText}
           onFocus={onFocus}
+          autoFocus={!voiceInput}
           onSubmitEditing={onEndEditing}
           blurOnSubmit={false}
           returnKeyType="send"

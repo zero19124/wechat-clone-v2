@@ -1,6 +1,8 @@
      -chat
         -texing img voice emoji
           take pic or video to send
+          -voice msg smooth change and autofocus details of the length
+          -key panel
         -video call
         -transfer
           accept page

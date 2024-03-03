@@ -21,7 +21,7 @@ import { RecordingObject } from "expo-av/build/Audio";
 const debouncedHandleTextChange = _.debounce((handler) => {
   handler();
 }, 200);
-const AudioRecorder = () => {
+const AudioRecorder = ({ onVoiceEnd }) => {
   const { themeColor } = useTheme();
   const elementsRef = useRef([]);
   const [tempUri, setTempUri] = useState();
@@ -78,6 +78,9 @@ const AudioRecorder = () => {
         console.log("结束录音", isOnCheckBtn);
         const uri = recording.getURI();
         setTempUri(uri);
+        // two way
+        // 1 direct to send
+        // 2 press send btn and send
         if (onCheckState) {
           cleanRecState("onCheck");
           return;
@@ -85,16 +88,9 @@ const AudioRecorder = () => {
         if (uri) {
           cleanRecState();
           console.log("播放录音", uri);
-          const { sound } = await Audio.Sound.createAsync({ uri });
-          await sound.playAsync();
-          // const uploadedphotos = await uploadImages([
-          //   {
-          //     uri: uri,
-          //     name: "audio-" + Math.random() + ".m4a",
-          //     type: "audio/mpeg",
-          //   },
-          // ]);
-          // console.log(uploadedphotos, "uploadedphotos");
+          // const { sound } = await Audio.Sound.createAsync({ uri });
+          // await sound.playAsync();
+          onVoiceEnd?.(uri);
         }
       }
     },
@@ -290,8 +286,9 @@ const AudioRecorder = () => {
                       flexDirection: "row",
                       justifyContent: "space-between",
                       position: "absolute",
-                      width: "100%",
-                      bottom: getSize(130),
+                      width: getSize(375),
+                      paddingHorizontal: 24,
+                      bottom: getSize(110),
                     }}
                   >
                     {
@@ -313,6 +310,7 @@ const AudioRecorder = () => {
                       onPress={() => {
                         setTempUri("");
                         cleanRecState();
+                        onVoiceEnd?.(tempUri);
                       }}
                     >
                       {t("send")}
@@ -367,8 +365,8 @@ const AudioRecorder = () => {
         <TouchableOpacity
           style={{
             borderRadius: 4,
-            paddingVertical: 12,
-            backgroundColor: themeColor.fill2,
+            paddingVertical: 10,
+            backgroundColor: themeColor.fill1,
             justifyContent: "center",
             alignItems: "center",
             width: "100%",
@@ -383,7 +381,6 @@ const AudioRecorder = () => {
           }}
         >
           <Text style={{ fontSize: 16 }}>
-            {" "}
             {recording ? t("Release to Send") : t("Hold to Talk")}
           </Text>
         </TouchableOpacity>
