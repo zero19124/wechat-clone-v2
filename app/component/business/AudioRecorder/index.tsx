@@ -5,6 +5,8 @@ import {
   View,
   Text,
   PanResponder,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useNavigation } from "expo-router";
@@ -25,99 +27,102 @@ const AudioRecorder = () => {
     useState<PanResponderInstance | null>(null);
   const [recording, setRecording] = useState(null);
   const isOnCancelBtn = useRef(false);
-
+  const [isOnCheckBtn, setIsOnCheckBtn] = useState(false);
+  const setIsOnCancelBtn = (val: boolean) => {
+    isOnCancelBtn.current = val;
+  };
+  const stopRecordingHandler = async () => {
+    console.log("Stopping recording..");
+    // this line is critical for routing audio back through the speaker instead of the earpiece
+    // await Audio.setAudioModeAsync({
+    //   allowsRecordingIOS: false,
+    // });
+    if (!recording) {
+      console.log("stopRecordingHandler no recording");
+      return;
+    }
+    await recording.stopAndUnloadAsync();
+    console.log("结束录音");
+    const uri = recording.getURI();
+    setRecording(null);
+    if (uri) {
+      console.log("播放录音", uri);
+      setTempUri(uri);
+      const { sound } = await Audio.Sound.createAsync({ uri });
+      await sound.playAsync();
+      // const uploadedphotos = await uploadImages([
+      //   {
+      //     uri: uri,
+      //     name: "audio-" + Math.random() + ".m4a",
+      //     type: "audio/mpeg",
+      //   },
+      // ]);
+      // console.log(uploadedphotos, "uploadedphotos");
+    }
+  };
+  const startRecordingHandler = async (type = "press") => {
+    console.log(type, "startRecordingHandler-type");
+    if (recording) {
+      await stopRecordingHandler();
+    }
+    console.log("开始录音");
+    await Audio.requestPermissionsAsync();
+    await Audio.setAudioModeAsync({
+      allowsRecordingIOS: true,
+      playsInSilentModeIOS: true,
+    });
+    const { recording } = await Audio.Recording.createAsync(
+      Audio.RecordingOptionsPresets.HIGH_QUALITY
+    );
+    setRecording(recording);
+  };
   useEffect(() => {
     setPanResponderRef(
       PanResponder.create({
         onStartShouldSetPanResponder: () => true,
-        onMoveShouldSetPanResponder: () => true,
-        onPanResponderGrant: async (evt, gestureState) => {
-          // 检测是否按在了元素1上
-          const touchIndex = await getTouchedElementIndex(
-            evt.nativeEvent.pageX,
-            evt.nativeEvent.pageY,
-            "onPanResponderGrant"
-          );
-          console.log("onPanResponderGrant", touchIndex);
-          if (touchIndex === 0) {
-            // 假设元素1的索引为0
-            console.log("开始录音");
-            // const { status } = await Audio.requestPermissionsAsync();
-            // if (status === "granted") {
-            await Audio.requestPermissionsAsync();
-            await Audio.setAudioModeAsync({
-              allowsRecordingIOS: true,
-              playsInSilentModeIOS: true,
-            });
-            // await Audio.setAudioModeAsync({
-            //   allowsRecordingIOS: true,
-            //   playsInSilentModeIOS: true,
-            //   // playThroughEarpieceAndroid: false,
-            // });
-            const { recording } = await Audio.Recording.createAsync(
-              Audio.RecordingOptionsPresets.HIGH_QUALITY
-            );
-            setRecording(recording);
-            // const recording = new Audio.Recording();
-            // await recording.prepareToRecordAsync(
-            //   Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
-            // );
-            // await recording.startAsync();
-            // setRecording(recording);
-            // }
-          }
+        onPanResponderEnd(e, gestureState) {
+          console.log("onPanResponderEnd");
         },
-        onPanResponderMove: async (evt, gestureState) => {
+        onMoveShouldSetPanResponder: () => true,
+        // onPanResponderGrant: async (evt, gestureState) => {
+        //   await startRecordingHandler("grand-start");
+        // },
+        onPanResponderMove: async (evt, gestureState) => {},
+        onPanResponderRelease: async (evt, gestureState) => {
+          console.log("onPanResponderRelease");
           // 检测手指移动过程中是否触碰到了元素5
           const touchIndex = await getTouchedElementIndex(
             evt.nativeEvent.pageX,
             evt.nativeEvent.pageY,
-            "onPanResponderGrant"
+            "onPanResponderRelease"
           );
+          console.log("onPanResponderRelease2");
+          // 如果在第一个元素上
+          if (touchIndex === 0) {
+            setIsOnCheckBtn(true);
+          } else {
+            setIsOnCheckBtn(false);
+          }
+          setIsOnCancelBtn(false);
           console.log(isOnCancelBtn.current, "isOnCancelBtn.current");
           console.log("onPanResponderMove", touchIndex);
-
-          if (touchIndex === 4) {
-            // 假设元素5的索引为4
-            isOnCancelBtn.current = true;
-          } else {
-            isOnCancelBtn.current = false;
+          // 如果在第二个元素上
+          if (touchIndex === 1) {
+            setIsOnCancelBtn(true);
           }
-        },
-        onPanResponderRelease: async (evt, gestureState) => {
           // 松开手指时结束录音并尝试播放
-          if (isOnCancelBtn.current) {
+          //  if on the second ele than cancel the recording
+          if (isOnCancelBtn.current && recording) {
             console.log("取消录音");
-            if (recording) {
-              recording.stopAndUnloadAsync();
-              setRecording(null);
-            }
+            recording?.stopAndUnloadAsync();
+            setRecording(null);
             return;
           }
+          setIsOnCancelBtn(false);
+          console.log("onPanResponderRelease3");
+
           if (recording) {
-            console.log("Stopping recording..");
-            // this line is critical for routing audio back through the speaker instead of the earpiece
-            await Audio.setAudioModeAsync({
-              allowsRecordingIOS: false,
-            });
-            console.log("结束录音");
-            await recording.stopAndUnloadAsync();
-            const uri = recording.getURI();
-            setRecording(null);
-            if (uri) {
-              console.log("播放录音", uri);
-              setTempUri(uri);
-              const { sound } = await Audio.Sound.createAsync({ uri });
-              await sound.playAsync();
-              const uploadedphotos = await uploadImages([
-                {
-                  uri: uri,
-                  name: "audio-" + Math.random() + ".caf",
-                  type: "audio/mpeg",
-                },
-              ]);
-              console.log(uploadedphotos, "uploadedphotos");
-            }
+            stopRecordingHandler();
           }
         },
       })
@@ -126,36 +131,53 @@ const AudioRecorder = () => {
 
   // 功能函数：根据触摸位置判断触碰到的元素索引
   const getTouchedElementIndex = (pageX, pageY, type) => {
+    console.log("getTouchedElementIndex");
     return new Promise((res, rej) => {
-      console.log(type, "type---------");
+      // console.log(type, "type---------");
       let touchedIndex = -1;
-      elementsRef.current.forEach((element, index) => {
+      const lastIndex = elementsRef.current.length - 1;
+      elementsRef.current.forEach(async (element, index) => {
         if (element) {
-          // console.log("element");
-          element.measure((x, y, width, height, pageXElem, pageYElem) => {
-            if (
-              pageX >= pageXElem &&
-              pageX <= pageXElem + width &&
-              pageY >= pageYElem &&
-              pageY <= pageYElem + height
-            ) {
-              debouncedHandleTextChange(() => {
-                console.log(pageX, pageY, pageXElem, pageYElem);
-                console.log(`Element ${index} is touchedtouchedtouchedtouched`);
-              });
+          console.log(element.measure, "element.measure");
+          try {
+            // console.log("element");
+            await element.measure(
+              (x, y, width, height, pageXElem, pageYElem) => {
+                if (
+                  pageX >= pageXElem &&
+                  pageX <= pageXElem + width &&
+                  pageY >= pageYElem &&
+                  pageY <= pageYElem + height
+                ) {
+                  debouncedHandleTextChange(() => {
+                    console.log(pageX, pageY, pageXElem, pageYElem);
+                    console.log(
+                      `Element ${index} is touchedtouchedtouchedtouched`
+                    );
+                  });
 
-              touchedIndex = index;
-              res(touchedIndex);
-            }
-          });
+                  touchedIndex = index;
+                  console.log("touchedIndex got" + touchedIndex);
+                  res(touchedIndex);
+                }
+                if (index === lastIndex) {
+                  res(touchedIndex);
+                }
+              }
+            );
+          } catch (e) {
+            console.log(e, "eeeeee");
+          }
         }
       });
-      console.log("getTouchedElementIndex", touchedIndex);
+
+      // console.log("getTouchedElementIndex", touchedIndex);
     });
   };
 
   const playSound = async () => {
     // 创建一个新的音频对象
+    setIsOnCheckBtn(false);
 
     const sound = new Audio.Sound();
     try {
@@ -177,42 +199,51 @@ const AudioRecorder = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text>操作说明</Text>
+    <View style={{ position: "absolute", bottom: 0, right: 0, left: 0 }}>
       <Text>{tempUri}</Text>
       <View>
         {/* 点击按钮播放音频 */}
-        <Button title="播放录音" onPress={playSound} />
+        {isOnCheckBtn && <Button title="播放录音" onPress={playSound} />}
       </View>
-      {panResponderRef?.panHandlers && (
-        <View {...panResponderRef?.panHandlers} style={styles.container}>
-          {Array.from({ length: 10 }, (_, index) => (
+      {recording && (
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          {Array.from({ length: 2 }, (_, index) => (
             <View
               key={index}
               ref={(el) => (elementsRef.current[index] = el)}
-              style={styles.element}
+              style={{
+                width: 50,
+                height: 50,
+                margin: 10,
+                backgroundColor: "gray",
+              }}
             >
-              <Text>{index}</Text>
+              <Text>{index ? "cancel" : "check it"}</Text>
             </View>
           ))}
         </View>
       )}
+
+      <View
+        {...panResponderRef?.panHandlers}
+        style={{ backgroundColor: "red" }}
+      >
+        <TouchableOpacity
+          style={{ backgroundColor: "blue", width: "100%", height: 59 }}
+          onPress={() => {
+            stopRecordingHandler();
+            console.log("onPress");
+          }}
+          onPressIn={async () => {
+            console.log("onPressIn");
+            await startRecordingHandler();
+          }}
+        >
+          <Text>startRecord {recording ? "true" : "false"}</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
-// 样式定义
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  element: {
-    width: 50,
-    height: 50,
-    margin: 10,
-    backgroundColor: "gray",
-  },
-});
 export default AudioRecorder;

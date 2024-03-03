@@ -15,6 +15,7 @@ import {
   View,
   Image,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import Image1 from "@/component/base/Image";
 import RedDot from "@/component/complex/RedDot";
@@ -25,6 +26,8 @@ import { useUser } from "app/store/user";
 import { useNavigation } from "expo-router";
 import Loading from "@/component/base/Loading";
 import config from "@/config/index";
+import { useState } from "react";
+import AudioRecorder from "@/component/business/AudioRecorder";
 const Me = () => {
   // return <PusherTester />;
   const avatars = [
@@ -55,8 +58,9 @@ const Me = () => {
       icon: <Sticker width={24} height={24} fill={themeColor.iconYellow} />,
     },
   ];
+
   return (
-    <SafeAreaView style={{ backgroundColor: themeColor.white }}>
+    <SafeAreaView style={{ backgroundColor: themeColor.white ,flex:1}}>
       <View
         className="flex-row"
         style={{ paddingTop: "16%", paddingBottom: 32 }}
@@ -160,7 +164,7 @@ const Me = () => {
           </View>
         </View>
       </View>
-      <SimpleLogin />
+      {/* <SimpleLogin />
 
       <Divider />
 
@@ -181,55 +185,56 @@ const Me = () => {
           );
         }}
         text={"Services"}
-      />
-      <Divider />
+      /> */}
+      {/* <Divider /> */}
 
-      {serviceList.map((service) => {
-        return (
-          <ItemCard
-            onLongPress={() => {
-              if (service.text === "Cards & Offers") {
-                fetch(
-                  config.apiDomain +
-                    "/api/wallet/AddMoneyByUserId?userId=" +
-                    userInfo?._id
-                ).then(() => {
-                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-                });
-              }
-            }}
-            onPress={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-            }}
-            key={service.text}
-            leftComp={() => {
-              return <View style={{ marginLeft: 24 }}>{service.icon}</View>;
-            }}
-            text={service.text}
-          />
-        );
-      })}
-      <Divider />
-      <ItemCard
-        onPress={() => {
-          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-          // Haptics.selectionAsync();
-          navigator.navigate("pages/me/setting/index");
-        }}
-        borderVisible={false}
-        leftComp={() => {
+      {/* {serviceList.map((service) => {
           return (
-            <SettingIcon
-              style={{ marginLeft: 24 }}
-              width={24}
-              height={24}
-              fill={themeColor.iconBlue}
+            <ItemCard
+              onLongPress={() => {
+                if (service.text === "Cards & Offers") {
+                  fetch(
+                    config.apiDomain +
+                      "/api/wallet/AddMoneyByUserId?userId=" +
+                      userInfo?._id
+                  ).then(() => {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+                  });
+                }
+              }}
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+              }}
+              key={service.text}
+              leftComp={() => {
+                return <View style={{ marginLeft: 24 }}>{service.icon}</View>;
+              }}
+              text={service.text}
             />
           );
-        }}
-        text={"Setting"}
-      />
+        })} */}
+      {/* <Divider /> */}
+      {/* <ItemCard
+          onPress={() => {
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+            // Haptics.selectionAsync();
+            navigator.navigate("pages/me/setting/index");
+          }}
+          borderVisible={false}
+          leftComp={() => {
+            return (
+              <SettingIcon
+                style={{ marginLeft: 24 }}
+                width={24}
+                height={24}
+                fill={themeColor.iconBlue}
+              />
+            );
+          }}
+          text={"Setting"}
+        /> */}
+      <AudioRecorder />
     </SafeAreaView>
   );
 };
