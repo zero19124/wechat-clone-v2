@@ -8,6 +8,7 @@ eas build --profile development --platform android
 
 
 eas build --profile preview --platform android
+eas build --profile preview --platform ios
 
 prod
 eas build --platform ios
