@@ -279,11 +279,13 @@ const Page = () => {
           }}
         >
           {/* 聊天列表 */}
-          {dataOut.length ? (
-            <PrivateChatList dataOut={dataOut} flatListRef={flatListRef} />
-          ) : (
-            <></>
-          )}
+          <View style={{ flex: 1 }}>
+            {dataOut.length ? (
+              <PrivateChatList dataOut={dataOut} flatListRef={flatListRef} />
+            ) : (
+              <></>
+            )}
+          </View>
         </TouchableWithoutFeedback>
         {/* keyboard 内容 */}
         <ChatInput
