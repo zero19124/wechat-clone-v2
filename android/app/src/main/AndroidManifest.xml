@@ -35,7 +35,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="your-app-scheme"/>
-        <data android:scheme="com.anonymous.myapp"/>
+        <data android:scheme="com.anonymous1.myapp9"/>
         <data android:scheme="exp+wechat-clone"/>
       </intent-filter>
     </activity>

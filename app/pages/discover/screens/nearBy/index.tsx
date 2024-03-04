@@ -10,11 +10,17 @@ import GoBack from "@/component/complex/GoBack";
 import { getSize } from "utils";
 import GoBackIcon from "@/icons/common/go-back.svg";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useNavigation } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useTheme } from "@/theme/useTheme";
 import { useUser } from "app/store/user";
 
-const NearByView = () => {
+const NearByView = ({
+  type = "normal",
+  setHandler = () => {},
+}: {
+  setHandler?: (coordinates: any) => void;
+  type?: "normal" | "chat-location";
+}) => {
   // const data = {
   //   longitude: 113.93,
   //   latitude: 22.48,
@@ -25,7 +31,10 @@ const NearByView = () => {
   const [locationData, setLocationData] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const { themeColor } = useTheme();
-
+  const params = useLocalSearchParams<{
+    routeType: string;
+    coordinates: any;
+  }>();
   const getUserList = async ([longitude, latitude]) => {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -61,6 +70,15 @@ const NearByView = () => {
       });
   };
   useEffect(() => {
+    if (params.routeType === "chat-location-check") {
+      console.log("chat-location-check");
+      setMarker(params.coordinates);
+      return;
+    }
+    if (type === "chat-location") {
+      console.log("chat-location");
+      return;
+    }
     getCurUserLocation().then(async (coordinates) => {
       console.log(coordinates, "longitude, latitude");
       await getUserList(coordinates);
@@ -89,8 +107,8 @@ const NearByView = () => {
         initialRegion={{
           longitude: userInfo?.location?.coordinates[0],
           latitude: userInfo?.location?.coordinates[1],
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          latitudeDelta: 0.0522,
+          longitudeDelta: 0.0521,
         }}
         style={[styles.map, { position: "relative" }]}
       >
@@ -112,13 +130,22 @@ const NearByView = () => {
             <Popover
               reference={
                 <View style={{ padding: 24, paddingBottom: 4 }}>
-                  <Text>😄</Text>
+                  <Text style={{ fontSize: 32 }}>😄</Text>
                 </View>
               }
             >
               <TouchableOpacity
                 style={{ width: getSize(150) }}
                 onPress={() => {
+                  if (type === "chat-location") {
+                    console.log("chat-location");
+                    setHandler?.(marker);
+                    return;
+                  }
+                  if (params.routeType === "chat-location-check") {
+                    console.log("chat-location-check");
+                    return;
+                  }
                   setMarker(null);
                   fetch(
                     config.apiDomain + "/api/utils/updateUserLocationByUserId",
@@ -154,7 +181,11 @@ const NearByView = () => {
                     });
                 }}
               >
-                <Text style={{ padding: 12 }}>{t("Set New Location")}</Text>
+                <Text style={{ padding: 12 }}>
+                  {type === "normal"
+                    ? t("Set New Location")
+                    : t("Send Location")}
+                </Text>
               </TouchableOpacity>
             </Popover>
           </Marker>

@@ -101,6 +101,9 @@ const FnKeyBoard = ({
       case FN_TYPE_MAPS.VideoCall:
         handlers?.({ type: FN_TYPE_MAPS.VideoCall });
         break;
+      case FN_TYPE_MAPS.Location:
+        handlers?.({ type: FN_TYPE_MAPS.Location });
+        break;
     }
   };
   const SvgText = ({ children }) => (

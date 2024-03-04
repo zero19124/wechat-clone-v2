@@ -81,9 +81,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace 'com.anonymous.myapp'
+    namespace 'com.anonymous1.myapp9'
     defaultConfig {
-        applicationId 'com.anonymous.myapp'
+        applicationId 'com.anonymous1.myapp9'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

@@ -133,6 +133,12 @@ const Layout = () => {
                         }}
                       />
                       <Stack.Screen
+                        name="pages/chats/msg-chats/screens/location/index"
+                        options={{
+                          headerShown: false,
+                        }}
+                      />
+                      <Stack.Screen
                         name="pages/chats/screens/video-call-rec/index"
                         options={{
                           headerShown: false,

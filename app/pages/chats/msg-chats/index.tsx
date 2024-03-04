@@ -220,7 +220,8 @@ const Page = () => {
     getMsgList();
   }, []);
   const { t } = useTranslation();
-  const defaultActions: ActionSheetAction[] = [
+
+  const VideoCallActions = [
     {
       name: t("Video Call"),
       callback: () => {
@@ -238,6 +239,25 @@ const Page = () => {
       },
     },
   ];
+  const LocationActions = [
+    {
+      name: t("Send Location"),
+      callback: () => {
+        console.log("Location");
+        navigate.navigate("pages/chats/msg-chats/screens/location/index");
+      },
+    },
+    {
+      name: t("Real-time Location"),
+      callback: () => {
+        console.log("Location2");
+        navigate.navigate("pages/chats/screens/video-call-send/index");
+      },
+    },
+  ];
+  const [defaultActions, setDefaultActions] =
+    useState<ActionSheetAction[]>(VideoCallActions);
+
   const [visible, setVisible] = useState(false);
 
   const onClose = () => {
@@ -351,6 +371,7 @@ const Page = () => {
               console.log(type, val, "handlers");
 
               if (type === FN_TYPE_MAPS.Album) {
+                console.log("Album");
                 sendMsgHandler({
                   val,
                   userId: userInfo?._id + "",
@@ -359,8 +380,15 @@ const Page = () => {
                   doneHandler: () => {},
                 });
               } else if (type === FN_TYPE_MAPS.VideoCall) {
-                console.log(123);
+                console.log("VideoCall");
                 setVisible(!visible);
+                setDefaultActions(VideoCallActions);
+
+                setH();
+              } else if (type === FN_TYPE_MAPS.Location) {
+                console.log("Location");
+                setVisible(!visible);
+                setDefaultActions(LocationActions);
                 setH();
               }
             }}
