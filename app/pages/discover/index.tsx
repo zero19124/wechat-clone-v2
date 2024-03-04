@@ -46,6 +46,9 @@ const Discover = () => {
     {
       text: "Nearby",
       url: require("@/icons/discover/nearby.jpeg"),
+      onPressHandler: () => {
+        navigator.navigate("pages/discover/screens/nearBy/index");
+      },
     },
     {
       text: "Games",

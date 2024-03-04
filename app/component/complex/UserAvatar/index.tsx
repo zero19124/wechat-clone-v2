@@ -11,8 +11,10 @@ import { useMemo } from "react";
 const UserAvatar = ({
   source,
   style,
+  rounded = false,
 }: {
   source?: ImageSourcePropType;
+  rounded?: boolean;
   style?: StyleProp<ImageStyle>;
 }) => {
   const finalSource = useMemo(() => {
@@ -27,13 +29,16 @@ const UserAvatar = ({
   return (
     <Image
       source={finalSource}
-      style={[avatarStyle.itemContainerAvatar, style]}
+      style={[
+        avatarStyle.itemContainerAvatar,
+        style,
+        { borderRadius: rounded ? getSize(50) : 4 },
+      ]}
     />
   );
 };
 const avatarStyle = StyleSheet.create({
   itemContainerAvatar: {
-    borderRadius: 4,
     borderColor: themeColor.fillColor,
     borderWidth: 1,
     width: getSize(50),

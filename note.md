@@ -38,3 +38,12 @@ use > npx i18next-parser
    // let offer = new RTCSessionDescription(offerData.offer);
       await peer.setRemoteDescription(offerData.offer); 
   <!-- fix 多看别人代码 -->
+
+8expo-location
+  After expo-location, the docs said to do a rebuild. Just running npx expo run:ios wasn't enough, the native code had to be regenerated.
+
+So,
+
+Had a clean working directory by committing the work
+Ran npx expo prebuild --clean
+Finally, npx expo run:ios

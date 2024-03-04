@@ -167,6 +167,12 @@ const Layout = () => {
                           headerShown: false,
                         }}
                       />
+                      <Stack.Screen
+                        name="pages/discover/screens/nearBy/index"
+                        options={{
+                          headerShown: false,
+                        }}
+                      />
                       <Stack.Screen name="pages/contacts/screens/friend-info/index" />
                       <Stack.Screen name="pages/contacts/screens/send-friend-request/index" />
                       {/* discover  */}
@@ -198,6 +204,12 @@ const Layout = () => {
                         options={{
                           title: "qrcode",
                           presentation: "fullScreenModal",
+                        }}
+                      />
+                      <Stack.Screen
+                        name="pages/map/src/App"
+                        options={{
+                          title: "map",
                         }}
                       />
                       {/* my qrcode */}

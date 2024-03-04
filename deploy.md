@@ -22,3 +22,5 @@ cd android && ./gradlew clean
 
 casting android
 scrcpy
+
+npm run ios --simulator=“iPhone 15 Pro”

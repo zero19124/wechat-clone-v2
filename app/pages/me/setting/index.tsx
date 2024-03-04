@@ -44,6 +44,13 @@ const Setting = () => {
         onPress={() => toggleTheme(themeName === "light" ? "dark" : "light")}
         title={t("change the theme")}
       />
+      <Button
+        color={themeColor.text5}
+        onPress={() => {
+          navigator.navigate('pages/map/src/App')
+        }}
+        title={t("to map")}
+      />
     </View>
   );
 };

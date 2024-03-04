@@ -29,6 +29,8 @@ PODS:
     - ExpoModulesCore
     - React-Core
   - EXJSONUtils (0.7.1)
+  - EXLocation (16.1.0):
+    - ExpoModulesCore
   - EXManifests (0.7.2):
     - ExpoModulesCore
   - EXMediaLibrary (15.4.1):
@@ -659,6 +661,7 @@ DEPENDENCIES:
   - EXFont (from `../node_modules/expo-font/ios`)
   - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
   - EXJSONUtils (from `../node_modules/expo-json-utils/ios`)
+  - EXLocation (from `../node_modules/expo-location/ios`)
   - EXManifests (from `../node_modules/expo-manifests/ios`)
   - EXMediaLibrary (from `../node_modules/expo-media-library/ios`)
   - EXNotifications (from `../node_modules/expo-notifications/ios`)
@@ -781,6 +784,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-image-loader/ios"
   EXJSONUtils:
     :path: "../node_modules/expo-json-utils/ios"
+  EXLocation:
+    :path: "../node_modules/expo-location/ios"
   EXManifests:
     :path: "../node_modules/expo-manifests/ios"
   EXMediaLibrary:
@@ -940,7 +945,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   ASN1Decoder: 91cb1d781b5a178ea7375b2f1519e2bdaaa4c427
-  boost: 57d2868c099736d80fcd648bf211b4431e51a558
+  boost: 7dcd2de282d72e344012f7d6564d024930a6a440
   BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
@@ -954,6 +959,7 @@ SPEC CHECKSUMS:
   EXFont: 738c44c390953ebcbab075a4848bfbef025fd9ee
   EXImageLoader: 34b214f9387e98f3c73989f15d8d5b399c9ab3f7
   EXJSONUtils: 6802be4282d42b97c51682468ddc1026a06f8276
+  EXLocation: a425ace19c0445e7ea9702982fc6b9a402791510
   EXManifests: cf66451b11b2c2f6464917528d792759f7fd6ce0
   EXMediaLibrary: 8ac14ce76f266026b10cac2ab049debe032d7ae7
   EXNotifications: 09394cbd7165f9a4a00a53328aa09bf874bae717
@@ -1042,6 +1048,6 @@ SPEC CHECKSUMS:
   Yoga: d0003f849d2b5224c072cef6568b540d8bb15cd3
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
-PODFILE CHECKSUM: a6bbabc82ad3c813f09df0b9905b99779f83cd75
+PODFILE CHECKSUM: e2c79ffe0e39499db97e3720ccef117276d160fd
 
 COCOAPODS: 1.15.2

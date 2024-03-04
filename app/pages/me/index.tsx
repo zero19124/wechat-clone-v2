@@ -24,9 +24,15 @@ import ItemCard from "@/component/complex/ItemCard";
 import SimpleLogin from "./components/SimpleLogin";
 import { useUser } from "app/store/user";
 import { useNavigation } from "expo-router";
-import Loading from "@/component/base/Loading";
 import config from "@/config/index";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import MapView, { Marker } from "react-native-maps";
+import { StyleSheet } from "react-native";
+import * as Location from "expo-location";
+import UserAvatar from "@/component/complex/UserAvatar";
+import { Popover } from "@/component/base/Popover";
+import { useTranslation } from "react-i18next";
+
 const Me = () => {
   // return <PusherTester />;
   const avatars = [
@@ -237,26 +243,4 @@ const Me = () => {
   );
 };
 
-import React from "react";
-import MapView from "react-native-maps";
-import { StyleSheet } from "react-native";
-
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <MapView style={styles.map} />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  map: {
-    width: "100%",
-    height: "100%",
-  },
-});
-
-// export default Me;
+export default Me;
