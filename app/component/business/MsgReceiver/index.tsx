@@ -1,6 +1,5 @@
 import { Text, View, Image, TouchableOpacity } from "react-native";
 import ImagePreview from "@/component/base/ImagePreview";
-
 import { getSize } from "utils";
 import { useNavigation } from "expo-router";
 import { useTranslation } from "react-i18next";
@@ -11,13 +10,10 @@ import { getMsgTypeMap } from "./component/common";
 import { Audio } from "expo-av";
 import { useMemo, useRef, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import ChatIcon from "@/icons/tabs/chats.svg";
-import ChatActiveIcon from "@/icons/tabs/chats-active.svg";
-import CirclePlus from "@/icons/circle-plus.svg";
-import AddContactsFilled from "@/icons/chats/add-contacts-filled.svg";
-import ChatFilled from "@/icons/chats/chat-filled.svg";
-import MoneyFilled from "@/icons/chats/money-filled.svg";
-import ScanFilled from "@/icons/chats/scan-filled.svg";
+import CopyOutline from "@/icons/chats/copy-outline.svg";
+import PreviousOutline from "@/icons/chats/previous-outline.svg";
+import * as Clipboard from "expo-clipboard";
+
 import {
   Popover,
   PopoverAction,
@@ -53,39 +49,12 @@ const MsgWrapper = ({
       {
         text: t("Recall"),
         icon: (
-          <ChatFilled
-            style={{ width: 22, height: 22 }}
-            fill={themeColor.white}
-          />
+          <PreviousOutline width={20} height={20} fill={themeColor.white} />
         ),
       },
       {
-        text: t("Add Contacts"),
-        icon: (
-          <AddContactsFilled
-            style={{ width: 22, height: 22 }}
-            fill={themeColor.white}
-          />
-        ),
-      },
-      {
-        text: t("Scan"),
-        icon: (
-          <ScanFilled
-            style={{ width: 22, height: 22 }}
-            fill={themeColor.white}
-          />
-        ),
-      },
-
-      {
-        text: t("Money"),
-        icon: (
-          <MoneyFilled
-            style={{ width: 22, height: 22 }}
-            fill={themeColor.white}
-          />
-        ),
+        text: t("Copy"),
+        icon: <CopyOutline width={20} height={20} fill={themeColor.white} />,
       },
     ];
     if (msgSenderId + "" !== userInfo?._id + "") {
@@ -93,7 +62,7 @@ const MsgWrapper = ({
     }
     return iconActionsList;
   }, [msgSenderId]);
-  const select = (option: PopoverAction) => {
+  const select = async (option: PopoverAction) => {
     Toast.info(option.text);
     if (option.text === "Recall") {
       sendMsgHandler({
@@ -104,6 +73,8 @@ const MsgWrapper = ({
         doneHandler: () => {},
       });
     }
+    await Clipboard.setStringAsync(text);
+    Toast.success("copied");
     popover.current?.hide();
   };
   const TextWrapper = ({ children }) => {
@@ -281,7 +252,7 @@ const MsgWrapper = ({
   return (
     <>
       <Popover ref={popover} theme="dark">
-        <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+        <View style={{ flexDirection: "row" }}>
           {iconActions.map((action) => {
             return (
               <TouchableOpacity

@@ -5,17 +5,52 @@ import { FlatList, View } from "react-native";
 import data from "@/mocks/msgList.json";
 import { useUser } from "app/store/user";
 import { getSize } from "utils";
-
+import { Text } from "react-native";
+import { useTransition } from "react";
+import { useTranslation } from "react-i18next";
+import { useTheme } from "@/theme/useTheme";
 const PrivateChatList = (props: {
   dataOut: any[];
   flatListRef: React.MutableRefObject<FlatList<any> | undefined>;
 }) => {
+  const { t } = useTranslation();
   const { dataOut, flatListRef } = props;
   const { userInfo } = useUser().userStore;
+  const { themeColor } = useTheme();
   console.log(dataOut, "dataOut-userInfo");
   const renderItem = ({ item }: { item: (typeof data)[0] }) => {
+    // only me hava
     if (item.type === "recalledMsg") {
       return <></>;
+    }
+    if (item.type === "recallMsg") {
+      return (
+        <View
+          style={{
+            marginVertical:24,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: themeColor.overlay2,
+              padding: 12,
+              borderRadius: 2,
+              paddingVertical: 4,
+              margin: "auto",
+            }}
+          >
+            <Text
+              style={{
+                textAlign: "center",
+              }}
+            >
+              {t("you recalled a message")}
+            </Text>
+          </View>
+        </View>
+      );
     }
     const isMe = item.userId === userInfo?._id;
     const ItemWrapper = () => {

@@ -7,6 +7,7 @@
         - msg recall
         -transfer
           accept page
+        -recall only the themself can recall
         -Location Sharing(real time by socket)
     -contacts
       - add friends or add by qrcode
