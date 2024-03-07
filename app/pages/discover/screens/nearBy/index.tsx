@@ -1,10 +1,10 @@
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import config from "@/config/index";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import UserAvatar from "@/component/complex/UserAvatar";
-import { Popover } from "@/component/base/Popover";
+import { Popover, PopoverInstance } from "@/component/base/Popover";
 import { useTranslation } from "react-i18next";
 import GoBack from "@/component/complex/GoBack";
 import { getSize } from "utils";
@@ -13,6 +13,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useTheme } from "@/theme/useTheme";
 import { useUser } from "app/store/user";
+import Toast from "@/component/base/Toast";
 
 const NearByView = ({
   type = "normal",
@@ -91,6 +92,8 @@ const NearByView = ({
   } else if (location) {
     text = JSON.stringify(location);
   }
+  const popover = useRef<PopoverInstance>(null);
+
   const { userInfo } = useUser().userStore;
   const [marker, setMarker] = useState();
   const onMapPress = (e: any) => {
@@ -209,6 +212,7 @@ const NearByView = ({
                   </Text>
                 )}
                 <Popover
+                  ref={popover}
                   onOpen={() => {
                     fetch(config.apiDomain + `/api/user/getOnlineUsers`)
                       .then((res) => {
@@ -255,9 +259,25 @@ const NearByView = ({
                           {item?.onLine ? t("online") : t("offline")}
                         </Text>
                       ) : (
-                        <Text style={{ padding: 12 }}>status loading...</Text>
+                        <Text style={{ padding: 12 }}>
+                          {t("status loading...")}
+                        </Text>
                       )}
                     </View>
+                    <TouchableOpacity
+                      style={{
+                        margin: 12,
+                        borderRadius: 4,
+                        marginTop: 2,
+                        backgroundColor: themeColor.blue1,
+                      }}
+                      onPress={() => {
+                        Toast.info(t("message sent!"));
+                        popover.current?.hide();
+                      }}
+                    >
+                      <Text style={{ padding: 12 }}>{t("say hi")}</Text>
+                    </TouchableOpacity>
                   </View>
                 </Popover>
               </View>

@@ -28,7 +28,8 @@ import { useTheme } from "@/theme/useTheme";
 import AppText from "./screens/code-scanner/index";
 import Dialog from "@/component/base/Dialog";
 import { PusherContext } from "@/hooks/usePusherProvider";
-const Chats = () => {
+const Chats = (prop) => {
+  console.log(prop, "prop,proppropprop");
   // return <AppText />;
   const navigate = useNavigation();
   const { t } = useTranslation();
