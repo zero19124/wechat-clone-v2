@@ -1,3 +1,6 @@
+demo video is below
+
+https://www.bilibili.com/video/BV1kW421A7Fh
 a real-time chat app.
 
 github  give it a star if u like it!

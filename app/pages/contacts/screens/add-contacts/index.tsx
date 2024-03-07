@@ -75,7 +75,7 @@ const AddContacts = () => {
         </Overlay>
         <Image
           style={{ width: "100%", height: 300, marginTop: 24 }}
-          source={require("@/assets/add-contacts-bg.png")}
+          source={require("@/assets/add-contacts-bg.jpeg")}
         />
       </Pressable>
     </View>
