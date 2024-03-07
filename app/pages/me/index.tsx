@@ -36,7 +36,7 @@ import { useTranslation } from "react-i18next";
 const Me = () => {
   // return <PusherTester />;
   const avatars = [
-    require("@/assets/bella.png"),
+    require("@/assets/bella.jpeg"),
     require("@/assets/me.png"),
     require("@/assets/avatar.png"),
   ];
