@@ -17,11 +17,16 @@ import React from "react";
 import { PortalService } from "./component/base/ConfigProvider/ConfigProvider";
 import { View, Text } from "react-native";
 import { PusherContext } from "@/hooks/usePusherProvider";
+import setShortCut from "lib/setShortCut";
 
 export const PortalRef =
   React.createRef<PortalService>() as MutableRefObject<PortalService>;
 
 const Layout = () => {
+  const navigate = useNavigation();
+  // set the quickActionItem
+  setShortCut(navigate);
+  
   console.log(" top-level component");
   if (__DEV__) {
     console.log("App is running in development mode");
@@ -31,7 +36,6 @@ const Layout = () => {
 
   const pusherContext = useContext(PusherContext);
   const socket = pusherContext.socket;
-  const navigate = useNavigation();
   // Translations
   const resources = {
     en: {

@@ -61,7 +61,7 @@ export const cardList = [
   },
   {
     text: "Group Chat",
-    url: require("@/icons/contacts/group-chat.png"),
+    url: require("@/icons/contacts/group-chat.jpeg"),
   },
   {
     text: "Tags",
@@ -69,7 +69,7 @@ export const cardList = [
   },
   {
     text: "Official Account",
-    url: require("@/icons/contacts/official-account.png"),
+    url: require("@/icons/contacts/official-account.jpeg"),
   },
   {
     text: "Wecom Contacts",

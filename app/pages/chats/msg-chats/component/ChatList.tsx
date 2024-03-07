@@ -34,7 +34,7 @@ const PrivateChatList = (props: {
         >
           <View
             style={{
-              backgroundColor: themeColor.overlay2,
+              backgroundColor: themeColor.overlay1,
               padding: 12,
               borderRadius: 2,
               paddingVertical: 4,

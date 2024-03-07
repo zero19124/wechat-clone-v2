@@ -1,10 +1,18 @@
 #import "AppDelegate.h"
+// @generated begin react-native-quick-actions-import - expo prebuild (DO NOT MODIFY) sync-6ea4aa8a461f1aab4f2c38893cd59140deb974e4
+#import "RNQuickActionManager.h"
+// @generated end react-native-quick-actions-import
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTLinkingManager.h>
 
 @implementation AppDelegate
 
+// @generated begin react-native-quick-actions-delegate - expo prebuild (DO NOT MODIFY) sync-c20e1981d7932e1a91e1d34dbf5c36e3ff230412
+- (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL succeeded)) completionHandler {
+  [RNQuickActionManager onQuickActionPress:shortcutItem completionHandler:completionHandler];
+}
+// @generated end react-native-quick-actions-delegate
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   self.moduleName = @"main";

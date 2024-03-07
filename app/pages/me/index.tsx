@@ -83,7 +83,7 @@ const Me = () => {
               ? {
                   uri: userInfo?.image,
                 }
-              : require("@/assets/avatar-default.png")
+              : require("@/assets/avatar-default.jpeg")
           }
         />
         <View className="flex-1">

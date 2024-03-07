@@ -14,7 +14,8 @@ prod
 eas build --platform ios
 eas build --platform android
 
-
+Release apps with custom native code to production
+eas build -p all
 
 if  Execution failed for task ':react-native-view-shot:compileDebugLibraryResources'
 

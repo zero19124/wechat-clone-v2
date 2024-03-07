@@ -19,6 +19,7 @@ const MomentsImg = (props: IMomentsImgPros) => {
       {imgList.map((imgUri, index) => {
         return (
           <Pressable
+            key={index}
             onPress={() => {
               console.log(1, ImagePreview);
 

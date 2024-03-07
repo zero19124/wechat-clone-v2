@@ -174,6 +174,7 @@ const Contacts = () => {
             const itemList = listMap?.get?.(item.toLocaleLowerCase());
             // 没有则显示到其他
             if (!itemList?.length) return null;
+            console.log(itemList, "itemList");
             return (
               <View key={index}>
                 <IndexBar.Anchor key={index} index={item} />
@@ -185,6 +186,7 @@ const Contacts = () => {
                   return (
                     <ItemCard
                       uniqueKey={_item?._id + ""}
+                      key={_item?._id + ""}
                       style={{
                         marginTop: 16,
                       }}

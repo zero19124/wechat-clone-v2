@@ -73,6 +73,17 @@
     <array>
       <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
     </array>
+    <key>UIApplicationShortcutItems</key>
+    <array>
+      <dict>
+        <key>UIApplicationShortcutItemIconType</key>
+        <string>UIApplicationShortcutIconTypeCapturePhoto</string>
+        <key>UIApplicationShortcutItemTitle</key>
+        <string>Take Photo</string>
+        <key>UIApplicationShortcutItemType</key>
+        <string>photo</string>
+      </dict>
+    </array>
     <key>UIBackgroundModes</key>
     <array>
       <string>location</string>

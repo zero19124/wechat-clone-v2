@@ -20,7 +20,7 @@ const UserAvatar = ({
   const finalSource = useMemo(() => {
     if (typeof source === "object") {
       if (!source?.uri) {
-        return require("@/assets/avatar-default.png");
+        return require("@/assets/avatar-default.jpeg");
       }
       return source;
     }

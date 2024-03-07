@@ -618,6 +618,8 @@ PODS:
   - RNQrGenerator (1.4.0):
     - React
     - ZXingObjC
+  - RNQuickAction (0.3.13):
+    - React
   - RNReanimated (3.7.1):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
@@ -737,6 +739,7 @@ DEPENDENCIES:
   - RNFastImage (from `../node_modules/react-native-fast-image`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNQrGenerator (from `../node_modules/rn-qr-generator`)
+  - RNQuickAction (from `../node_modules/react-native-quick-actions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -932,6 +935,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gesture-handler"
   RNQrGenerator:
     :path: "../node_modules/rn-qr-generator"
+  RNQuickAction:
+    :path: "../node_modules/react-native-quick-actions"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -1038,6 +1043,7 @@ SPEC CHECKSUMS:
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNGestureHandler: c0d04458598fcb26052494ae23dda8f8f5162b13
   RNQrGenerator: 1676221c08bfabec978242989c733810dad20959
+  RNQuickAction: 6d404a869dc872cde841ad3147416a670d13fa93
   RNReanimated: 43675f1f0e704abe8ebf953fd79b00e66302cda2
   RNScreens: 50ffe2fa2342eabb2d0afbe19f7c1af286bc7fb3
   RNSVG: 53c661b76829783cdaf9b7a57258f3d3b4c28315
