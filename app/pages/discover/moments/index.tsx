@@ -1,6 +1,14 @@
 import { useFocusEffect, useNavigation } from "expo-router";
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
-import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import {
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 import CameraOutline from "@/icons/common/camera-outline.svg";
 import { useTranslation } from "react-i18next";
 import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
@@ -14,7 +22,7 @@ import { useCommonNavigateProps } from "@/component/complex/CommonNavigateTitle"
 import config from "@/config/index";
 import { useUser } from "app/store/user";
 import { TImageIns } from "@/hooks/useImagePicker";
-
+import { TextInput } from "react-native-gesture-handler";
 
 const getMock = (type = "img", name = "读书方法") => {
   const Mock = {
@@ -73,42 +81,44 @@ const Moments = () => {
     navigator.setOptions(navigatorProps as NativeStackNavigationOptions);
   });
 
-
   const pickImages = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsMultipleSelection: true,
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      console.log(result, "result");
-      const selectedImages = result?.assets?.map((image) => {
-        return {
-          uri: image.uri,
-          type: image.type,
-          name: image.fileName,
-        };
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsMultipleSelection: true,
+        quality: 1,
       });
-      console.log(selectedImages.length, "selectedImages.length");
 
-      // setImages(selectedImages);
-      // console.log(selectedImages, "selectedImages");
+      if (!result.canceled) {
+        console.log(result, "result");
+        const selectedImages = result?.assets?.map((image) => {
+          return {
+            uri: image.uri,
+            type: image.type,
+            name: image.fileName,
+          };
+        });
+        console.log(selectedImages.length, "selectedImages.length");
 
-      const uploadedImgs = await uploadImages(selectedImages);
-      if (uploadedImgs?.length) {
-        navigator.navigate(
-          "pages/discover/moments/screens/post-moments/index",
-          {
-            uploadedImgs,
-          }
-        );
-      } else {
-        Toast.fail(t("upload failed"));
+        // setImages(selectedImages);
+        // console.log(selectedImages, "selectedImages");
+
+        // const uploadedImgs = await uploadImages(selectedImages);
+        if (true) {
+          setTimeout(() => {
+            navigator.navigate("pages/discover/screens/nearBy/index", {
+              uploadedImgs: [],
+            });
+          }, 1000);
+        } else {
+          Toast.fail(t("upload failed"));
+        }
       }
+    } catch (e) {
+      console.log(e, "error-moment post");
     }
   };
-  const uploadImages = async (images:TImageIns[]) => {
+  const uploadImages = async (images: TImageIns[]) => {
     const formData = new FormData();
     console.log(images.length, "images.length");
     images.forEach((image, index) => {
@@ -145,6 +155,10 @@ const Moments = () => {
     {
       name: t("Choose from Album"),
       callback: () => {
+        setTimeout(() => {
+          navigator.navigate("pages/discover/screens/nearBy/index");
+        }, 1000);
+        return;
         setTimeout(async () => {
           await pickImages();
         }, 600);
@@ -177,21 +191,29 @@ const Moments = () => {
       getMomentsList();
     }, [])
   );
+
   return (
-    <ScrollView style={{ backgroundColor: themeColor.white, flex: 1 }}>
-      <ActionSheet
-        style={{ backgroundColor: themeColor.white, borderRadius: 8 }}
-        visible={visible}
-        actions={defaultActions}
-        onClose={onClose}
-        cancelText={t("Cancel")}
-        onCancel={onClose}
-      />
-      {momentsList?.map((item, index) => {
-        // console.log(item, "item");
-        return <MomentsCard key={index} momentData={item} />;
-      })}
-    </ScrollView>
+    <KeyboardAvoidingView
+      keyboardVerticalOffset={90}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
+      <ScrollView style={{ backgroundColor: themeColor.white, flex: 1 }}>
+        <ActionSheet
+          style={{ backgroundColor: themeColor.white, borderRadius: 8 }}
+          visible={visible}
+          actions={defaultActions}
+          onClose={onClose}
+          cancelText={t("Cancel")}
+          onCancel={onClose}
+        />
+        {momentsList?.map((item, index) => {
+          // console.log(item, "item");
+          return <MomentsCard key={index} momentData={item} />;
+        })}
+      </ScrollView>
+      {/* <TextInput style={{ width: 50, height: 50, backgroundColor: "red" }} /> */}
+    </KeyboardAvoidingView>
   );
 };
 export default Moments;

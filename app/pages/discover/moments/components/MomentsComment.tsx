@@ -14,13 +14,18 @@ import { useState } from "react";
 import HeartOutlineIcon from "@/icons/discover/heart-outline.svg";
 import HeartIcon from "@/icons/discover/heart.svg";
 import CommentOutlineIcon from "@/icons/discover/comment-outline.svg";
+import axios from "axios";
 
 import { useTranslation } from "react-i18next";
+import { useUser } from "app/store/user";
+import config from "@/config/index";
+import { TextInput } from "react-native-gesture-handler";
+import { formatDateToString } from "@/utils/date";
 const MomentsComment = (props: { momentData: IMomentsCard["momentData"] }) => {
   const { themeColor, commonStyle } = useTheme();
   const { momentData } = props;
   const { t } = useTranslation();
-
+  const { userInfo } = useUser().userStore;
   const [commentVisible, setCommentVisible] = useState(false);
   const [liked, setLiked] = useState(false);
   const animatedValue = new Animated.Value(0);
@@ -28,10 +33,10 @@ const MomentsComment = (props: { momentData: IMomentsCard["momentData"] }) => {
   const handleAnimation = () => {
     setCommentVisible(!commentVisible);
   };
-
+  // console.log(momentData, "momentData");
   return (
     <View style={style.momentsCardBottom}>
-      <Text style={{ color: themeColor.text1 }}>{momentData.time}</Text>
+      <Text style={{ color: themeColor.text1 }}>{formatDateToString(momentData.createdAt)}</Text>
       {commentVisible && (
         <Animated.View
           style={[
@@ -50,6 +55,15 @@ const MomentsComment = (props: { momentData: IMomentsCard["momentData"] }) => {
           <TouchableOpacity
             onPress={() => {
               setLiked(!liked);
+              axios
+                .post("api/moments/add-moments-like", {
+                  momentsId: momentData._id,
+                  likedUserId: userInfo?._id,
+                  likedUserName: userInfo?.act,
+                })
+                .then((res) => {
+                  console.log(1111, res);
+                });
               setTimeout(() => {
                 setCommentVisible(false);
               }, 300);
@@ -68,15 +82,13 @@ const MomentsComment = (props: { momentData: IMomentsCard["momentData"] }) => {
             ) : (
               <HeartOutlineIcon width={20} fill={themeColor.white} />
             )}
-            <View>
-              <Text
-                style={{
-                  color: themeColor.white,
-                }}
-              >
-                {t("like")}
-              </Text>
-            </View>
+            <Text
+              style={{
+                color: themeColor.white,
+              }}
+            >
+              {t("like")}
+            </Text>
           </TouchableOpacity>
           {/* divider  */}
           <View
@@ -88,6 +100,21 @@ const MomentsComment = (props: { momentData: IMomentsCard["momentData"] }) => {
           />
           {/* divider  end*/}
           <TouchableOpacity
+            onPress={() => {
+              axios
+                .post("api/moments/add-moments-comment", {
+                  momentsId: momentData._id,
+                  commentedUserId: userInfo?._id,
+                  commentedUserName: userInfo?.act,
+                  // comment,
+                })
+                .then((res) => {
+                  console.log(1111, res);
+                });
+              setTimeout(() => {
+                setCommentVisible(false);
+              }, 300);
+            }}
             style={[
               {
                 flexDirection: "row",

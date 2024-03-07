@@ -1,6 +1,7 @@
 import QuickActions from "react-native-quick-actions";
 import { DeviceEventEmitter } from "react-native";
-
+// icon
+// https://developer.apple.com/documentation/uikit/uiapplicationshortcuticontype/uiapplicationshortcuticontypeplay?language=objc
 export default (navigate: any) => {
   DeviceEventEmitter.addListener(
     "quickActionShortcut",
@@ -15,19 +16,19 @@ export default (navigate: any) => {
     }
   );
   QuickActions.setShortcutItems([
-    {
-      type: "Money", // Required
-      title: "Money", // Optional, if empty, `type` will be used instead
-      icon: "compose", // Icons instructions below
-      userInfo: {
-        url: "pages/chats/screens/money-qrcode/index",
-      },
-    },
+    // {
+    //   type: "Money", // Required
+    //   title: "Money", // Optional, if empty, `type` will be used instead
+    //   icon: "Date", // Icons instructions below
+    //   userInfo: {
+    //     url: "pages/chats/screens/money-qrcode/index",
+    //   },
+    // },
     {
       type: "Scan Qrcode", // Required
       title: "Scan Qrcode", // Optional, if empty, `type` will be used instead
       subtitle: "add friend or pay",
-      icon: "play", // Icons instructions below
+      icon: "CapturePhoto", // Icons instructions below
       userInfo: {
         url: "pages/chats/screens/code-scanner/index",
       },
@@ -35,9 +36,17 @@ export default (navigate: any) => {
     {
       type: "My QR Code", // Required
       title: "My QR Code", // Optional, if empty, `type` will be used instead
-      icon: "play", // Icons instructions below
+      icon: "Date", // Icons instructions below
       userInfo: {
         url: "pages/me/screens/my-qrcode/index",
+      },
+    },
+    {
+      type: "People NearBy", // Required
+      title: "People NearBy", // Optional, if empty, `type` will be used instead
+      icon: "Location", // Icons instructions below
+      userInfo: {
+        url: "pages/discover/screens/nearBy/index",
       },
     },
   ]);

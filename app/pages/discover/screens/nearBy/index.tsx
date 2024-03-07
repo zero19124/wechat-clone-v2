@@ -265,6 +265,7 @@ const NearByView = ({
                       )}
                     </View>
                     <TouchableOpacity
+                      
                       style={{
                         margin: 12,
                         borderRadius: 4,

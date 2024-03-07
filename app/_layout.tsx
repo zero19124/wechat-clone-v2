@@ -18,7 +18,10 @@ import { PortalService } from "./component/base/ConfigProvider/ConfigProvider";
 import { View, Text } from "react-native";
 import { PusherContext } from "@/hooks/usePusherProvider";
 import setShortCut from "lib/setShortCut";
-
+import axios from "axios";
+import config from "./config";
+axios.defaults.baseURL = config.apiDomain; // 配置axios请求的地址
+axios.defaults.headers.post["Content-Type"] = "application/json; charset=utf-8";
 export const PortalRef =
   React.createRef<PortalService>() as MutableRefObject<PortalService>;
 
@@ -26,7 +29,7 @@ const Layout = () => {
   const navigate = useNavigation();
   // set the quickActionItem
   setShortCut(navigate);
-  
+
   console.log(" top-level component");
   if (__DEV__) {
     console.log("App is running in development mode");

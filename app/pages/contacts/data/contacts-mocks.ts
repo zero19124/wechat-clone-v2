@@ -53,11 +53,11 @@ export const originalList = [
 export const cardList = [
   {
     text: "New Friends",
-    url: require("@/icons/contacts/new-friend.png"),
+    url: require("@/icons/contacts/new-friend.jpeg"),
   },
   {
     text: "Chats Only Friends",
-    url: require("@/icons/contacts/chats-only-friends.png"),
+    url: require("@/icons/contacts/chats-only-friends.jpeg"),
   },
   {
     text: "Group Chat",
@@ -65,7 +65,7 @@ export const cardList = [
   },
   {
     text: "Tags",
-    url: require("@/icons/contacts/tags.png"),
+    url: require("@/icons/contacts/tags.jpeg"),
   },
   {
     text: "Official Account",
@@ -73,6 +73,6 @@ export const cardList = [
   },
   {
     text: "Wecom Contacts",
-    url: require("@/icons/contacts/wecom-contacts.png"),
+    url: require("@/icons/contacts/wecom-contacts.jpeg"),
   },
 ];

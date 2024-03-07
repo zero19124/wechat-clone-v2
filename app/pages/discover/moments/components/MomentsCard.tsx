@@ -14,6 +14,7 @@ import { useTheme } from "@/theme/useTheme";
 import MomentsComment from "./MomentsComment";
 import { Video, ResizeMode } from "expo-av";
 import ImagePreview from "@/component/base/ImagePreview";
+import { getSize } from "utils";
 export interface IMomentsCard {
   momentData: IMomentData;
 }
@@ -56,7 +57,7 @@ const MomentsCard = (props: IMomentsCard) => {
     },
   });
   const { momentData } = props;
-
+  console.log(momentData, "momentData.likes----");
   return (
     <View style={[commonStyle.commonBorderBottom, style.momentsCardWrapper]}>
       <View style={style.momentsCardAvatar}>
@@ -76,7 +77,7 @@ const MomentsCard = (props: IMomentsCard) => {
                 // ref={video}
                 style={{ width: "80%", height: 200 }}
                 // style={styles.video}
-                
+
                 source={{
                   uri: "https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
                 }}
@@ -98,17 +99,28 @@ const MomentsCard = (props: IMomentsCard) => {
               style={{
                 paddingHorizontal: 4,
                 paddingVertical: 2,
+                paddingBottom: 0,
                 flexDirection: "row",
                 alignItems: "center",
                 ...commonStyle.commonBorderBottom,
               }}
             >
               <HeartOutlineIcon width={20} fill={themeColor.textBlue} />
-              <View style={{ marginLeft: 4 }}>
-                {momentData.likes.map((like) => {
+              <View
+                style={{
+                  marginLeft: 4,
+                  flexWrap: "wrap",
+                  flexDirection: "row",
+                }}
+              >
+                {momentData.likes.map((like, index) => {
                   return (
-                    <Text style={[style.momentsCardTextBlue, { fontSize: 14 }]}>
-                      {like.name}
+                    <Text
+                      key={index}
+                      style={[style.momentsCardTextBlue, { fontSize: 14 }]}
+                    >
+                      {like.likedUserName}
+                      {index ? "" : ","}
                     </Text>
                   );
                 })}
@@ -117,24 +129,35 @@ const MomentsCard = (props: IMomentsCard) => {
           </View>
         )}
         {/* comment  */}
-        <View style={{ paddingHorizontal: 8, paddingVertical: 2 }}>
-          {momentData.comments.map((com) => {
-            return (
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginTop: 2,
-                }}
-              >
-                <Text style={[style.momentsCardTextBlue, { fontSize: 14 }]}>
-                  {com.name}:
-                </Text>
-                <Text>{com.comment}</Text>
-              </View>
-            );
-          })}
-        </View>
+        {momentData.comments.length ? (
+          <View
+            style={{
+              paddingHorizontal: 8,
+              ...style.momentsCardComment,
+              paddingTop: 0,
+            }}
+          >
+            {momentData.comments.map((com, index) => {
+              return (
+                <View
+                  key={index}
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginTop: 2,
+                  }}
+                >
+                  <Text style={[style.momentsCardTextBlue, { fontSize: 14 }]}>
+                    {com.commentedUserName}:
+                  </Text>
+                  <Text>{com?.comment || "nice"}</Text>
+                </View>
+              );
+            })}
+          </View>
+        ) : (
+          <></>
+        )}
       </View>
     </View>
   );
