@@ -40,3 +40,10 @@ issue     >  handleBarCodeScanned this fn called after useeffect called
   # 
     mockLocation.la = la;
               setMock(mockLocation);  如果是 setMock({...mockLocation})  那么 地址就被改了
+
+
+# 11.0.0: CocoaPods could not find compatible versions for pod "ExpoAdapterGoogleSignIn"
+
+go to github read the changes for the version.
+https://github.com/react-native-google-signin/google-signin/releases/tag/v11.0.0
+

@@ -75,6 +75,12 @@
           "isAndroidBackgroundLocationEnabled": true
         }
       ],
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.475065706028-11egj47k01ej9juk2o892q5os4gehkbp"
+        }
+      ],
       "expo-localization"
     ],
     "extra": {

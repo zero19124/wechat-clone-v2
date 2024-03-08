@@ -45,15 +45,9 @@
     <key>NSAppTransportSecurity</key>
     <dict>
       <key>NSAllowsArbitraryLoads</key>
+      <false/>
+      <key>NSAllowsLocalNetworking</key>
       <true/>
-      <key>NSExceptionDomains</key>
-      <dict>
-        <key>localhost</key>
-        <dict>
-          <key>NSExceptionAllowsInsecureHTTPLoads</key>
-          <true/>
-        </dict>
-      </dict>
     </dict>
     <key>NSCameraUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access camera.</string>
@@ -72,17 +66,6 @@
     <key>NSUserActivityTypes</key>
     <array>
       <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
-    </array>
-    <key>UIApplicationShortcutItems</key>
-    <array>
-      <dict>
-        <key>UIApplicationShortcutItemIconType</key>
-        <string>UIApplicationShortcutIconTypeCapturePhoto</string>
-        <key>UIApplicationShortcutItemTitle</key>
-        <string>Take Photo</string>
-        <key>UIApplicationShortcutItemType</key>
-        <string>photo</string>
-      </dict>
     </array>
     <key>UIBackgroundModes</key>
     <array>
