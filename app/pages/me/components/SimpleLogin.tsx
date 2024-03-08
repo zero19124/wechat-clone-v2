@@ -40,20 +40,39 @@ export default () => {
   const signIn = async () => {
     // if hanvet register and create one
     try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
+      console.log(11111);
 
-      const hasUser = await axios.get(config.apiDomain + "/api/user/register");
+      await GoogleSignin.hasPlayServices();
+      console.log(22222, GoogleSignin);
+      const userInfo = await GoogleSignin.signIn();
+      console.log(33333, userInfo);
+
+      const hasUser = await axios
+        .post(config.apiDomain + "/api/user/register", {
+          ...userInfo.user,
+          act: userInfo.user.name,
+          email: userInfo.user.email,
+          type: "google",
+          psw: 123,
+        })
+        .then((res) => res.data.data);
       console.log(hasUser, "hasUser");
 
       if (hasUser) {
+        setUserStore({ userInfo: hasUser });
+        console.log("setUserStore");
+        return;
       }
-      await axios.post(config.apiDomain + "/api/user/register", {
+      const user = await axios.post(config.apiDomain + "/api/user/register", {
         type: "google",
-        ...userInfo,
+        ...userInfo.user,
       });
+      console.log(user, "user");
       setGoogleUser({ userInfo });
+      setUserStore(user);
     } catch (error: any) {
+      console.log(error, "error");
+
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
       } else if (error.code === statusCodes.IN_PROGRESS) {
@@ -74,9 +93,11 @@ export default () => {
     }
   };
   useEffect(() => {
-    GoogleSignin.configure();
-    // loginHandler();
-    // Toast.fail("2222");
+    GoogleSignin.configure({
+      iosClientId:
+        "475065706028-11egj47k01ej9juk2o892q5os4gehkbp.apps.googleusercontent.com", // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+      googleServicePlistPath: "", // [iOS] if you renamed your GoogleService-Info file, new name here, e.g. GoogleService-Info-Staging
+    });
   }, []);
   const loginHandler = () => {
     // if (deviceModel === "iPhone 15") {
@@ -115,14 +136,6 @@ export default () => {
 
   return (
     <View>
-      <GoogleSigninButton
-        size={GoogleSigninButton.Size.Wide}
-        color={GoogleSigninButton.Color.Dark}
-        onPress={() => {
-          // initiate sign in
-        }}
-        disabled={isInProgress}
-      />
       <Text>{config.apiDomain}</Text>
       {userStore?.userInfo?.act ? (
         <View>
@@ -147,14 +160,26 @@ export default () => {
           />
         </View>
       ) : (
-        <>
+        <View className="justify-center items-center">
+          <GoogleSigninButton
+            size={GoogleSigninButton.Size.Wide}
+            color={GoogleSigninButton.Color.Dark}
+            onPress={() => {
+              signIn();
+              // initiate sign in
+            }}
+            disabled={isInProgress}
+          />
           <TextInput
+            className="w-full"
             style={style.inputStyle}
             onChangeText={(val) => {
               setData({ ...data, act: val });
             }}
           />
           <TextInput
+            className="w-full"
+
             style={style.inputStyle}
             onChangeText={(val) => {
               setData({ ...data, psw: val });
@@ -167,7 +192,7 @@ export default () => {
               console.log(data, "data", config.apiDomain);
             }}
           />
-        </>
+        </View>
       )}
     </View>
   );

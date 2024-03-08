@@ -41,8 +41,11 @@ const Me = () => {
     require("@/assets/avatar.png"),
   ];
   const { userInfo } = useUser().userStore;
+  const { userStore } = useUser();
   const navigator = useNavigation();
-
+  useEffect(() => {
+    console.log(userStore, "userStoreuserStore");
+  }, []);
   const serviceList = [
     {
       text: "Favorites",
