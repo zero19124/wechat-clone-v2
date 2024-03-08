@@ -1,6 +1,11 @@
 import { useUser } from "app/store/user";
 import { useEffect, useState } from "react";
 import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from "@react-native-google-signin/google-signin";
+import {
   Button,
   StyleSheet,
   TextInput,
@@ -12,6 +17,7 @@ import config from "@/config/index";
 import DeviceInfo from "react-native-device-info";
 import Toast from "@/component/base/Toast";
 import * as Clipboard from "expo-clipboard";
+import axios from "axios";
 
 const style = StyleSheet.create({
   inputStyle: {
@@ -23,12 +29,52 @@ const style = StyleSheet.create({
 export default () => {
   const { setUserStore, userStore } = useUser();
   const deviceModel = DeviceInfo.getModel();
-
+  const [googleUser, setGoogleUser] = useState();
+  const [isInProgress, setIsInProgress] = useState(false);
   const [data, setData] = useState({ psw: "1", act: "1" });
   // deviceModel === "iPhone 15"
   //   ? { act: "12", psw: "12" }
   //   : { psw: "1", act: "1" }
+  // Somewhere in your code
+
+  const signIn = async () => {
+    // if hanvet register and create one
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+
+      const hasUser = await axios.get(config.apiDomain + "/api/user/register");
+      console.log(hasUser, "hasUser");
+
+      if (hasUser) {
+      }
+      await axios.post(config.apiDomain + "/api/user/register", {
+        type: "google",
+        ...userInfo,
+      });
+      setGoogleUser({ userInfo });
+    } catch (error: any) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+      } else {
+        // some other error happened
+      }
+    }
+  };
+  const signOut = async () => {
+    try {
+      await GoogleSignin.signOut();
+      setGoogleUser({ user: null }); // Remember to remove the user from your app's state as well
+    } catch (error) {
+      console.error(error);
+    }
+  };
   useEffect(() => {
+    GoogleSignin.configure();
     // loginHandler();
     // Toast.fail("2222");
   }, []);
@@ -69,6 +115,14 @@ export default () => {
 
   return (
     <View>
+      <GoogleSigninButton
+        size={GoogleSigninButton.Size.Wide}
+        color={GoogleSigninButton.Color.Dark}
+        onPress={() => {
+          // initiate sign in
+        }}
+        disabled={isInProgress}
+      />
       <Text>{config.apiDomain}</Text>
       {userStore?.userInfo?.act ? (
         <View>
@@ -87,7 +141,7 @@ export default () => {
             onPress={() => {
               console.log(data, "data");
               Toast.fail("log out");
-
+              signOut();
               setUserStore((prev) => ({ ...prev, userInfo: {} }));
             }}
           />

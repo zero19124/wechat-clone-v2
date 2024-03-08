@@ -27,6 +27,13 @@ scrcpy
 
 npm run ios --simulator=“iPhone 15 Pro”
 
+npx expo prebuild --clean
+npx expo run:ios
+
  sudo  chown -R Zhuanz: node_modules/
  sudo  chown -R Zhuanz: ios/
+ sudo  chown -R Zhuanz: ./
  sudo  chown -R Zhuanz: android/
+
+
+ npx expo start --clear
