@@ -36,3 +36,7 @@ issue     >  handleBarCodeScanned this fn called after useeffect called
   issue> 录音难点 点击的时候切换录音画面无法触发到panresponder
   发现触摸的同时改变state不会中断
   
+
+  # 
+    mockLocation.la = la;
+              setMock(mockLocation);  如果是 setMock({...mockLocation})  那么 地址就被改了

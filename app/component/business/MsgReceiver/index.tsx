@@ -8,7 +8,7 @@ import TransferCard from "./component/TransferCard";
 import { getMsgTypeMap } from "./component/common";
 import { Audio } from "expo-av";
 import { useMemo, useRef, useState } from "react";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 import CopyOutline from "@/icons/chats/copy-outline.svg";
 import PreviousOutline from "@/icons/chats/previous-outline.svg";
 import * as Clipboard from "expo-clipboard";
@@ -109,6 +109,25 @@ const MsgWrapper = ({
     }
     if (msgType === "location") {
       return <LocationCard popover={popover} text={text} />;
+    }
+    if (msgType === "realTimeLocation") {
+      console.log(msgId, "sss");
+      return (
+        <TouchableOpacity
+          style={{ flexDirection: "row", alignItems: "center", paddingLeft: 8 }}
+          onPress={() => {
+            navigator.navigate(
+              "pages/chats/msg-chats/screens/real-time-location/index",
+              { messageIdForRoom: msgId }
+            );
+          }}
+        >
+          <FontAwesome5 name="location-arrow" size={14} color="black" />
+          <Text style={{ padding: 12, justifyContent: "center" }}>
+            {t("real time location sharing ...")}
+          </Text>
+        </TouchableOpacity>
+      );
     }
     if (msgType === "voice") {
       return <VoiceCard popover={popover} text={text} />;

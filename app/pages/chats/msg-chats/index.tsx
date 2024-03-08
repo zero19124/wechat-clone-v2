@@ -251,7 +251,20 @@ const Page = () => {
       name: t("Real-time Location"),
       callback: () => {
         console.log("Location2");
-        navigate.navigate("pages/chats/screens/video-call-send/index");
+        sendMsgHandler({
+          val:
+            "realTimeLocation+" + "sharing real time location+" + userInfo?._id,
+          userId: userInfo?._id + "",
+          type: "realTimeLocation",
+          convoId: chatListStore.curConvo?.convoId + "",
+          doneHandler: (data: any) => {
+            console.log(data, "latest data");
+            navigate.navigate(
+              "pages/chats/msg-chats/screens/real-time-location/index",
+              { messageIdForRoom: data._id }
+            );
+          },
+        });
       },
     },
   ];
