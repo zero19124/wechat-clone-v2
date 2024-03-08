@@ -57,7 +57,7 @@ const MomentsCard = (props: IMomentsCard) => {
     },
   });
   const { momentData } = props;
-  console.log(momentData, "momentData.likes----");
+  // console.log(momentData, "momentData.likes----");
   return (
     <View style={[commonStyle.commonBorderBottom, style.momentsCardWrapper]}>
       <View style={style.momentsCardAvatar}>
@@ -114,13 +114,19 @@ const MomentsCard = (props: IMomentsCard) => {
                 }}
               >
                 {momentData.likes.map((like, index) => {
+                  let likedUserName = like.likedUserName;
+                  if (index) {
+                    likedUserName += ",";
+                  }
+                  if (momentData.likes.length > 1 && !index) {
+                    likedUserName += ",";
+                  }
                   return (
                     <Text
                       key={index}
                       style={[style.momentsCardTextBlue, { fontSize: 14 }]}
                     >
-                      {like.likedUserName}
-                      {index ? "" : ","}
+                      {likedUserName}
                     </Text>
                   );
                 })}

@@ -1,5 +1,11 @@
 import { useFocusEffect, useNavigation } from "expo-router";
-import { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   Image,
   KeyboardAvoidingView,
@@ -23,7 +29,9 @@ import config from "@/config/index";
 import { useUser } from "app/store/user";
 import { TImageIns } from "@/hooks/useImagePicker";
 import { TextInput } from "react-native-gesture-handler";
-
+import eventBus from "@/utils/eventBus";
+import { getSize } from "utils";
+type TMomentsComment = { sendHandler: (comment: string) => Promise<any> };
 const getMock = (type = "img", name = "读书方法") => {
   const Mock = {
     image: "https://placekitten.com/300/300",
@@ -82,40 +90,38 @@ const Moments = () => {
   });
 
   const pickImages = async () => {
-    try {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsMultipleSelection: true,
-        quality: 1,
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      console.log(result, "result");
+      const selectedImages = result?.assets?.map((image) => {
+        return {
+          uri: image.uri,
+          type: image.type,
+          name: image.fileName,
+        };
       });
+      console.log(selectedImages.length, "selectedImages.length");
 
-      if (!result.canceled) {
-        console.log(result, "result");
-        const selectedImages = result?.assets?.map((image) => {
-          return {
-            uri: image.uri,
-            type: image.type,
-            name: image.fileName,
-          };
-        });
-        console.log(selectedImages.length, "selectedImages.length");
+      // setImages(selectedImages);
+      // console.log(selectedImages, "selectedImages");
 
-        // setImages(selectedImages);
-        // console.log(selectedImages, "selectedImages");
-
-        // const uploadedImgs = await uploadImages(selectedImages);
-        if (true) {
-          setTimeout(() => {
-            navigator.navigate("pages/discover/screens/nearBy/index", {
-              uploadedImgs: [],
-            });
-          }, 1000);
-        } else {
-          Toast.fail(t("upload failed"));
-        }
+      // return;
+      const uploadedImgs = await uploadImages(selectedImages);
+      if (uploadedImgs?.length) {
+        navigator.navigate(
+          "pages/discover/moments/screens/post-moments/index",
+          {
+            uploadedImgs,
+          }
+        );
+      } else {
+        Toast.fail(t("upload failed"));
       }
-    } catch (e) {
-      console.log(e, "error-moment post");
     }
   };
   const uploadImages = async (images: TImageIns[]) => {
@@ -151,14 +157,19 @@ const Moments = () => {
     }
   };
   const defaultActions: ActionSheetAction[] = [
-    { name: t("Camera"), subname: "Take a photo or video" },
+    {
+      name: t("Camera"),
+      subname: "Take a photo or video",
+      callback: () => {
+        useType: "moments",
+          navigator.navigate("pages/chats/msg-chats/screens/camera/index", {
+            useType: "moments",
+          });
+      },
+    },
     {
       name: t("Choose from Album"),
       callback: () => {
-        setTimeout(() => {
-          navigator.navigate("pages/discover/screens/nearBy/index");
-        }, 1000);
-        return;
         setTimeout(async () => {
           await pickImages();
         }, 600);
@@ -166,6 +177,7 @@ const Moments = () => {
     },
   ];
   const [visible, setVisible] = useState(false);
+  const [commentVisible, setCommentVisible] = useState(false);
 
   const onClose = () => {
     setVisible(false);
@@ -186,17 +198,30 @@ const Moments = () => {
         }
       });
   };
+  const curCommentData = useRef<TMomentsComment>();
+  useEffect(() => {
+    eventBus?.on?.("moments-comment", (data: TMomentsComment) => {
+      setCommentVisible(true);
+      console.log(data, "moments-comment");
+      curCommentData.current = data;
+    });
+    eventBus?.on?.("moments-liked", () => {
+      getMomentsList();
+    });
+  }, []);
   useFocusEffect(
     useCallback(() => {
       getMomentsList();
     }, [])
   );
-
   return (
     <KeyboardAvoidingView
-      keyboardVerticalOffset={90}
+      style={{
+        // backgroundColor: "yellow",
+        flex: 1,
+      }}
+      keyboardVerticalOffset={100}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={{ flex: 1 }}
     >
       <ScrollView style={{ backgroundColor: themeColor.white, flex: 1 }}>
         <ActionSheet
@@ -209,10 +234,37 @@ const Moments = () => {
         />
         {momentsList?.map((item, index) => {
           // console.log(item, "item");
-          return <MomentsCard key={index} momentData={item} />;
+          return (
+            <View key={index}>
+              <MomentsCard momentData={item} />
+            </View>
+          );
         })}
       </ScrollView>
-      {/* <TextInput style={{ width: 50, height: 50, backgroundColor: "red" }} /> */}
+      {commentVisible && (
+        <View style={{ backgroundColor: themeColor.fillColor, padding: 4 }}>
+          <TextInput
+            onSubmitEditing={async (event) => {
+              const text = event.nativeEvent.text;
+              curCommentData.current?.sendHandler?.(text).then(() => {
+                // refresh list
+                setCommentVisible(false);
+                getMomentsList();
+              });
+            }}
+            returnKeyType="send"
+            autoFocus
+            selectionColor={themeColor.primary}
+            style={{
+              borderRadius: 4,
+              height: getSize(38),
+              paddingLeft: 8,
+              fontSize: 18,
+              backgroundColor: themeColor.white,
+            }}
+          />
+        </View>
+      )}
     </KeyboardAvoidingView>
   );
 };

@@ -58,22 +58,18 @@ const ChatInput = ({
           value={value}
           selectionColor={themeColor.primary}
           onChangeText={onChangeText}
+          returnKeyType="send"
+          onSubmitEditing={onEndEditing}
           onFocus={onFocus}
           autoFocus={!voiceInput && !init}
-          onSubmitEditing={onEndEditing}
           blurOnSubmit={false}
-          returnKeyType="send"
           style={{
             borderRadius: 4,
             height: getSize(38),
-
-            // position: "absolute",
-            // bottom: -410,
             paddingLeft: 8,
             fontSize: 18,
             paddingVertical: 8,
             flex: 1,
-            // fontSize: 22,
             backgroundColor: themeColor.white,
           }}
         ></TextInput>

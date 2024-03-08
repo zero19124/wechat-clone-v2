@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { IMomentsCard } from "./MomentsCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HeartOutlineIcon from "@/icons/discover/heart-outline.svg";
 import HeartIcon from "@/icons/discover/heart.svg";
 import CommentOutlineIcon from "@/icons/discover/comment-outline.svg";
@@ -21,6 +21,7 @@ import { useUser } from "app/store/user";
 import config from "@/config/index";
 import { TextInput } from "react-native-gesture-handler";
 import { formatDateToString } from "@/utils/date";
+import eventBus from "@/utils/eventBus";
 const MomentsComment = (props: { momentData: IMomentsCard["momentData"] }) => {
   const { themeColor, commonStyle } = useTheme();
   const { momentData } = props;
@@ -33,10 +34,20 @@ const MomentsComment = (props: { momentData: IMomentsCard["momentData"] }) => {
   const handleAnimation = () => {
     setCommentVisible(!commentVisible);
   };
+  useEffect(() => {
+    const curLiked = momentData.likes.find(
+      (item) => item.likedUserId === userInfo?._id
+    );
+    if (curLiked) {
+      setLiked(true);
+    }
+  }, []);
   // console.log(momentData, "momentData");
   return (
     <View style={style.momentsCardBottom}>
-      <Text style={{ color: themeColor.text1 }}>{formatDateToString(momentData.createdAt)}</Text>
+      <Text style={{ color: themeColor.text1 }}>
+        {formatDateToString(momentData.createdAt)}
+      </Text>
       {commentVisible && (
         <Animated.View
           style={[
@@ -62,7 +73,7 @@ const MomentsComment = (props: { momentData: IMomentsCard["momentData"] }) => {
                   likedUserName: userInfo?.act,
                 })
                 .then((res) => {
-                  console.log(1111, res);
+                  eventBus.emit("moments-liked");
                 });
               setTimeout(() => {
                 setCommentVisible(false);
@@ -101,16 +112,17 @@ const MomentsComment = (props: { momentData: IMomentsCard["momentData"] }) => {
           {/* divider  end*/}
           <TouchableOpacity
             onPress={() => {
-              axios
-                .post("api/moments/add-moments-comment", {
-                  momentsId: momentData._id,
-                  commentedUserId: userInfo?._id,
-                  commentedUserName: userInfo?.act,
-                  // comment,
-                })
-                .then((res) => {
-                  console.log(1111, res);
-                });
+              eventBus?.emit?.("moments-comment", {
+                sendHandler: (comment: string) => {
+                  return axios.post("api/moments/add-moments-comment", {
+                    momentsId: momentData._id,
+                    commentedUserId: userInfo?._id,
+                    commentedUserName: userInfo?.act,
+                    comment,
+                  });
+                },
+              });
+
               setTimeout(() => {
                 setCommentVisible(false);
               }, 300);

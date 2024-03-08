@@ -58,7 +58,7 @@ const Layout = () => {
 
             // headerShown: false,
             tabBarLabel: ({ color }) => {
-              return <TabText color={color}>{t("Chats")}</TabText>;
+              return <TabText color={color}>{("Chats")}</TabText>;
             },
           }}
         ></Tabs.Screen>
