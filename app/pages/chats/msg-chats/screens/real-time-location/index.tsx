@@ -25,6 +25,7 @@ import Toast from "@/component/base/Toast";
 import { PusherContext } from "@/hooks/usePusherProvider";
 import { TextInput } from "react-native-gesture-handler";
 import Button from "@/component/base/Button/Button";
+import DeviceInfo from "react-native-device-info";
 type TUserListInRoomData = {
   userId: string;
   messageIdForRoom: string;
@@ -48,6 +49,7 @@ const NearByView = ({
 
   const [onLineUserList, setOnLineUserList] = useState<TUserListInRoomData[]>();
   const { userInfo } = useUser().userStore;
+  const deviceModel = DeviceInfo.getModel();
   const curUserLocation = {
     longitude: userInfo?.location?.coordinates[0],
     latitude: userInfo?.location?.coordinates[1],
@@ -75,14 +77,18 @@ const NearByView = ({
   const intervalId = useRef<NodeJS.Timeout>();
   useEffect(() => {
     Location.getCurrentPositionAsync({}).then((coordinates) => {
-      console.log(params, "params-real-time-location-join");
+      console.log(params, "params-real-time-location-join", coordinates);
       // step1
       // join a room
+
       pusherContext.socket?.emit("real-time-location-join", {
         messageIdForRoom: params.messageIdForRoom,
         userId: userInfo?._id,
         userImg: userInfo?.image,
-        coordinates: { coords: curUserLocation } as any,
+        coordinates: {
+          coords:
+            deviceModel === "iPhone 13 Pro" ? coordinates.coords : curUserLocation,
+        } as any,
       } as TUserListInRoomData);
 
       intervalId.current = setInterval(async () => {
@@ -94,7 +100,7 @@ const NearByView = ({
     pusherContext.socket?.on(
       "real-time-location-joined",
       (userListInRoom: TUserListInRoomData[]) => {
-        console.log(userListInRoom, "real-time-location-joined");
+        // console.log(userListInRoom, "real-time-location-joined");
         setOnLineUserList(userListInRoom);
         Toast.info("friend joined");
       }
@@ -103,13 +109,13 @@ const NearByView = ({
     pusherContext.socket?.on(
       "real-time-location-updated",
       (data: TUserListInRoomData) => {
-        console.log(data, "real-time-location-updated");
+        // console.log(data, "real-time-location-updated");
         setOnLineUserList(data);
       }
     );
     pusherContext.socket?.on("real-time-location-sb-left", (data) => {
       setOnLineUserList(data);
-      console.log(data, "real-time-location-sb-left");
+      // console.log(data, "real-time-location-sb-left");
       Toast.info("friend left");
     });
     return () => {
@@ -118,11 +124,13 @@ const NearByView = ({
         messageIdForRoom: params.messageIdForRoom,
         leavingUserId: userInfo?._id,
       });
+      pusherContext.socket?.removeListener("real-time-location-joined");
+      pusherContext.socket?.removeListener("real-time-location-sb-left");
     };
   }, []);
   const fadeAnim = new Animated.Value(1);
   const startAnimation = useCallback(() => {
-    console.log("startAnimation");
+    // console.log("startAnimation");
     Animated.loop(
       Animated.sequence([
         Animated.timing(fadeAnim, {
@@ -148,7 +156,7 @@ const NearByView = ({
   }, [fadeAnim]);
   startAnimation();
   const [mockLocation, setMock] = useState({ ...curUserLocation });
-  console.log(mockLocation, "mockLocationmockLocation11");
+  // console.log(mockLocation, "mockLocationmockLocation11");
   return (
     <View style={styles.container}>
       <MapView
@@ -180,7 +188,7 @@ const NearByView = ({
               value={String(mockLocation.longitude).substring(0, 6)}
               style={{ width: 100, height: 30, backgroundColor: "red" }}
               onChangeText={(l) => {
-                console.log(l, "22211");
+                // console.log(l, "22211");
                 mockLocation.longitude = l;
                 setMock({ ...mockLocation });
               }}
@@ -196,7 +204,7 @@ const NearByView = ({
             <TouchableOpacity
               style={{ backgroundColor: themeColor.primary, padding: 12 }}
               onPress={() => {
-                console.log(mockLocation, "mockLocation");
+                // console.log(mockLocation, "mockLocation");
                 setMock((pre) => {
                   pusherContext.socket?.emit("real-time-location-update", {
                     messageIdForRoom: params.messageIdForRoom,
@@ -212,7 +220,7 @@ const NearByView = ({
         )}
         {onLineUserList?.map((item, index) => {
           // console.log(item, "item", item.coordinates.coords);
-          console.log(item.coordinates, "item.coordinates.coords;");
+          // console.log(item.coordinates, "item.coordinates.coords;");
 
           const { longitude, latitude } = item?.coordinates?.coords;
           return (
