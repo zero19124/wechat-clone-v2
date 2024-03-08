@@ -20,9 +20,9 @@ import { useLocalSearchParams, useNavigation } from "expo-router";
 import config from "@/config/index";
 import { useUser } from "app/store/user";
 import { useState } from "react";
-// import MomentsImg from "../../components/MomentsIms";
+import MomentsImg from "../../components/MomentsIms";
 const PostMoments = () => {
-  return <Text>3</Text>
+  // return <Text>3</Text>
   const { t } = useTranslation();
   const navigator = useNavigation();
   const params = useLocalSearchParams<{ uploadedImgs: string[] }>();
@@ -148,7 +148,7 @@ const PostMoments = () => {
             selectionColor={themeColor.primary}
           />
           <View style={{ marginTop: 24 }}>
-            {/* <MomentsImg imgList={params.uploadedImgs || []} /> */}
+            <MomentsImg imgList={params.uploadedImgs || []} />
           </View>
         </View>
         <OptionsSection />

@@ -11,7 +11,7 @@ import { ResizeMode, Video } from "expo-av";
 import useSendMsg from "@/hooks/useSendMsg";
 import { useUser } from "app/store/user";
 import { useChatList } from "app/store/chatList";
-import { useNavigation } from "expo-router";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { getSize } from "utils";
 import { useTheme } from "@/theme/useTheme";
 import Fade from "@/component/base/Transitions/Fade";
@@ -22,7 +22,10 @@ import Toast from "@/component/base/Toast";
 export default () => {
   const cameraRef = useRef<Camera>(null);
   const videoRef = useRef<Video>(null);
+  const params = useLocalSearchParams<{ useType: string }>();
+  console.log(params, "params,params");
   const { themeColor } = useTheme();
+  const router = useRouter();
   const [recordingSecond, setRecordingSecond] = useState(0);
   const { sendMsgHandler } = useSendMsg();
   const intervalId = useRef(-1);
@@ -45,7 +48,7 @@ export default () => {
   };
   const cleanRecodingTime = (cb: () => void) => {
     clearInterval(intervalId.current);
-    cb();
+    cb?.();
 
     setTimeout(() => {
       setRecordingSecond(0);
@@ -184,7 +187,19 @@ export default () => {
             const uploadedphotos = await uploadImages([
               { uri: photo.uri, name: Math.random() + ".jpg", type: "image" },
             ]);
-            console.log("uploadedphotos-camera", uploadedphotos);
+            console.log("uploadedphotos-photo", uploadedphotos, params);
+            if (params.useType === "moments") {
+              navigator.goBack();
+              setTimeout(() => {
+                navigator.navigate(
+                  "pages/discover/moments/screens/post-moments/index",
+                  {
+                    uploadedImgs: uploadedphotos,
+                  }
+                );
+              }, 100);
+              return;
+            }
             sendMsgHandler({
               val: uploadedphotos[0],
               userId: userInfo?._id + "",
@@ -215,7 +230,21 @@ export default () => {
             const uploadedphotos = await uploadImages([
               { uri: video, name: Math.random() + ".mp4", type: "image" },
             ]);
+            console.log('video not support');
+            return;
             console.log("uploadedphotos-camera", uploadedphotos);
+            if (params.useType === "moments") {
+              navigator.goBack();
+              setTimeout(() => {
+                navigator.navigate(
+                  "pages/discover/moments/screens/post-moments/index",
+                  {
+                    uploadedImgs: uploadedphotos,
+                  }
+                );
+              }, 100);
+              return;
+            }
             sendMsgHandler({
               val: uploadedphotos[0],
               userId: userInfo?._id + "",
@@ -297,7 +326,7 @@ export default () => {
                   textAlign: "center",
                 }}
               >
-                {t("top to take photo or hold to record video")}
+                {t("tap to take photo or hold to record video")}
               </Text>
             </Fade>
           </View>
