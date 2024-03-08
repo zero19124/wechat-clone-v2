@@ -4,9 +4,7 @@ import {
   View,
   StyleSheet,
   Image,
-  Pressable,
   Animated,
-  Easing,
   TouchableOpacity,
 } from "react-native";
 import { IMomentsCard } from "./MomentsCard";
@@ -15,11 +13,8 @@ import HeartOutlineIcon from "@/icons/discover/heart-outline.svg";
 import HeartIcon from "@/icons/discover/heart.svg";
 import CommentOutlineIcon from "@/icons/discover/comment-outline.svg";
 import axios from "axios";
-
 import { useTranslation } from "react-i18next";
 import { useUser } from "app/store/user";
-import config from "@/config/index";
-import { TextInput } from "react-native-gesture-handler";
 import { formatDateToString } from "@/utils/date";
 import eventBus from "@/utils/eventBus";
 const MomentsComment = (props: { momentData: IMomentsCard["momentData"] }) => {
@@ -29,7 +24,6 @@ const MomentsComment = (props: { momentData: IMomentsCard["momentData"] }) => {
   const { userInfo } = useUser().userStore;
   const [commentVisible, setCommentVisible] = useState(false);
   const [liked, setLiked] = useState(false);
-  const animatedValue = new Animated.Value(0);
 
   const handleAnimation = () => {
     setCommentVisible(!commentVisible);

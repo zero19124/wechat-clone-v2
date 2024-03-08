@@ -12,7 +12,7 @@ const useSendMsg = () => {
   }: {
     val: string;
     userId: string;
-    doneHandler?: () => void;
+    doneHandler?: (data: any) => void;
     convoId: string;
     type: string;
   }) => {
@@ -41,7 +41,7 @@ const useSendMsg = () => {
         } else {
           Toast.fail("sendMsg failed");
         }
-        doneHandler?.();
+        doneHandler?.(res);
       });
   };
   return { sendMsgHandler };
