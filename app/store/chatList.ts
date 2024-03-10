@@ -10,7 +10,7 @@ export interface IUser {
 }
 interface IConvo {
   curConvo:
-    | { convoMember: number; convoId: string; curReceiverInfo?: IUser }
+    | { convoMember: IUser[]; convoId: string; curReceiverInfo?: IUser }
     | undefined;
   chatListState?: any[] | undefined;
 }

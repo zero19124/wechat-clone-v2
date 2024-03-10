@@ -1,7 +1,7 @@
 import { themeColor } from "@/theme/light";
 import MsgReceiver from "app/component/business/MsgReceiver";
 import UserAvatar from "app/component/complex/UserAvatar";
-import { FlatList, View } from "react-native";
+import { FlatList, TouchableOpacity, View } from "react-native";
 import data from "@/mocks/msgList.json";
 import { useUser } from "app/store/user";
 import { getSize } from "utils";
@@ -9,6 +9,10 @@ import { Text } from "react-native";
 import { useTransition } from "react";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@/theme/useTheme";
+import Dialog from "@/component/base/Dialog";
+import axios from "axios";
+import config from "@/config/index";
+import { useChatList } from "app/store/chatList";
 const PrivateChatList = (props: {
   dataOut: any[];
   flatListRef: React.MutableRefObject<FlatList<any> | undefined>;
@@ -17,10 +21,12 @@ const PrivateChatList = (props: {
   const { dataOut, flatListRef } = props;
   const { userInfo } = useUser().userStore;
   const { themeColor } = useTheme();
+  const { chatListStore, getChatList, setChatListStoreV2 } = useChatList();
+
   // console.log(dataOut, "dataOut-userInfo");
   const renderItem = ({ item }: { item: (typeof data)[0] }) => {
     // only me hava
-  // console.log(item.image, "item.image----");
+    // console.log(item.image, "item.image----");
 
     if (item.type === "recalledMsg") {
       return <></>;
@@ -95,15 +101,46 @@ const PrivateChatList = (props: {
                 flex: 1,
               }}
             >
-              <UserAvatar
-                source={{ uri: item.image }}
-                style={{
-                  marginRight: 8,
-                  width: getSize(45),
-                  height: getSize(45),
+              <TouchableOpacity
+                onLongPress={async () => {
+                  console.log(item, "do u want to kick out this member");
+                  // if(groupOwnerId === curID){}
+                  await Dialog.confirm({
+                    cancelButtonText: t("kick out"),
+                    confirmButtonText: t("cancel"),
+                    title: t("warning"),
+                    message: t(
+                      `do u want to kick out this member ${item.userName}?`
+                    ),
+                  })
+                    .then(() => {
+                      axios
+                        .post(
+                          config.apiDomain + "/api/convo/updateConvoMemberById",
+                          {
+                            convoId: chatListStore.curConvo?.convoId,
+                            attendId: item.userId,
+                            type: "kick-out",
+                          }
+                        )
+                        .then(() => {
+                          console.log("updateConvoMemberById-kickout");
+                        });
+                    })
+                    .catch(() => {});
                 }}
-              />
+              >
+                <UserAvatar
+                  source={{ uri: item.image }}
+                  style={{
+                    marginRight: 8,
+                    width: getSize(45),
+                    height: getSize(45),
+                  }}
+                />
+              </TouchableOpacity>
               <MsgReceiver
+                userName={chatListStore.curConvo.isGroup ? item.userName : ""}
                 msgId={item.msgId}
                 msgSenderId={item.userId}
                 msgType={item.type}
