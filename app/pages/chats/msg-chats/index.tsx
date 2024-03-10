@@ -42,6 +42,9 @@ import ActionSheet, { ActionSheetAction } from "@/component/base/ActionSheet";
 import { TNavigationOptions } from "@/component/complex/CommonNavigateTitle";
 import { getHeight, getSize } from "utils";
 import { uploadImages } from "@/hooks/useImagePicker";
+import Toast from "@/component/base/Toast";
+import Popup from "@/component/base/Popup";
+import UserAvatar from "@/component/complex/UserAvatar";
 const Page = () => {
   const navigate = useNavigation();
   // 获取设备型号
@@ -61,7 +64,9 @@ const Page = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const title = useMemo(() => {
     if (params.isGroup === "true") {
-      return t("Group chat" + "(" + chatListStore.curConvo?.convoMember + ")");
+      return t(
+        "Group chat" + "(" + chatListStore.curConvo?.convoMember?.length + ")"
+      );
     }
     return curReceiverInfo?.act;
   }, [params, curReceiverInfo]);
@@ -71,7 +76,30 @@ const Page = () => {
       headerShadowVisible: false,
       headerRight: () => <ThreeDot />,
       headerLeftContainerStyle: { paddingLeft: 12 },
-      title,
+      headerTitle: () => {
+        return (
+          <TouchableOpacity
+            onPress={() => {
+              setMemberListVisible(true);
+              // Toast.info(
+              //   chatListStore.curConvo?.convoMember
+              //     ?.map((item) => item.act)
+              //     .join(",")
+              // );
+            }}
+          >
+            <Text
+              style={{
+                color: themeColor.bg5,
+                fontSize: 18,
+                fontWeight: "bold",
+              }}
+            >
+              {title}
+            </Text>
+          </TouchableOpacity>
+        );
+      },
       headerTitleAlign: "center",
       headerLeft: () => (
         <View>
@@ -183,6 +211,7 @@ const Page = () => {
         // 插入信息列表
         const newMsg = {
           userId: data.user._id,
+          userName: data.user.act,
           msgId: data._id,
           type: data.type,
           image: data.user.image,
@@ -208,6 +237,7 @@ const Page = () => {
               .map((item) => {
                 return {
                   type: item.type,
+                  userName: item.user.act,
                   userId: item.userId,
                   msgId: item._id,
                   image: item.user.image,
@@ -279,6 +309,7 @@ const Page = () => {
     useState<ActionSheetAction[]>(VideoCallActions);
 
   const [visible, setVisible] = useState(false);
+  const [memberListVisible, setMemberListVisible] = useState(false);
 
   const onClose = () => {
     setVisible(false);
@@ -291,6 +322,36 @@ const Page = () => {
       }}
       edges={["bottom"]}
     >
+      <Popup
+        visible={memberListVisible}
+        position="top"
+        closeable
+        onClose={() => {
+          setMemberListVisible(false);
+        }}
+      >
+        <View
+          style={{
+            width: getSize(375),
+            padding: 24,
+            paddingTop: 80,
+            backgroundColor: "white",
+          }}
+        >
+          {chatListStore.curConvo?.convoMember.map((user) => {
+            return (
+              <View className="items-center flex-row my-1">
+                <UserAvatar source={{ uri: user.image }} />
+                <Text style={{ marginLeft: 12 }}>{user.act}</Text>
+              </View>
+            );
+          })}
+          <Text style={{ textAlign: "center" }}>
+            {t("total member:")}
+            {chatListStore.curConvo?.convoMember.length}
+          </Text>
+        </View>
+      </Popup>
       <ActionSheet
         style={{ backgroundColor: themeColor.white, borderRadius: 8 }}
         visible={visible}

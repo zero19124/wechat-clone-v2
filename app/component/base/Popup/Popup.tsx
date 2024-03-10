@@ -5,6 +5,7 @@ import Dialog from "./Dialog";
 import { useThemeFactory } from "../Theme";
 import { createStyle } from "./style";
 import type { PopupProps } from "./type";
+import { defaultTheme } from "@/theme/styles";
 
 const Popup = (props: PopupProps): JSX.Element => {
   const {
@@ -15,16 +16,19 @@ const Popup = (props: PopupProps): JSX.Element => {
     closeIconPosition = "top-right",
     position,
     onClose,
+    theme = "light",
     visible,
     title,
     style,
     ...rest
   } = props;
 
-  const { styles, theme } = useThemeFactory(createStyle, {
-    closeIconPosition,
-    position,
-  });
+  const styles = createStyle(defaultTheme, theme);
+
+  // const { styles, theme } = useThemeFactory(createStyle, {
+  //   closeIconPosition,
+  //   position,
+  // });
 
   return (
     <Dialog {...rest} position={position} visible={visible} onClose={onClose}>

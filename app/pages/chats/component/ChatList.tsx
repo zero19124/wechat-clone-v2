@@ -82,11 +82,11 @@ const ConvoList = () => {
     let chatUsers;
 
     if (item.isGroup) {
+      chatUsers = userStore.userInfo;
+    } else {
       chatUsers = item.participants?.filter(
         (user) => user._id !== userStore.userInfo?._id
       )[0];
-    } else {
-      chatUsers = userStore.userInfo;
     }
 
     const LeftPart = () => {

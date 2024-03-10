@@ -27,6 +27,7 @@ import LocationCard from "./component/LocationCard";
 const MsgWrapper = ({
   msgType = "text",
   type = "left",
+  userName = "",
   text,
   msgId,
   msgSenderId,
@@ -34,6 +35,8 @@ const MsgWrapper = ({
   type?: "left" | "right";
   text: string;
   msgId: string;
+  // if userName is not null then its group chat
+  userName?: string;
   msgSenderId: string;
   msgType: string;
 }) => {
@@ -197,7 +200,7 @@ const MsgWrapper = ({
   };
 
   return (
-    <>
+    <View>
       <Popover ref={popover} theme="dark">
         <View style={{ flexDirection: "row" }}>
           {iconActions.map((action) => {
@@ -229,8 +232,15 @@ const MsgWrapper = ({
           })}
         </View>
       </Popover>
+      {userName && (
+        <Text
+          style={{ color: themeColor.text3, marginVertical: 4, marginLeft: 4 }}
+        >
+          {userName}
+        </Text>
+      )}
       <TextWrapper>{getContent()}</TextWrapper>
-    </>
+    </View>
   );
 };
 export default MsgWrapper;

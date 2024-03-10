@@ -30,7 +30,8 @@ const goToMsgChat = (
     curConvo: {
       convoId,
       curReceiverInfo,
-      convoMember: convoData.participants.length,
+      convoMember: convoData.participants,
+      ...convoData,
     },
   });
 
