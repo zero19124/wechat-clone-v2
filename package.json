@@ -87,6 +87,7 @@
     "react-native-webrtc": "^118.0.1",
     "react-native-webview": "13.6.4",
     "recoil": "^0.7.7",
+    "rn-emoji-keyboard": "^1.6.1",
     "rn-qr-generator": "^1.4.0",
     "segmentit": "^2.0.3",
     "socket.io-client": "^4.7.4",

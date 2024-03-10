@@ -17,7 +17,7 @@ const PrivateChatList = (props: {
   const { dataOut, flatListRef } = props;
   const { userInfo } = useUser().userStore;
   const { themeColor } = useTheme();
-  console.log(dataOut, "dataOut-userInfo");
+  // console.log(dataOut, "dataOut-userInfo");
   const renderItem = ({ item }: { item: (typeof data)[0] }) => {
     // only me hava
     if (item.type === "recalledMsg") {
