@@ -3,6 +3,7 @@ import {
   useContext,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -28,10 +29,21 @@ import { useTheme } from "@/theme/useTheme";
 import AppText from "./screens/code-scanner/index";
 import Dialog from "@/component/base/Dialog";
 import { PusherContext } from "@/hooks/usePusherProvider";
+import axios from "axios";
+import config from "@/config/index";
+import { useUser } from "app/store/user";
+import { useChatList } from "app/store/chatList";
 const Chats = (prop) => {
   console.log(prop, "prop,proppropprop");
   // return <AppText />;
   const navigate = useNavigation();
+  const { userStore, setUserStore } = useUser();
+  useEffect(() => {
+    console.log(userStore, "userStoreuserStoreuserStore");
+  }, [userStore]);
+  const temU = useMemo(() => {
+    return userStore;
+  }, [userStore]);
   // const router = useRouter();
   const { t } = useTranslation();
   const { themeColor } = useTheme();
@@ -87,6 +99,8 @@ const Chats = (prop) => {
     },
   ];
   const router = useRouter();
+  const { chatListStore, getChatList, setChatListStoreV2 } = useChatList();
+
   const select = (option: PopoverAction) => {
     if (option.text === "rec") {
       // router.push('/pages/chats/screens/code-scanner/')
@@ -110,11 +124,41 @@ const Chats = (prop) => {
       navigate.navigate("pages/chats/screens/money-qrcode/index");
     }
     if (option.text === "New Chat") {
-      // create new group chat
-      navigate.navigate("pages/chats/msg-chats/index", { chatType: "isGroup" });
+      axios
+        .post(config.apiDomain + "/api/convo/add-convo", {
+          type: "new-chat",
+          participants: [userStore.userInfo?._id],
+        })
+        .then(() => {
+          // create new group chat
+          navigate.navigate("pages/chats/msg-chats/index", {
+            chatType: "isGroup",
+          });
+          console.log("add-convo-123");
+        });
     }
     if (option.text === "Join Group Chat") {
-      navigate.navigate("pages/chats/screens/money-qrcode/index");
+      setUserStore((pre) => {
+        console.log(pre, "pre");
+        return pre;
+      });
+      // if user already in the group then cant join
+      console.log(temU, "userStore.userInfo", userStore);
+      if (!userStore.userInfo?._id) {
+        Toast.info("userId is null");
+        return;
+      }
+      axios
+        .post(config.apiDomain + "/api/convo/updateConvoMemberById", {
+          convoId: "65edd5b3ebab61a59bf5d730" || chatListStore.curConvo,
+          attendId: userStore.userInfo?._id,
+        })
+        .then(() => {
+          navigate.navigate("pages/chats/msg-chats/index", {
+            chatType: "isGroup",
+          });
+          console.log("add-convo-123");
+        });
     }
     popover.current?.hide();
     Toast.info(option.text);
@@ -180,7 +224,7 @@ const Chats = (prop) => {
         return <ChatIcon />;
       },
     });
-  }, []);
+  }, [userStore]);
   console.log("chats");
   const pusherContext = useContext(PusherContext);
   const socket = pusherContext.socket;

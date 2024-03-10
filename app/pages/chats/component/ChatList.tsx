@@ -18,6 +18,7 @@ import { PusherContext } from "@/hooks/usePusherProvider";
 import DeviceInfo from "react-native-device-info";
 import { TThemeType, useTheme } from "@/theme/useTheme";
 import { goToMsgChat } from "@/hooks/useSameRouter";
+import UserAvatar from "@/component/complex/UserAvatar";
 // const data = [
 //   {
 //     id: 1,
@@ -74,12 +75,19 @@ const ConvoList = () => {
     getChatList(userId + "");
   }, [pusherContext.socket, userId]);
   const renderItem = ({ item }: { item: any }) => {
+    console.log(item._id, item.isGroup, "ConvoList");
     {
       /* 头像 */
     }
-    const chatUsers = item.participants?.filter(
-      (user) => user._id !== userStore.userInfo?._id
-    );
+    let chatUsers;
+
+    if (item.isGroup) {
+      chatUsers = item.participants?.filter(
+        (user) => user._id !== userStore.userInfo?._id
+      )[0];
+    } else {
+      chatUsers = userStore.userInfo;
+    }
 
     const LeftPart = () => {
       const MarkUnReadDot = (props: {
@@ -117,10 +125,15 @@ const ConvoList = () => {
       };
       return (
         <View>
-          <Image
-            source={{
-              uri: chatUsers[0].image,
-            }}
+          <UserAvatar
+            rounded={item.isGroup}
+            source={
+              item.isGroup
+                ? require("@/assets/group-chat.jpg")
+                : {
+                    uri: chatUsers.image,
+                  }
+            }
             style={style.itemContainerAvatar}
           />
           {item.unReadCount > 0 ? (
@@ -143,7 +156,7 @@ const ConvoList = () => {
         >
           {/* groupName */}
           <Text style={{ fontSize: 16, marginVertical: 4 }}>
-            {chatUsers[0].act}
+            {item.groupName || chatUsers?.act}
           </Text>
           <Text
             style={{
