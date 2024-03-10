@@ -160,16 +160,7 @@ export default () => {
           />
         </View>
       ) : (
-        <View className="justify-center items-center">
-          <GoogleSigninButton
-            size={GoogleSigninButton.Size.Wide}
-            color={GoogleSigninButton.Color.Dark}
-            onPress={() => {
-              signIn();
-              // initiate sign in
-            }}
-            disabled={isInProgress}
-          />
+        <View className="">
           <TextInput
             className="w-full"
             style={style.inputStyle}
@@ -178,20 +169,30 @@ export default () => {
             }}
           />
           <TextInput
-            className="w-full"
-
             style={style.inputStyle}
             onChangeText={(val) => {
               setData({ ...data, psw: val });
             }}
           />
-          <Button
-            title="login"
-            onPress={() => {
-              loginHandler();
-              console.log(data, "data", config.apiDomain);
-            }}
-          />
+          <View className="  justify-center items-center">
+            <Button
+              title="login"
+              onPress={() => {
+                loginHandler();
+                console.log(data, "data", config.apiDomain);
+              }}
+            />
+            <GoogleSigninButton
+              className="flex-1"
+              size={GoogleSigninButton.Size.Wide}
+              color={GoogleSigninButton.Color.Dark}
+              onPress={() => {
+                signIn();
+                // initiate sign in
+              }}
+              disabled={isInProgress}
+            />
+          </View>
         </View>
       )}
     </View>

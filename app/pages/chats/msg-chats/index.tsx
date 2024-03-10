@@ -14,8 +14,8 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import EmojiPicker from "rn-emoji-keyboard";
 import DeviceInfo from "react-native-device-info";
-
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import {
@@ -57,6 +57,7 @@ const Page = () => {
     return chatListStore.curConvo?.curReceiverInfo;
   }, [chatListStore]);
   const [dataOut, setDataOut] = useState<any[]>([]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   useLayoutEffect(() => {
     navigate.setOptions({
       // headerShown: false,
@@ -322,6 +323,10 @@ const Page = () => {
         </TouchableWithoutFeedback>
         {/* keyboard 内容 */}
         <ChatInput
+          emojiPress={() => {
+            // console.log("333");
+            setIsOpen(true);
+          }}
           onVoiceEnd={async (uri) => {
             console.log(111, uri);
             const uploadedphotos = await uploadImages([
@@ -368,15 +373,22 @@ const Page = () => {
           chatPress={() => {
             console.log("c");
           }}
-          emojiPress={() => {
-            console.log("e");
-          }}
           plusPress={() => {
             console.log("p");
             setH();
           }}
         />
-
+        <EmojiPicker
+          onEmojiSelected={(emojiSelectedData) => {
+            // {"emoji": "🤗", "name": "smiling face with open hands",
+            //  "slug": "smiling_face_with_open_hands",
+            //   "toneEnabled": false, "unicode_version": "1.0"}
+            // console.log(emojiSelectedData, "emojiSelectedData");
+            setMsg((val: string) => (val += emojiSelectedData.emoji + ""));
+          }}
+          open={isOpen}
+          onClose={() => setIsOpen(false)}
+        />
         {
           <FnKeyBoard
             heightValue={heightValue}

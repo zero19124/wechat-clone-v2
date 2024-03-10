@@ -32,12 +32,19 @@ const Chats = (prop) => {
   console.log(prop, "prop,proppropprop");
   // return <AppText />;
   const navigate = useNavigation();
+  // const router = useRouter();
   const { t } = useTranslation();
   const { themeColor } = useTheme();
   const popover = useRef<PopoverInstance>(null);
   const iconActions: PopoverAction[] = [
     {
       text: t("New Chat"),
+      icon: (
+        <ChatFilled style={{ width: 22, height: 22 }} fill={themeColor.white} />
+      ),
+    },
+    {
+      text: t("Join Group Chat"),
       icon: (
         <ChatFilled style={{ width: 22, height: 22 }} fill={themeColor.white} />
       ),
@@ -100,6 +107,13 @@ const Chats = (prop) => {
       navigate.navigate("pages/contacts/screens/add-contacts/index");
     }
     if (option.text === "Money") {
+      navigate.navigate("pages/chats/screens/money-qrcode/index");
+    }
+    if (option.text === "New Chat") {
+      // create new group chat
+      navigate.navigate("pages/chats/msg-chats/index", { chatType: "isGroup" });
+    }
+    if (option.text === "Join Group Chat") {
       navigate.navigate("pages/chats/screens/money-qrcode/index");
     }
     popover.current?.hide();
