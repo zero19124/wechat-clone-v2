@@ -48,23 +48,30 @@ const Page = () => {
   const deviceModel = DeviceInfo.getModel();
   const { userInfo } = useUser().userStore;
   const { getChatList, chatListStore } = useChatList();
-
-  const params = useLocalSearchParams();
+  const params = useLocalSearchParams<{ convoId: string; isGroup: string }>();
   const convoId = useMemo(() => {
+    console.log(params, "params-chat");
     return chatListStore.curConvo?.convoId;
   }, [params]);
+  const { t } = useTranslation();
   const curReceiverInfo = useMemo(() => {
     return chatListStore.curConvo?.curReceiverInfo;
   }, [chatListStore]);
   const [dataOut, setDataOut] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const title = useMemo(() => {
+    if (params.isGroup === "true") {
+      return t("Group chat" + "(" + chatListStore.curConvo?.convoMember + ")");
+    }
+    return curReceiverInfo?.act;
+  }, [params, curReceiverInfo]);
   useLayoutEffect(() => {
     navigate.setOptions({
       // headerShown: false,
       headerShadowVisible: false,
       headerRight: () => <ThreeDot />,
       headerLeftContainerStyle: { paddingLeft: 12 },
-      title: curReceiverInfo?.act,
+      title,
       headerTitleAlign: "center",
       headerLeft: () => (
         <View>
@@ -220,7 +227,6 @@ const Page = () => {
 
     getMsgList();
   }, []);
-  const { t } = useTranslation();
 
   const VideoCallActions = [
     {
@@ -379,6 +385,10 @@ const Page = () => {
           }}
         />
         <EmojiPicker
+          disabledCategories={[]}
+          defaultHeight={"30%"}
+          categoryPosition={"top"}
+          height={30}
           onEmojiSelected={(emojiSelectedData) => {
             // {"emoji": "🤗", "name": "smiling face with open hands",
             //  "slug": "smiling_face_with_open_hands",

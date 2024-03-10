@@ -20,6 +20,8 @@ const PrivateChatList = (props: {
   // console.log(dataOut, "dataOut-userInfo");
   const renderItem = ({ item }: { item: (typeof data)[0] }) => {
     // only me hava
+  // console.log(item.image, "item.image----");
+
     if (item.type === "recalledMsg") {
       return <></>;
     }
@@ -27,7 +29,7 @@ const PrivateChatList = (props: {
       return (
         <View
           style={{
-            marginVertical:24,
+            marginVertical: 24,
             justifyContent: "center",
             alignItems: "center",
           }}

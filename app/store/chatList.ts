@@ -9,7 +9,9 @@ export interface IUser {
   psw: string;
 }
 interface IConvo {
-  curConvo: { convoId: string; curReceiverInfo?: IUser } | undefined;
+  curConvo:
+    | { convoMember: number; convoId: string; curReceiverInfo?: IUser }
+    | undefined;
   chatListState?: any[] | undefined;
 }
 export const chatListState = atom<IConvo>({
@@ -24,7 +26,7 @@ export const chatListState = atom<IConvo>({
 export const useChatList = () => {
   const deviceModel = DeviceInfo.getModel();
   const setChatListStoreV2 = (val: any) => {
-    console.log(val, "setChatListStoreV2");
+    // console.log(val, "setChatListStoreV2-log");
     setChatListStore(val);
   };
   const [chatListStore, setChatListStore] = useRecoilState(chatListState);

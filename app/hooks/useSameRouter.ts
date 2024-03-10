@@ -27,10 +27,15 @@ const goToMsgChat = (
   console.log(curReceiverInfo, "curReceiverInfo");
   setChatListStoreV2({
     chatListState: chatListStore.chatListState,
-    curConvo: { convoId, curReceiverInfo },
+    curConvo: {
+      convoId,
+      curReceiverInfo,
+      convoMember: convoData.participants.length,
+    },
   });
 
   navigator.navigate("pages/chats/msg-chats/index", {
+    isGroup: convoData?.isGroup,
     convoId,
   });
 };

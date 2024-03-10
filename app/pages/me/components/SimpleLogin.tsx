@@ -117,11 +117,13 @@ export default () => {
         return res.json();
       })
       .then((res) => {
-        console.log(res, "res");
+        console.log(res, "res-SimpleLogin");
 
         if (res?.code === 200) {
           const newInfo = { ...userStore, userInfo: res?.data };
-          setUserStore(newInfo);
+          // setUserStore(newInfo);
+          setUserStore({ ...newInfo });
+
           console.log(newInfo, "userStore login");
         } else {
           Toast.fail(res.msg);
@@ -155,7 +157,7 @@ export default () => {
               console.log(data, "data");
               Toast.fail("log out");
               signOut();
-              setUserStore((prev) => ({ ...prev, userInfo: {} }));
+              setUserStore((prev) => ({ ...prev, userInfo: { name: 3 } }));
             }}
           />
         </View>
