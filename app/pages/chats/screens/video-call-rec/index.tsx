@@ -7,7 +7,7 @@
  */
 
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { View, Button, Dimensions } from "react-native";
+import { View, Button } from "react-native";
 
 import {
   RTCPeerConnection,
@@ -15,8 +15,6 @@ import {
   RTCView,
   mediaDevices,
 } from "react-native-webrtc";
-import io from "socket.io-client";
-import config from "@/config/index";
 import { useUser } from "app/store/user";
 import { PusherContext } from "@/hooks/usePusherProvider";
 import { useLocalSearchParams, useNavigation } from "expo-router";
