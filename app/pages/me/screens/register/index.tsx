@@ -273,6 +273,7 @@ const RegisterScreen: React.FC = () => {
 
       <Button
         type="primary"
+        style={{ width: "90%" }}
         onPress={handleSubmit((val) => {
           console.log("handleSubmit");
           onSubmit(val);

@@ -149,22 +149,23 @@ export default () => {
       <Text>{config.apiDomain}</Text>
       {userStore?.userInfo?.act ? (
         <View>
-          <Text>userID ===={userStore.userInfo._id}</Text>
           <TouchableOpacity
             onPress={async () => {
               await Clipboard.setStringAsync(userStore?.userInfo?._id || "");
               Toast.success("copied");
             }}
           >
-            <Text>copy userId</Text>
+            <Text>userID ===={userStore.userInfo._id} copy userId </Text>
           </TouchableOpacity>
           {/* <Text>{userStore?.userInfo?.act}</Text> */}
           <Button
             onPress={() => {
               console.log(data, "data");
-              Toast.fail("log out");
+              Toast.fail(t("Log out"));
               signOut();
-              setData({ act: "", psw: "" });
+              data.act = "";
+              data.psw = "";
+              setData(data);
               setUserStore((prev) => ({ ...prev, userInfo: {} }));
             }}
           >
@@ -177,13 +178,15 @@ export default () => {
             className="w-full"
             style={style.inputStyle}
             onChangeText={(val) => {
-              setData({ ...data, act: val });
+              data.act = val;
+              setData(data);
             }}
           />
           <TextInput
             style={style.inputStyle}
             onChangeText={(val) => {
-              setData({ ...data, psw: val });
+              data.psw = val;
+              setData(data);
             }}
           />
           <View className=" justify-center items-center">

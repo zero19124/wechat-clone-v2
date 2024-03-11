@@ -10,7 +10,7 @@ const goToMsgChat = (
   chatListStore: any,
   setChatListStoreV2: any
 ) => {
-  console.log(convoData, "convoData");
+  // console.log(convoData, "convoData");
   if (!convoData) {
     Toast.fail("convoData null");
     return;

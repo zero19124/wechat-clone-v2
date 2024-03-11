@@ -2,17 +2,14 @@ import {
   View,
   Text,
   Animated,
-  ScrollView,
   TouchableOpacity,
   Dimensions,
   StyleSheet,
-  Keyboard,
 } from "react-native";
 import PanelSvgs from "@/icons/utils/svgs";
 import { convertCamelCaseToNormal, getSize } from "utils";
-import * as light from "@/theme/light";
 import { useNavigation, useRouter } from "expo-router";
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { pickImages } from "@/hooks/useImagePicker";
 import Swiper from "@/component/base/Swiper";
 import { useTheme } from "@/theme/useTheme";
@@ -40,27 +37,14 @@ const iconOrderOne = [
 const { width } = Dimensions.get("window");
 
 const iconOrderTwo = ["ContactCard", "File", "Coupons", "Music"];
-
-const FnKeyBoard = ({
-  heightValue,
-  handlers,
-}: {
-  heightValue: number;
-  handlers: (type: keyof typeof FN_TYPE_MAPS, val: any) => void;
-}) => {
-  console.log("FnKeyBoard", heightValue);
-  const { themeColor } = useTheme();
-  const router = useRouter();
-  const navigator = useNavigation();
+const getStyle = (themeColor: ReturnType<typeof useTheme>["themeColor"]) => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      // backgroundColor: "white"
     },
     child: { width, justifyContent: "center" },
     text: { fontSize: width * 0.5, textAlign: "center" },
     touchItemWrapper: {
-      // backgroundColor: "tomato",
       flexDirection: "row",
       flexWrap: "wrap",
     },
@@ -74,12 +58,26 @@ const FnKeyBoard = ({
       height: getSize(60),
     },
   });
+  return styles;
+};
+const FnKeyBoard = ({
+  heightValue,
+  handlers,
+}: {
+  heightValue: number;
+  handlers: (data: { type: string; val?: any }) => void;
+}) => {
+  console.log("FnKeyBoard", heightValue);
+  const { themeColor } = useTheme();
+  const router = useRouter();
+  const navigator = useNavigation();
+  const styles = getStyle(themeColor);
   const svgHandler = async (name: string) => {
     switch (name) {
       case FN_TYPE_MAPS.Transfer:
-        console.log(222);
-        router.push("/individual-payment");
-        handlers?.(FN_TYPE_MAPS.Transfer, "");
+        console.log(FN_TYPE_MAPS.Transfer, "FN_TYPE_MAPS.Transfer:");
+        router.push("/component/business/individual-payment/index");
+        handlers?.({ type: FN_TYPE_MAPS.Transfer, val: "" });
         break;
       // case "ImgPicker":
       //   console.log(222);
@@ -120,7 +118,7 @@ const FnKeyBoard = ({
   );
 
   const [showIndicator, setShowIndicator] = useState(false);
-  const onLayoutChange = (event) => {
+  const onLayoutChange = (event: any) => {
     const { height } = event.nativeEvent.layout;
     console.log(height, "height");
     if (height > 200) {

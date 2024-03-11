@@ -110,7 +110,8 @@ const Chats = (prop) => {
     if (option.text === "send") {
       // router.push('/pages/chats/screens/code-scanner/')
       // router.push("pages/chats/screens/code-scanner/index");
-      navigate.navigate("pages/chats/screens/video-call-send/index");
+      // navigate.navigate("pages/chats/screens/video-call-send/index");
+      router.push('/pages/chats/screens/video-call-send/')
     }
     if (option.text === "Scan") {
       // router.push('/pages/chats/screens/code-scanner/')

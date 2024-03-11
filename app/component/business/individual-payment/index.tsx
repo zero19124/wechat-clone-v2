@@ -15,7 +15,7 @@ import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
-import * as light from "../../theme/light";
+import * as light from "../../../../theme/light";
 import { FontAwesome } from "@expo/vector-icons";
 import InputKeyboard from "./InputKeyboard";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
@@ -24,7 +24,7 @@ import ItemCard from "@/component/complex/ItemCard";
 import UserAvatar from "@/component/complex/UserAvatar";
 import { useTheme } from "@/theme/useTheme";
 import { useTranslation } from "react-i18next";
-import config from "../config";
+import config from "../../../config";
 
 const Page = () => {
   const [amountValue, setAmountValue] = useState("");
@@ -37,7 +37,7 @@ const Page = () => {
     recipientId: string;
     type: "direct";
   }>();
-  console.log(params, "params-individual-payment");
+  console.log(params, "params-component/business/individual-payment/index");
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitleAlign: "center",
@@ -162,7 +162,7 @@ const Page = () => {
   useEffect(() => {
     // getLatestPhoto();
   }, []);
-  console.log("individual-payment", new Date().getTime());
+  console.log("component/business/individual-payment/index", new Date().getTime());
 
   return (
     <>

@@ -12,12 +12,8 @@ import { View, Button, Dimensions } from "react-native";
 import {
   RTCPeerConnection,
   RTCIceCandidate,
-  RTCSessionDescription,
   RTCView,
-  MediaStream,
-  MediaStreamTrack,
   mediaDevices,
-  registerGlobals,
 } from "react-native-webrtc";
 import io from "socket.io-client";
 import config from "@/config/index";
