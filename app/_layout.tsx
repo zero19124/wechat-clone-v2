@@ -110,6 +110,7 @@ const Layout = () => {
                 <ActionSheetProvider>
                   <RootSiblingParent>
                     <Stack
+                      initialRouteName="(tabs)"
                       screenOptions={{
                         headerStyle: {
                           backgroundColor: light.themeColor.fillColor,
@@ -223,6 +224,13 @@ const Layout = () => {
                         options={{
                           title: "qrcode",
                           presentation: "fullScreenModal",
+                        }}
+                      />
+                      {/* register  */}
+                      <Stack.Screen
+                        name="pages/me/screens/register/index"
+                        options={{
+                          title: "register",
                         }}
                       />
                       <Stack.Screen

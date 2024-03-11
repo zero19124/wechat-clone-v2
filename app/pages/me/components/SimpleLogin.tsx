@@ -18,6 +18,7 @@ import DeviceInfo from "react-native-device-info";
 import Toast from "@/component/base/Toast";
 import * as Clipboard from "expo-clipboard";
 import axios from "axios";
+import { useNavigation, useRouter } from "expo-router";
 
 const style = StyleSheet.create({
   inputStyle: {
@@ -29,6 +30,7 @@ const style = StyleSheet.create({
 export default () => {
   const { setUserStore, userStore } = useUser();
   const deviceModel = DeviceInfo.getModel();
+  const router = useRouter();
   const [googleUser, setGoogleUser] = useState();
   const [isInProgress, setIsInProgress] = useState(false);
   const [data, setData] = useState({ psw: "1", act: "1" });
@@ -176,14 +178,28 @@ export default () => {
               setData({ ...data, psw: val });
             }}
           />
-          <View className="  justify-center items-center">
-            <Button
-              title="login"
-              onPress={() => {
-                loginHandler();
-                console.log(data, "data", config.apiDomain);
+          <View className=" justify-center items-center">
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                width: "100%",
               }}
-            />
+            >
+              <Button
+                title="login"
+                onPress={() => {
+                  loginHandler();
+                  console.log(data, "data", config.apiDomain);
+                }}
+              />
+              <Button
+                title="register"
+                onPress={() => {
+                  router.push("/pages/me/screens/register/");
+                }}
+              />
+            </View>
             <GoogleSigninButton
               className="flex-1"
               size={GoogleSigninButton.Size.Wide}

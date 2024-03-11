@@ -18,8 +18,10 @@ import config from "@/config/index";
 import BottomWidthDivider from "@/component/complex/BottomWidthDivider";
 import ItemCard from "@/component/complex/ItemCard";
 import UserAvatar from "@/component/complex/UserAvatar";
+import { useUser } from "app/store/user";
 const AddContactsSearch = () => {
   const navigate = useNavigation();
+  const { userInfo } = useUser().userStore;
   const [text, setText] = useState("");
   const [showResult, setShowResult] = useState(false);
   const [resultList, setResultList] = useState([]);
@@ -37,7 +39,7 @@ const AddContactsSearch = () => {
       .then((res) => res.json())
       .then((userList) => {
         console.log(userList, "userList");
-        setResultList(userList);
+        setResultList(userList.filter((user) => user._id !== userInfo?._id));
         setShowResult(true);
       });
     // 在这里处理文本变化的逻辑

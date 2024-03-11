@@ -39,79 +39,74 @@ const Layout = () => {
     return <Text style={{ fontSize: 12, color }}>{children}</Text>;
   };
   return (
-    <RootSiblingParent>
-      <Tabs
-        initialRouteName="Contacts"
-        screenOptions={{
-      headerTitleAlign: "center",
-
-          headerStyle: {
-            
-            backgroundColor: themeColor.fillColor,
+    <Tabs
+      initialRouteName="Contacts"
+      screenOptions={{
+        headerTitleAlign: "center",
+        headerStyle: {
+          backgroundColor: themeColor.fillColor,
+        },
+        tabBarActiveTintColor: themeColor.primary,
+      }}
+    >
+      <Tabs.Screen
+        name="index"
+        options={{
+          // headerShown: false,
+          tabBarLabel: ({ color }) => {
+            return <TabText color={color}>{"Chats"}</TabText>;
           },
-          tabBarActiveTintColor: themeColor.primary,
         }}
-      >
-        <Tabs.Screen
-          name="index"
-          options={{
+      ></Tabs.Screen>
+      <Tabs.Screen
+        name="contacts"
+        options={{
+          tabBarLabel: ({ color }) => {
+            return <TabText color={color}>{t("Contacts")}</TabText>;
+          },
 
-            // headerShown: false,
-            tabBarLabel: ({ color }) => {
-              return <TabText color={color}>{("Chats")}</TabText>;
-            },
-          }}
-        ></Tabs.Screen>
-        <Tabs.Screen
-          name="contacts"
-          options={{
-            tabBarLabel: ({ color }) => {
-              return <TabText color={color}>{t("Contacts")}</TabText>;
-            },
+          headerTitle: "Contacts",
+          tabBarIcon: ({ size, color, focused }) => {
+            if (focused) {
+              return <ContactsActiveIcon />;
+            }
+            return <ContactsIcon />;
+          },
+        }}
+      ></Tabs.Screen>
+      <Tabs.Screen
+        name="discover"
+        options={{
+          tabBarLabel: ({ color }) => {
+            return <TabText color={color}>{t("Discover")}</TabText>;
+          },
 
-            headerTitle: "Contacts",
-            tabBarIcon: ({ size, color, focused }) => {
-              if (focused) {
-                return <ContactsActiveIcon />;
-              }
-              return <ContactsIcon />;
-            },
-          }}
-        ></Tabs.Screen>
-        <Tabs.Screen
-          name="discover"
-          options={{
-            tabBarLabel: ({ color }) => {
-              return <TabText color={color}>{t("Discover")}</TabText>;
-            },
-
-            headerTitle: "Discover",
-            tabBarIcon: ({ size, color, focused }) => {
-              if (focused) {
-                return <DiscoverActiveIcon />;
-              }
-              return <DiscoverIcon />;
-            },
-          }}
-        ></Tabs.Screen>
-        <Tabs.Screen
-          name="me"
-          options={{
-            tabBarLabel: ({ color }) => {
-              return <TabText color={color}>{t("Me")}</TabText>;
-            },
-            headerShown: false,
-            headerTitle: () => <Text>ind1ex</Text>,
-            tabBarIcon: ({ size, color, focused }) => {
-              if (focused) {
-                return <MeActiveIcon />;
-              }
-              return <MeIcon width={28} height={28} />;
-            },
-          }}
-        ></Tabs.Screen>
-      </Tabs>
-    </RootSiblingParent>
+          headerTitle: "Discover",
+          tabBarIcon: ({ size, color, focused }) => {
+            if (focused) {
+              return <DiscoverActiveIcon />;
+            }
+            return <DiscoverIcon />;
+          },
+        }}
+      ></Tabs.Screen>
+      <Tabs.Screen
+        name="me"
+        options={{
+          tabBarLabel: ({ color }) => {
+            return <TabText color={color}>{t("Me")}</TabText>;
+          },
+          headerShown: false,
+          headerTitle: () => <Text>ind1ex</Text>,
+          tabBarIcon: ({ size, color, focused }) => {
+            if (focused) {
+              return <MeActiveIcon />;
+            }
+            return <MeIcon width={28} height={28} />;
+          },
+        }}
+      ></Tabs.Screen>
+    </Tabs>
   );
 };
 export default Layout;
