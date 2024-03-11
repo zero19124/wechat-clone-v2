@@ -248,7 +248,7 @@ const Layout = () => {
                       />
                       {/* comomns  */}
                       <Stack.Screen
-                        name="individual-payment/index"
+                        name="component/business/individual-payment/index"
                         options={{
                           headerShadowVisible: false,
                           title: "Payment",

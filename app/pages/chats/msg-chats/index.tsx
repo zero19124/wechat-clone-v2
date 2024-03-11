@@ -269,10 +269,11 @@ const Page = () => {
       },
     },
     {
-      name: t("Voice Call"),
+      name: t("Voice Call2"),
       callback: () => {
         console.log("Voice");
-        navigate.navigate("pages/chats/screens/video-call-send/index");
+      router.push('pages/chats/screens/video-call-send')
+        // navigate.navigate("pages/chats/screens/video-call-send/index");
       },
     },
   ];

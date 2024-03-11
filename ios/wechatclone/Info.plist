@@ -22,11 +22,6 @@
     <string>1.0.0</string>
     <key>CFBundleSignature</key>
     <string>????</string>
-    <key>GIDClientID</key>
-    <string>475065706028-11egj47k01ej9juk2o892q5os4gehkbp.apps.googleusercontent.com</string>
-
-   
-  
     <key>CFBundleURLTypes</key>
     <array>
       <dict>
@@ -39,7 +34,7 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>com.googleusercontent.apps.475065706028-11egj47k01ej9juk2o892q5os4gehkbp</string>
+          <string>exp+wechat-clone</string>
         </array>
       </dict>
     </array>

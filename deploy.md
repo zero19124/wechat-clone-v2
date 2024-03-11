@@ -37,3 +37,4 @@ npx expo run:ios
 
 
  npx expo start --clear
+ npx expo install --fix

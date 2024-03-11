@@ -19,7 +19,6 @@ import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import {
   RTCPeerConnection,
   RTCIceCandidate,
-  RTCView,
   mediaDevices,
 } from "react-native-webrtc";
 import config from "@/config/index";

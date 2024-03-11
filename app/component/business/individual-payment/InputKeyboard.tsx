@@ -7,7 +7,7 @@ import {
   Pressable,
 } from "react-native";
 import * as Clipboard from "expo-clipboard";
-import { getSize } from "../../utils";
+import { getSize } from "../../../../utils";
 import CloseIcon from "@/icons/common/close.svg";
 import CoinIcon from "@/icons/common/coin.svg";
 import { useCallback, useMemo, useRef, useState } from "react";
@@ -20,7 +20,7 @@ import {
 import PaymentKeyBoard from "./component/PaymentInput";
 import AmountText from "app/component/complex/AmountText";
 import { useTheme } from "@/theme/useTheme";
-import config from "../config";
+import config from "../../../config";
 import { useUser } from "app/store/user";
 import { useTranslation } from "react-i18next";
 import Toast from "@/component/base/Toast";
