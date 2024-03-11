@@ -56,7 +56,7 @@ const ConvoList = () => {
   const userId = useMemo(() => userStore.userInfo?._id, [userStore]);
   const style = getStyle(themeColor);
   useEffect(() => {
-    console.log(chatListStore.chatListState?.length, "chatListStore");
+    // console.log(chatListStore.chatListState?.length, "chatListStore");
   }, [chatListStore]);
 
   const pusherContext = useContext(PusherContext);
@@ -75,7 +75,7 @@ const ConvoList = () => {
     getChatList(userId + "");
   }, [pusherContext.socket, userId]);
   const renderItem = ({ item }: { item: any }) => {
-    console.log(item._id, item.isGroup, "ConvoList");
+    // console.log(item._id, item.isGroup, "ConvoList");
     {
       /* 头像 */
     }

@@ -1,4 +1,4 @@
-import React, { useRef, useTransition } from "react";
+import React, { useLayoutEffect, useRef, useTransition } from "react";
 import { View, Text, TextInput, Image, TouchableOpacity } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import * as ImagePicker from "expo-image-picker";
@@ -12,9 +12,14 @@ import Radio from "@/component/base/Radio";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import config from "@/config/index";
-import { useRouter } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import Toast from "@/component/base/Toast";
 import { uploadImages } from "@/hooks/useImagePicker";
+import {
+  TNavigationOptions,
+  useCommonNavigateProps,
+} from "@/component/complex/CommonNavigateTitle";
+import { useTheme } from "@/theme/useTheme";
 
 interface FormValue {
   username: string;
@@ -29,7 +34,9 @@ const defaultValues = {
   gender: "male",
   bio: "",
   avatar: "",
+  email: "",
 };
+
 const RegisterScreen: React.FC = () => {
   const {
     control,
@@ -41,12 +48,14 @@ const RegisterScreen: React.FC = () => {
   } = useForm({
     defaultValues,
   });
+  // https://react-hook-form.com/get-started#ReactNative
   const router = useRouter();
   const watchAvatar = watch("avatar");
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
   if (!permissionResponse?.granted) {
     requestPermission();
   }
+
   const pickImage = async () => {
     if (!permissionResponse?.granted) {
       alert("permission is not granted");
@@ -85,6 +94,7 @@ const RegisterScreen: React.FC = () => {
         gender: data.gender,
         image,
         bio: data.bio,
+        email: data.email,
         type: "register",
       })
       .then((res) => {
@@ -99,22 +109,59 @@ const RegisterScreen: React.FC = () => {
         }, 500);
       });
   };
+  const { themeColor } = useTheme();
+  const navigation = useNavigation();
   const { t } = useTranslation();
   const formRef = useRef<FormInstance<FormValue>>(null);
   console.log(errors, "errors");
+  useLayoutEffect(() => {
+    const navigatorProps = useCommonNavigateProps({
+      rightComp: () => <></>,
+      title: t("Register") as string,
+    });
+    navigation.setOptions({
+      ...navigatorProps,
+      headerStyle: { backgroundColor: themeColor.white },
+      headerShadowVisible: false,
+    } as TNavigationOptions);
+  }, []);
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+    <View
+      style={{
+        flex: 1,
+        alignItems: "center",
+        backgroundColor: themeColor.white,
+      }}
+    >
+      <TouchableOpacity onPress={pickImage}>
+        <UserAvatar
+          rounded
+          source={
+            watchAvatar
+              ? { uri: watchAvatar }
+              : require("@/assets/img-default.png")
+          }
+          style={{ width: 75, height: 75 }}
+        />
+      </TouchableOpacity>
+      <Button
+        size="small"
+        type="default"
+        onPress={pickImage}
+        style={{ marginVertical: 12 }}
+      >
+        {t("Choose Avatar")}
+      </Button>
       <Controller
         control={control}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
-            placeholder="First name"
+            placeholder="username"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
             style={{
               width: "80%",
-              marginBottom: 10,
               borderWidth: 1,
               borderRadius: 8,
               padding: 10,
@@ -130,6 +177,32 @@ const RegisterScreen: React.FC = () => {
       {errors && errors.username && (
         <Text style={{ color: "red" }}>{errors.username.message}</Text>
       )}
+      <Controller
+        control={control}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            placeholder="email"
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+            style={{
+              width: "80%",
+              marginVertical: 12,
+              borderWidth: 1,
+              borderRadius: 8,
+              padding: 10,
+            }}
+          />
+        )}
+        name="email"
+        rules={{
+          required: "email is required",
+        }}
+        defaultValue=""
+      />
+      {errors && errors.email && (
+        <Text style={{ color: "red" }}>{errors.email.message}</Text>
+      )}
 
       <Controller
         control={control}
@@ -141,14 +214,14 @@ const RegisterScreen: React.FC = () => {
             value={value}
             style={{
               width: "80%",
-              marginBottom: 10,
               borderWidth: 1,
+              borderRadius: 8,
               padding: 10,
             }}
           />
         )}
         name="password"
-        rules={{ required: "Password is required" }}
+        rules={{ required: "password is required" }}
         defaultValue=""
       />
       {errors && errors.password && (
@@ -159,6 +232,7 @@ const RegisterScreen: React.FC = () => {
         control={control}
         render={({ field: { onChange, onBlur, value } }) => (
           <Radio.Group
+            style={{ flexDirection: "row", marginVertical: 16, gap: 12 }}
             defaultValue={value}
             onChange={(val) => {
               console.log(val, 2222);
@@ -175,15 +249,6 @@ const RegisterScreen: React.FC = () => {
       {errors && errors.gender && (
         <Text style={{ color: "red" }}>{errors.gender.message}</Text>
       )}
-      <TouchableOpacity onPress={pickImage} style={{ marginBottom: 10 }}>
-        <Text>Choose Avatar</Text>
-      </TouchableOpacity>
-      {watchAvatar && (
-        <UserAvatar
-          source={{ uri: watchAvatar }}
-          style={{ width: 100, height: 100, marginBottom: 10 }}
-        />
-      )}
 
       <Controller
         control={control}
@@ -197,6 +262,7 @@ const RegisterScreen: React.FC = () => {
               width: "80%",
               marginBottom: 10,
               borderWidth: 1,
+              borderRadius: 8,
               padding: 10,
             }}
           />

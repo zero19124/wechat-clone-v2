@@ -6,7 +6,6 @@ import {
   statusCodes,
 } from "@react-native-google-signin/google-signin";
 import {
-  Button,
   StyleSheet,
   TextInput,
   View,
@@ -19,6 +18,8 @@ import Toast from "@/component/base/Toast";
 import * as Clipboard from "expo-clipboard";
 import axios from "axios";
 import { useNavigation, useRouter } from "expo-router";
+import Button from "@/component/base/Button/Button";
+import { useTranslation } from "react-i18next";
 
 const style = StyleSheet.create({
   inputStyle: {
@@ -30,6 +31,7 @@ const style = StyleSheet.create({
 export default () => {
   const { setUserStore, userStore } = useUser();
   const deviceModel = DeviceInfo.getModel();
+  const { t } = useTranslation();
   const router = useRouter();
   const [googleUser, setGoogleUser] = useState();
   const [isInProgress, setIsInProgress] = useState(false);
@@ -102,6 +104,10 @@ export default () => {
     });
   }, []);
   const loginHandler = () => {
+    if (!data.act || !data.psw) {
+      Toast.fail("act or psw is required");
+      return;
+    }
     // if (deviceModel === "iPhone 15") {
     //   setData({ psw: "1", act: "1" });
     // } else {
@@ -154,14 +160,16 @@ export default () => {
           </TouchableOpacity>
           {/* <Text>{userStore?.userInfo?.act}</Text> */}
           <Button
-            title="log out"
             onPress={() => {
               console.log(data, "data");
               Toast.fail("log out");
               signOut();
-              setUserStore((prev) => ({ ...prev, userInfo: { name: 3 } }));
+              setData({ act: "", psw: "" });
+              setUserStore((prev) => ({ ...prev, userInfo: {} }));
             }}
-          />
+          >
+            {t("Log out")}
+          </Button>
         </View>
       ) : (
         <View className="">
@@ -182,23 +190,26 @@ export default () => {
             <View
               style={{
                 flexDirection: "row",
-                justifyContent: "space-between",
+                justifyContent: "space-around",
                 width: "100%",
               }}
             >
               <Button
-                title="login"
+                type="primary"
                 onPress={() => {
                   loginHandler();
                   console.log(data, "data", config.apiDomain);
                 }}
-              />
+              >
+                {t("Login")}
+              </Button>
               <Button
-                title="register"
                 onPress={() => {
                   router.push("/pages/me/screens/register/");
                 }}
-              />
+              >
+                {t("Register")}
+              </Button>
             </View>
             <GoogleSigninButton
               className="flex-1"

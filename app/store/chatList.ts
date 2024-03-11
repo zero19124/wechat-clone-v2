@@ -39,12 +39,12 @@ export const useChatList = () => {
         if (res?.code === 200) {
           setChatListStoreV2({ ...chatListStore, chatListState: res.data });
           res.data.forEach((item) => {
-            console.log(
-              "chatListStore fetch",
-              item.latestMessage,
-              userId,
-              deviceModel
-            );
+            // console.log(
+            //   "chatListStore fetch",
+            //   item.latestMessage,
+            //   userId,
+            //   deviceModel
+            // );
           });
 
           return res.data;
