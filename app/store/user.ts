@@ -4,11 +4,16 @@ interface IUser {
   token?: string;
   refreshToken?: string;
   userInfo?: {
+    bio: string;
+    gender: "male" | "female";
     act: string;
+    wechatId: string;
+    mail: string;
     psw: string;
     _id: string;
     image: string;
     location: {
+      type:string,
       coordinates: number[];
     };
   };
