@@ -37,4 +37,23 @@ npx expo run:ios
 
 
  npx expo start --clear
+
  npx expo install --fix
+
+ <key>GIDClientID</key>
+  <string>475065706028-11egj47k01ej9juk2o892q5os4gehkbp.apps.googleusercontent.com</string>
+  <key>CFBundleURLTypes</key>
+  <array>
+    <dict>
+      <key>CFBundleURLSchemes</key>
+      <array>
+        <string>com.googleusercontent.apps.475065706028-11egj47k01ej9juk2o892q5os4gehkbp</string>
+    </array>
+  </dict>
+  </array>
+
+
+local.properties
+sdk.dir=/Users/Zhuanz/Library/Android/sdk
+
+
