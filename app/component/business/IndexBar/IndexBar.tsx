@@ -141,7 +141,7 @@ const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref) => {
         });
       }
     } catch (e) {
-      console.log('onScroll is error');
+      console.log("onScroll is error");
     }
   };
   // 这里用英文字母找到对应索引 然后用ref跳到对应的索引
@@ -153,7 +153,14 @@ const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref) => {
       // 列表标题的高度
       const rects = await getAnchorRects();
       const activeRect = rects[activeIndex];
-      scrollViewRef.current?.scrollTo({ y: activeRect.y + 1, animated: false });
+      try {
+        scrollViewRef.current?.scrollTo({
+          y: activeRect.y + 1,
+          animated: false,
+        });
+      } catch (e) {
+        console.log(e, "scrollViewRef.current?.scrollTo({ y: ");
+      }
     }
   };
 
@@ -229,7 +236,7 @@ const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref) => {
           console.log(jumpTo, "jumpTo", activeAnchor, "activeAnchor");
           Animated.timing(transYAmimation.y, {
             useNativeDriver: true,
-            duration: 20,
+            duration: 1,
             toValue: textPosition,
           }).start();
           // if (
