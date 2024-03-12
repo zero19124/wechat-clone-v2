@@ -2,6 +2,8 @@
 
 # dependencies
 node_modules/
+ios/
+android/
 
 # Expo
 .expo/
@@ -14,6 +16,7 @@ web-build/
 *.p8
 *.p12
 *.key
+*.ipa
 *.mobileprovision
 
 # Metro

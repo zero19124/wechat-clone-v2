@@ -140,7 +140,7 @@ const PrivateChatList = (props: {
                 />
               </TouchableOpacity>
               <MsgReceiver
-                userName={chatListStore.curConvo.isGroup ? item.userName : ""}
+                userName={chatListStore.curConvo?.isGroup ? item.userName : ""}
                 msgId={item.msgId}
                 msgSenderId={item.userId}
                 msgType={item.type}
