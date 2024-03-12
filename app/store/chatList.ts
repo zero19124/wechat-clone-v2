@@ -26,7 +26,7 @@ export const chatListState = atom<IConvo>({
 export const useChatList = () => {
   const deviceModel = DeviceInfo.getModel();
   const setChatListStoreV2 = (val: any) => {
-    // console.log(val, "setChatListStoreV2-log");
+    console.log(val, "setChatListStoreV2-log");
     setChatListStore(val);
   };
   const [chatListStore, setChatListStore] = useRecoilState(chatListState);

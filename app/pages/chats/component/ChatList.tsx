@@ -61,7 +61,7 @@ const ConvoList = () => {
   const userId = useMemo(() => userStore.userInfo?._id, [userStore]);
   const style = getStyle(themeColor);
   useEffect(() => {
-    // console.log(chatListStore.chatListState?.length, "chatListStore");
+    console.log(chatListStore.chatListState?.length, "chatListStore");
   }, [chatListStore]);
   const pusherContext = useContext(PusherContext);
   const deviceModel = DeviceInfo.getModel();
@@ -235,11 +235,13 @@ const ConvoList = () => {
   };
 
   return (
-    <FlatList
-      data={chatListStore.chatListState}
-      keyExtractor={(item) => item._id + ""}
-      renderItem={renderItem}
-    />
+    chatListStore.chatListState && (
+      <FlatList
+        data={chatListStore.chatListState}
+        keyExtractor={(item) => item._id + ""}
+        renderItem={renderItem}
+      />
+    )
   );
 };
 

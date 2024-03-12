@@ -32,9 +32,11 @@ import * as Location from "expo-location";
 import UserAvatar from "@/component/complex/UserAvatar";
 import { Popover } from "@/component/base/Popover";
 import { useTranslation } from "react-i18next";
+import { useChatList } from "app/store/chatList";
 
 const Me = () => {
   // return <PusherTester />;
+ 
   const avatars = [
     require("@/assets/bella.jpeg"),
     require("@/assets/me.png"),

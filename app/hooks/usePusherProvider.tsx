@@ -3,6 +3,7 @@ import { createContext, useEffect, useState } from "react";
 import io, { Socket } from "socket.io-client";
 import { useUser, userState } from "app/store/user";
 import config from "../config";
+import { useChatList } from "app/store/chatList";
 export const PusherContext = createContext(
   {} as {
     onlineUsers: { [key: string]: string };

@@ -20,6 +20,7 @@ import axios from "axios";
 import { useNavigation, useRouter } from "expo-router";
 import Button from "@/component/base/Button/Button";
 import { useTranslation } from "react-i18next";
+import { useChatList } from "app/store/chatList";
 
 const style = StyleSheet.create({
   inputStyle: {
@@ -36,6 +37,10 @@ export default () => {
   const [googleUser, setGoogleUser] = useState();
   const [isInProgress, setIsInProgress] = useState(false);
   const [data, setData] = useState({ psw: "1", act: "1" });
+  const { chatListStore, getChatList, setChatListStoreV2 } = useChatList();
+  const resetAfterOffline = () => {
+    setChatListStoreV2({ chatListStore: [], curConvo: {} });
+  };
   // deviceModel === "iPhone 15"
   //   ? { act: "12", psw: "12" }
   //   : { psw: "1", act: "1" }
@@ -167,6 +172,7 @@ export default () => {
               data.psw = "";
               setData(data);
               setUserStore((prev) => ({ ...prev, userInfo: {} }));
+              resetAfterOffline();
             }}
           >
             {t("Log out")}

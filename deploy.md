@@ -60,6 +60,8 @@ npx expo run:android
  <key>GIDClientID</key>
   <string>475065706028-11egj47k01ej9juk2o892q5os4gehkbp.apps.googleusercontent.com</string>
   
+
+  
   <key>CFBundleURLTypes</key>
   <array>
     <dict>
