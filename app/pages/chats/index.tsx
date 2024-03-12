@@ -35,6 +35,7 @@ import { useUser } from "app/store/user";
 import { useChatList } from "app/store/chatList";
 import Overlay from "@/component/base/Overlay";
 import Button from "@/component/base/Button/Button";
+import { PortalHost } from "@/component/business/Portal";
 const Chats = () => {
   const pusherContext = useContext(PusherContext);
   const socket = pusherContext.socket;
@@ -151,7 +152,59 @@ const Chats = () => {
         roomName.current
     );
     const resultByGroupName = convoName.data.data;
-    console.log(resultByGroupName._id, "convoName");
+    console.log(resultByGroupName, "convoName");
+    if (!resultByGroupName) {
+      setVisible(false);
+      roomName.current = "";
+      setTimeout(() => {
+        Toast.fail("no room called " + roomName.current);
+        roomName.current = "";
+      }, 300);
+    }
+    const setJoinRoom = () => {
+      setChatListStoreV2({
+        type: "joinRoomHandler",
+        chatListState: chatListStore.chatListState,
+        curConvo: {
+          convoId: resultByGroupName._id,
+          curReceiverInfo: { act: "group chat" },
+          convoMember: resultByGroupName.participants,
+          ...resultByGroupName,
+        },
+      });
+      setTimeout(() => {
+        navigate.navigate("pages/chats/msg-chats/index", {
+          chatType: "isGroup",
+        });
+      }, 300);
+      setVisible(false);
+      roomName.current = "";
+    };
+    if (
+      resultByGroupName?.participants?.find(
+        (item) => item._id === userStore.userInfo?._id
+      )
+    ) {
+      console.log(2222222, resultByGroupName);
+      setVisible(false);
+      roomName.current = "";
+      setChatListStoreV2({
+        type: "joinRoomHandler",
+        chatListState: chatListStore.chatListState,
+        curConvo: {
+          convoId: resultByGroupName._id,
+          curReceiverInfo: { act: "group chat" },
+          convoMember: resultByGroupName.participants,
+          ...resultByGroupName,
+        },
+      });
+      setTimeout(() => {
+        navigate.navigate("pages/chats/msg-chats/index", {
+          chatType: "isGroup",
+        });
+      }, 300);
+      return;
+    }
     axios
       .post(config.apiDomain + "/api/convo/updateConvoMemberById", {
         convoId: resultByGroupName._id,
@@ -159,26 +212,7 @@ const Chats = () => {
         type: "add",
       })
       .then(() => {
-        setChatListStoreV2({
-          type: "joinRoomHandler",
-          chatListState: chatListStore.chatListState,
-          curConvo: {
-            convoId: resultByGroupName._id,
-            curReceiverInfo: { act: "group chat" },
-            convoMember: resultByGroupName.participants,
-            ...resultByGroupName,
-          },
-        });
-        setTimeout(() => {
-          navigate.navigate("pages/chats/msg-chats/index", {
-            chatType: "isGroup",
-          });
-        }, 300);
-        setVisible(false);
-
-        roomName.current = "";
-
-        console.log("add-convo-123");
+        setJoinRoom();
       });
   };
   const newRoomHandle = async () => {
@@ -195,12 +229,20 @@ const Chats = () => {
         participants: [userStore.userInfo?._id],
       })
       .then((res) => {
+        if (res.data.code === 400) {
+          console.log(111111);
+          setVisible(false);
+          roomName.current = "";
+          setTimeout(() => {
+            Toast.fail(res.data.data);
+          }, 300);
+          return;
+        }
         const resultByGroupName = res.data.data;
         console.log(resultByGroupName, "convoName,newRoomHandle");
         // create new group chat
         setChatListStoreV2({
           type: "newRoomHandle",
-
           chatListState: chatListStore.chatListState,
           curConvo: {
             convoId: resultByGroupName._id,
