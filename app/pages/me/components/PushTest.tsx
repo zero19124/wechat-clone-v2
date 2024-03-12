@@ -3,6 +3,7 @@ import { Text, View, Button, Platform } from "react-native";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
+import { Audio } from "expo-av";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -11,7 +12,12 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
-
+Notifications.addNotificationReceivedListener((e) => {
+  console.log(23333, e);
+  new Audio.Sound().loadAsync(require("@/assets/ding-long.mp3"), {
+    shouldPlay: true,
+  });
+});
 // Can use this function below or use Expo's Push Notification Tool from: https://expo.dev/notifications
 async function sendPushNotification(expoPushToken) {
   const message = {
@@ -23,7 +29,7 @@ async function sendPushNotification(expoPushToken) {
   };
   console.log(message, "message");
   try {
-    await fetch("https://exp.host/--/api/v2/push/send", {
+    const res = await fetch("https://exp.host/--/api/v2/push/send", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -31,6 +37,11 @@ async function sendPushNotification(expoPushToken) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(message),
+    }).then((res) => res.json());
+    console.log(111, res.data);
+    // Audio.setAudioModeAsync({ allowsRecordingIOS: false });
+    new Audio.Sound().loadAsync(require("@/assets/ding-long.mp3"), {
+      shouldPlay: true,
     });
   } catch (e) {
     console.log(e, "eeee");

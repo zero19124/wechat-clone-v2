@@ -200,9 +200,6 @@ export default () => {
               <Button
                 type="primary"
                 onPress={() => {
-                  router.push("/pages/me/components/PushTest");
-                  
-                  return
                   loginHandler();
                   console.log(data, "data", config.apiDomain);
                 }}
@@ -211,6 +208,8 @@ export default () => {
               </Button>
               <Button
                 onPress={() => {
+                  router.push("/pages/me/components/PushTest");
+                  return;
                   router.push("/pages/me/screens/register/");
                 }}
               >

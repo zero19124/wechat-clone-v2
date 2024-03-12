@@ -45,6 +45,9 @@ import { uploadImages } from "@/hooks/useImagePicker";
 import Toast from "@/component/base/Toast";
 import Popup from "@/component/base/Popup";
 import UserAvatar from "@/component/complex/UserAvatar";
+import { Audio } from "expo-av";
+
+
 const Page = () => {
   const navigate = useNavigation();
   // 获取设备型号
@@ -218,6 +221,7 @@ const Page = () => {
           latestMessage,
         };
         setDataOut((pre) => [newMsg, ...pre]);
+       
       } catch (e) {
         console.error(e, "mgsList-error");
       }

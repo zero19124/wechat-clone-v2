@@ -8,6 +8,8 @@ import {
   StyleSheet,
 } from "react-native";
 import { getSize } from "utils";
+import { Audio } from "expo-av";
+
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useContext, useEffect, useId, useMemo, useState } from "react";
 import config from "@/config/index";
@@ -73,6 +75,14 @@ const ConvoList = () => {
       getChatList(userId);
     });
     getChatList(userId + "");
+    if (userId) {
+      console.log('33333333332222');
+    Audio.setAudioModeAsync({ allowsRecordingIOS: false })
+      const sound = new Audio.Sound();
+      sound.loadAsync(require("@/assets/ding-short.mp3"), {
+        shouldPlay: true,
+      });
+    }
   }, [pusherContext.socket, userId]);
   const renderItem = ({ item }: { item: any }) => {
     // console.log(item._id, item.isGroup, "ConvoList");

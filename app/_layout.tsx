@@ -229,8 +229,7 @@ const Layout = () => {
                        <Stack.Screen
                         name="pages/me/components/PushTest"
                         options={{
-                          title: "qrcode",
-                          presentation: "fullScreenModal",
+                          title: "PushTest",
                         }}
                       />
                       {/* register  */}
