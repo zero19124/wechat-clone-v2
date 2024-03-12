@@ -9,8 +9,11 @@ import { ThemeProvider } from "@/theme/useTheme";
 import { RecoilRoot } from "recoil";
 import { PusherProvider } from "./hooks/usePusherProvider";
 import { useUser } from "./store/user";
+import * as Location from "expo-location";
 import { Audio } from "expo-av";
-
+import * as MediaLibrary from "expo-media-library";
+import { BarCodeScanner } from "expo-barcode-scanner";
+import * as Notifications from "expo-notifications";
 import { MutableRefObject, useContext, useEffect } from "react";
 import { I18nextProvider, initReactI18next } from "react-i18next";
 import i18n from "i18next";
@@ -30,7 +33,6 @@ export const PortalRef =
 const Layout = () => {
   const navigate = useNavigation();
   // set the quickActionItem
-  setShortCut(navigate);
 
   console.log(" top-level component");
   if (__DEV__) {
@@ -76,11 +78,7 @@ const Layout = () => {
       },
     },
   };
-  // init audio
-  Audio.setAudioModeAsync({
-    allowsRecordingIOS: true,
-    playsInSilentModeIOS: true,
-  });
+
   // Initialize i18n
   i18n.use(initReactI18next).init({
     compatibilityJSON: "v3",
@@ -97,7 +95,29 @@ const Layout = () => {
     PortalRef.current = portal;
     return null;
   };
+
+  
+  const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
+  const initPermit = async () => {
+    await Notifications.getPermissionsAsync();
+    // map
+    await Location.requestForegroundPermissionsAsync();
+    // init audio
+    await Audio.requestPermissionsAsync();
+    // camera
+    await BarCodeScanner.requestPermissionsAsync();
+    Audio.setAudioModeAsync({
+      allowsRecordingIOS: true,
+      playsInSilentModeIOS: true,
+    });
+    // album
+
+    requestPermission();
+  };
   useEffect(() => {
+    setShortCut(navigate);
+    // init permit
+    initPermit();
     // navigate.navigate("pages/contacts/screens/send-friend-request/index");
   }, []);
   // return (

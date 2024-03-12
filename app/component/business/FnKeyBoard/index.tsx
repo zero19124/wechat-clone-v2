@@ -76,7 +76,7 @@ const FnKeyBoard = ({
     switch (name) {
       case FN_TYPE_MAPS.Transfer:
         console.log(FN_TYPE_MAPS.Transfer, "FN_TYPE_MAPS.Transfer:");
-        router.push("/component/business/individual-payment/index");
+        navigator.navigate("component/business/individual-payment/index");
         handlers?.({ type: FN_TYPE_MAPS.Transfer, val: "" });
         break;
       // case "ImgPicker":

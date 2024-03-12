@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { TouchableOpacity, View, Text } from "react-native";
+import { TouchableOpacity, View, Text, TextInput } from "react-native";
 import ChatIcon from "@/icons/tabs/chats.svg";
 import ChatActiveIcon from "@/icons/tabs/chats-active.svg";
 import CirclePlus from "@/icons/circle-plus.svg";
@@ -33,18 +33,17 @@ import axios from "axios";
 import config from "@/config/index";
 import { useUser } from "app/store/user";
 import { useChatList } from "app/store/chatList";
-const Chats = (prop) => {
-  // console.log(prop, "prop,proppropprop");
-  // return <AppText />;
+import Overlay from "@/component/base/Overlay";
+import Button from "@/component/base/Button/Button";
+const Chats = () => {
+  const pusherContext = useContext(PusherContext);
+  const socket = pusherContext.socket;
+  const [visible, setVisible] = useState(false);
+  const [isNewRoom, setIsNewRoom] = useState(false);
+  const roomName = useRef("");
   const navigate = useNavigation();
   const { userStore, setUserStore } = useUser();
-  useEffect(() => {
-    // console.log(userStore, "userStoreuserStoreuserStore");
-  }, [userStore]);
-  const temU = useMemo(() => {
-    return userStore;
-  }, [userStore]);
-  // const router = useRouter();
+
   const { t } = useTranslation();
   const { themeColor } = useTheme();
   const popover = useRef<PopoverInstance>(null);
@@ -111,11 +110,9 @@ const Chats = (prop) => {
       // router.push('/pages/chats/screens/code-scanner/')
       // router.push("pages/chats/screens/code-scanner/index");
       // navigate.navigate("pages/chats/screens/video-call-send/index");
-      router.push('/pages/chats/screens/video-call-send/')
+      router.push("/pages/chats/screens/video-call-send/");
     }
     if (option.text === "Scan") {
-      // router.push('/pages/chats/screens/code-scanner/')
-      // router.push("pages/chats/screens/code-scanner/index");
       navigate.navigate("pages/chats/screens/code-scanner/index");
     }
     if (option.text === "Add Contacts") {
@@ -125,46 +122,104 @@ const Chats = (prop) => {
       navigate.navigate("pages/chats/screens/money-qrcode/index");
     }
     if (option.text === "New Chat") {
-      axios
-        .post(config.apiDomain + "/api/convo/add-convo", {
-          type: "new-chat",
-          participants: [userStore.userInfo?._id],
-        })
-        .then(() => {
-          // create new group chat
-          navigate.navigate("pages/chats/msg-chats/index", {
-            chatType: "isGroup",
-          });
-          console.log("add-convo-123");
-        });
+      popover.current?.hide();
+      setIsNewRoom(true);
+      setTimeout(() => {
+        setVisible(true);
+      }, 600);
     }
     if (option.text === "Join Group Chat") {
-      setUserStore((pre) => {
-        console.log(pre, "pre");
-        return pre;
-      });
-      // if user already in the group then cant join
-      console.log(temU, "userStore.userInfo", userStore);
-      if (!userStore.userInfo?._id) {
-        Toast.info("userId is null");
-        return;
-      }
-      axios
-        .post(config.apiDomain + "/api/convo/updateConvoMemberById", {
-          convoId: "65edd5b3ebab61a59bf5d730" || chatListStore.curConvo,
-          attendId: userStore.userInfo?._id,
-        })
-        .then(() => {
+      setIsNewRoom(false);
+      popover.current?.hide();
+      setTimeout(() => {
+        setVisible(true);
+      }, 600);
+    }
+    Toast.info(option.text);
+  };
+  const joinRoomHandler = async () => {
+    console.log(roomName.current, "joinRoomHandler");
+
+    // if user already in the group then cant join
+    if (!userStore.userInfo?._id) {
+      Toast.info("userId is null");
+      return;
+    }
+    const convoName = await axios.get(
+      config.apiDomain +
+        "/api/convo/getConvoByGroupName?groupName=" +
+        roomName.current
+    );
+    const resultByGroupName = convoName.data.data;
+    console.log(resultByGroupName._id, "convoName");
+    axios
+      .post(config.apiDomain + "/api/convo/updateConvoMemberById", {
+        convoId: resultByGroupName._id,
+        attendId: userStore.userInfo?._id,
+        type: "add",
+      })
+      .then(() => {
+        setChatListStoreV2({
+          type: "joinRoomHandler",
+          chatListState: chatListStore.chatListState,
+          curConvo: {
+            convoId: resultByGroupName._id,
+            curReceiverInfo: { act: "group chat" },
+            convoMember: resultByGroupName.participants,
+            ...resultByGroupName,
+          },
+        });
+        setTimeout(() => {
           navigate.navigate("pages/chats/msg-chats/index", {
             chatType: "isGroup",
           });
-          console.log("add-convo-123");
-        });
-    }
-    popover.current?.hide();
-    Toast.info(option.text);
-  };
+        }, 300);
+        setVisible(false);
 
+        roomName.current = "";
+
+        console.log("add-convo-123");
+      });
+  };
+  const newRoomHandle = async () => {
+    console.log(roomName.current, "newRoomHandle");
+    // will emit socket
+    if (!userStore.userInfo?._id) {
+      Toast.info("userId is null");
+      return;
+    }
+    axios
+      .post(config.apiDomain + "/api/convo/add-convo", {
+        groupName: roomName.current,
+        type: "new-chat",
+        participants: [userStore.userInfo?._id],
+      })
+      .then((res) => {
+        const resultByGroupName = res.data.data;
+        console.log(resultByGroupName, "convoName,newRoomHandle");
+        // create new group chat
+        setChatListStoreV2({
+          type: "newRoomHandle",
+
+          chatListState: chatListStore.chatListState,
+          curConvo: {
+            convoId: resultByGroupName._id,
+            curReceiverInfo: { act: "group chat" },
+            convoMember: resultByGroupName.participants,
+            ...resultByGroupName,
+            convoMember: [userStore.userInfo],
+          },
+        });
+        setVisible(false);
+        roomName.current = "";
+        setTimeout(() => {
+          navigate.navigate("pages/chats/msg-chats/index", {
+            chatType: "isGroup",
+          });
+          console.log("newRoomHandle");
+        }, 300);
+      });
+  };
   useLayoutEffect(() => {
     navigate.setOptions({
       // headerShown: false,
@@ -227,8 +282,9 @@ const Chats = (prop) => {
     });
   }, [userStore]);
   console.log("chats");
-  const pusherContext = useContext(PusherContext);
-  const socket = pusherContext.socket;
+  useEffect(() => {
+    // console.log(userStore, "userStoreuserStoreuserStore");
+  }, [userStore]);
   useEffect(() => {
     console.log(Dialog.confirm, "Dialog");
     socket?.on(
@@ -237,10 +293,11 @@ const Chats = (prop) => {
         console.log("pre-call", preCallData);
         const { to, from } = preCallData;
         await Dialog.confirm({
+          overlay: true,
           cancelButtonText: "拒接",
           confirmButtonText: "接听",
-          title: "from" + preCallData?.from,
-          message: "to" + preCallData?.to,
+          title: "from：" + preCallData?.from,
+          message: "to：" + preCallData?.to,
         })
           .then(() => {
             navigate.navigate("pages/chats/screens/video-call-rec/index", {
@@ -273,22 +330,63 @@ const Chats = (prop) => {
 
     // navigate.navigate("pages/contacts/screens/send-friend-request/index");
   }, [socket]);
-  console.log(11111111);
+
   return (
-    <View style={{ backgroundColor: light.themeColor.white, flex: 1 }}>
-      {/* <Text>Chats</Text>
-      <Tooltip
-        isVisible={toolTipVisible}
-        content={<Text>Check this out!</Text>}
-        placement="top"
-        onClose={() => setToolTipVisible(false)}
-      >
-        <TouchableHighlight onPress={() => setToolTipVisible(true)}>
-          <Text>Press me</Text>
-        </TouchableHighlight>
-      </Tooltip> */}
-      <ConvoList />
-    </View>
+    <>
+      {visible && (
+        <Overlay
+          key={visible + ""}
+          visible={visible}
+          onBackdropPress={() => setVisible(false)}
+        >
+          <View
+            style={{
+              width: "90%",
+              backgroundColor: "#fff",
+              borderRadius: 4,
+              padding: 24,
+            }}
+          >
+            <Text style={{ textAlign: "center", marginHorizontal: 24 }}>
+              {isNewRoom
+                ? "Enter the RoomName and create new room"
+                : t("Enter the RoomName")}
+            </Text>
+            <TextInput
+              autoFocus
+              selectionColor={themeColor.primary}
+              style={{
+                paddingHorizontal: 8,
+                backgroundColor: themeColor.bg3,
+                borderRadius: 8,
+                height: 30,
+                margin: 12,
+              }}
+              onChangeText={(val: string) => {
+                console.log(val, "set");
+                roomName.current = val;
+              }}
+            />
+            <Button
+              key={roomName.current}
+              style={{ marginBottom: 24 }}
+              onPress={() => {
+                if (isNewRoom) {
+                  newRoomHandle();
+                  return;
+                }
+                joinRoomHandler();
+              }}
+            >
+              {isNewRoom ? t("Create a Room") : t("Join")}
+            </Button>
+          </View>
+        </Overlay>
+      )}
+      <View style={{ backgroundColor: light.themeColor.white, flex: 1 }}>
+        <ConvoList />
+      </View>
+    </>
   );
 };
 

@@ -39,7 +39,11 @@ export default () => {
   const [data, setData] = useState({ psw: "1", act: "1" });
   const { chatListStore, getChatList, setChatListStoreV2 } = useChatList();
   const resetAfterOffline = () => {
-    setChatListStoreV2({ chatListStore: [], curConvo: {} });
+    setChatListStoreV2({
+      chatListStore: [],
+      curConvo: {},
+      type: "resetAfterOffline",
+    });
   };
   // deviceModel === "iPhone 15"
   //   ? { act: "12", psw: "12" }

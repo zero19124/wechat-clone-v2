@@ -26,6 +26,8 @@ post pics or video
 like or comment
 who can see
 -People NearBy
+ online status
+ say hi
 -me
 wallet
 login

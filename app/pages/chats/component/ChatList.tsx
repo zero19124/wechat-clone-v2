@@ -4,15 +4,12 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Image,
   StyleSheet,
 } from "react-native";
 import { getSize } from "utils";
 import { Audio } from "expo-av";
-
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useContext, useEffect, useId, useMemo, useState } from "react";
-import config from "@/config/index";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { useUser } from "app/store/user";
 import { formatDateToString } from "@/utils/date";
 import { useChatList } from "app/store/chatList";
@@ -21,35 +18,7 @@ import DeviceInfo from "react-native-device-info";
 import { TThemeType, useTheme } from "@/theme/useTheme";
 import { goToMsgChat } from "@/hooks/useSameRouter";
 import UserAvatar from "@/component/complex/UserAvatar";
-// const data = [
-//   {
-//     id: 1,
-//     isSticky: false,
-//     avatar: "@/assets/avatar.png",
-//     userName: "Bella111",
-//     unReadCount: 1,
-//     latestMessage: "latestMessage",
-//     time: "00:00",
-//   },
-//   {
-//     id: 12,
-//     isSticky: false,
-//     avatar: "@/assets/avatar.png",
-//     userName: "3",
-//     unReadCount: 12,
-//     latestMessage: "latestMessage",
-//     time: "00:00",
-//   },
-//   {
-//     id: 13,
-//     isSticky: false,
-//     avatar: "@/assets/avatar.png",
-//     userName: "Bella",
-//     unReadCount: 0,
-//     latestMessage: "latestMessage",
-//     time: "12:00",
-//   },
-// ];
+
 const ConvoList = () => {
   const navigate = useNavigation();
   const { userStore } = useUser();
@@ -160,7 +129,7 @@ const ConvoList = () => {
               item.isGroup
                 ? require("@/assets/group-chat.jpg")
                 : {
-                    uri: chatUsers.image,
+                    uri: chatUsers?.image,
                   }
             }
             style={style.itemContainerAvatar}

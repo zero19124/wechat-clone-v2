@@ -47,18 +47,17 @@ import Popup from "@/component/base/Popup";
 import UserAvatar from "@/component/complex/UserAvatar";
 import { Audio } from "expo-av";
 
-
 const Page = () => {
   const navigate = useNavigation();
   // 获取设备型号
   const deviceModel = DeviceInfo.getModel();
   const { userInfo } = useUser().userStore;
   const { getChatList, chatListStore } = useChatList();
-  const params = useLocalSearchParams<{ convoId: string; isGroup: string }>();
+  const params = useLocalSearchParams<{ convoId: string; chatType: string }>();
   const convoId = useMemo(() => {
-    // console.log(params, "params-chat");
+    console.log("chatListStore.curConvo-msg-chat", chatListStore.curConvo);
     return chatListStore.curConvo?.convoId;
-  }, [params]);
+  }, [chatListStore.curConvo]);
   const { t } = useTranslation();
   const curReceiverInfo = useMemo(() => {
     return chatListStore.curConvo?.curReceiverInfo;
@@ -66,9 +65,13 @@ const Page = () => {
   const [dataOut, setDataOut] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const title = useMemo(() => {
-    if (params.isGroup === "true") {
+    if (params.chatType === "isGroup") {
+      const groupName = chatListStore.curConvo?.groupName;
       return t(
-        "Group chat" + "(" + chatListStore.curConvo?.convoMember?.length + ")"
+        (groupName ? groupName : "Group chat") +
+          "(" +
+          chatListStore.curConvo?.convoMember?.length +
+          ")"
       );
     }
     return curReceiverInfo?.act;
@@ -212,16 +215,20 @@ const Page = () => {
           return;
         }
         // 插入信息列表
-        const newMsg = {
-          userId: data.user._id,
-          userName: data.user.act,
-          msgId: data._id,
-          type: data.type,
-          image: data.user.image,
-          latestMessage,
-        };
+        let newMsg = {};
+        try {
+          newMsg = {
+            userId: data.user._id,
+            userName: data.user.act,
+            msgId: data?._id,
+            type: data.type,
+            image: data.user.image,
+            latestMessage,
+          };
+        } catch (e) {
+          console.log(e, "newMsg destruct fail");
+        }
         setDataOut((pre) => [newMsg, ...pre]);
-       
       } catch (e) {
         console.error(e, "mgsList-error");
       }
@@ -298,7 +305,7 @@ const Page = () => {
             "realTimeLocation+" + "sharing real time location+" + userInfo?._id,
           userId: userInfo?._id + "",
           type: "realTimeLocation",
-          convoId: chatListStore.curConvo?.convoId + "",
+          convoId: convoId + "",
           doneHandler: (data: any) => {
             console.log(data, "latest data");
             navigate.navigate(
@@ -343,7 +350,7 @@ const Page = () => {
             backgroundColor: "white",
           }}
         >
-          {chatListStore.curConvo?.convoMember.map((user) => {
+          {chatListStore.curConvo?.convoMember?.map?.((user) => {
             return (
               <View className="items-center flex-row my-1" key={user._id}>
                 <UserAvatar source={{ uri: user.image }} />

@@ -103,20 +103,15 @@ const MsgWrapper = ({
   // transId+amount+userid
   const getContent = () => {
     // console.log(msgType, "msgType");
-    if (msgType === "joined-group-chat") {
-      return (
-        <Text style={{ padding: 12, justifyContent: "center" }}>
-          {t("recalled a message")}
-        </Text>
-      );
-    }
-    if (msgType === "recallMsg") {
-      return (
-        <Text style={{ padding: 12, justifyContent: "center" }}>
-          {t("recalled a message")}
-        </Text>
-      );
-    }
+ 
+    // move to chatlisht component 
+    // if (msgType === "recallMsg") {
+    //   return (
+    //     <Text style={{ padding: 12, justifyContent: "center" }}>
+    //       {t("recalled a message")}
+    //     </Text>
+    //   );
+    // }
     if (msgType === "location") {
       return <LocationCard popover={popover} text={text} />;
     }
@@ -172,7 +167,7 @@ const MsgWrapper = ({
       );
     }
     if (msgType === "img") {
-      console.log(text, "text-img");
+      // console.log(text, "text-img");
       return <ImageCard popover={popover} text={text} />;
     }
     return (
@@ -232,6 +227,7 @@ const MsgWrapper = ({
           })}
         </View>
       </Popover>
+      {/* show only in group chat  */}
       {userName && (
         <Text
           style={{ color: themeColor.text3, marginVertical: 4, marginLeft: 4 }}

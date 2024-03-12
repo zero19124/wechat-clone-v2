@@ -13,6 +13,7 @@ import Dialog from "@/component/base/Dialog";
 import axios from "axios";
 import config from "@/config/index";
 import { useChatList } from "app/store/chatList";
+import DeviceInfo from "react-native-device-info";
 const PrivateChatList = (props: {
   dataOut: any[];
   flatListRef: React.MutableRefObject<FlatList<any> | undefined>;
@@ -21,17 +22,22 @@ const PrivateChatList = (props: {
   const { dataOut, flatListRef } = props;
   const { userInfo } = useUser().userStore;
   const { themeColor } = useTheme();
-  const { chatListStore, getChatList, setChatListStoreV2 } = useChatList();
+  const { chatListStore } = useChatList();
+  const deviceModel = DeviceInfo.getModel();
 
-  // console.log(dataOut, "dataOut-userInfo");
+  if (deviceModel === "iPhone 15") {
+    console.log(dataOut, "dataOut-userInfo");
+  }
+
   const renderItem = ({ item }: { item: (typeof data)[0] }) => {
     // only me hava
     // console.log(item.image, "item.image----");
-
+    const isJoinedGroupChat = item.type === "joinedGroupChat";
     if (item.type === "recalledMsg") {
       return <></>;
     }
-    if (item.type === "recallMsg") {
+
+    if (item.type === "recallMsg" || isJoinedGroupChat) {
       return (
         <View
           style={{
@@ -42,7 +48,9 @@ const PrivateChatList = (props: {
         >
           <View
             style={{
-              backgroundColor: themeColor.overlay1,
+              backgroundColor: isJoinedGroupChat
+                ? themeColor.bg1
+                : themeColor.overlay1,
               padding: 12,
               borderRadius: 2,
               paddingVertical: 4,
@@ -54,7 +62,9 @@ const PrivateChatList = (props: {
                 textAlign: "center",
               }}
             >
-              {t("you recalled a message")}
+              {isJoinedGroupChat
+                ? item.latestMessage
+                : t("you recalled a message")}
             </Text>
           </View>
         </View>
@@ -151,7 +161,7 @@ const PrivateChatList = (props: {
         </View>
       );
     };
-    return <ItemWrapper />;
+    return <ItemWrapper key={item.msgId} />;
   };
   return (
     <FlatList

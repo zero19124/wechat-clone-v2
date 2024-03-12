@@ -26,7 +26,7 @@ export const chatListState = atom<IConvo>({
 export const useChatList = () => {
   const deviceModel = DeviceInfo.getModel();
   const setChatListStoreV2 = (val: any) => {
-    console.log(val, "setChatListStoreV2-log");
+    console.log(val?.curConvo, "setChatListStoreV2-log", val.type);
     setChatListStore(val);
   };
   const [chatListStore, setChatListStore] = useRecoilState(chatListState);
@@ -37,16 +37,16 @@ export const useChatList = () => {
       .then((res) => res.json())
       .then((res) => {
         if (res?.code === 200) {
-          setChatListStoreV2({ ...chatListStore, chatListState: res.data });
-          res.data.forEach((item) => {
-            // console.log(
-            //   "chatListStore fetch",
-            //   item.latestMessage,
-            //   userId,
-            //   deviceModel
-            // );
-          });
+          // console.log(chatListStore, "getConvoByUserId-chatListStore");
+          setChatListStore((pre) => {
+            // console.log(pre, "getConvoByUserId-chatListStore-pre");
 
+            return {
+              ...pre,
+              chatListState: res.data,
+              type: "getConvoByUserId",
+            };
+          });
           return res.data;
         } else {
           console.log(res?.msg);

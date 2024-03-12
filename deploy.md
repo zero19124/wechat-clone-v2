@@ -15,8 +15,8 @@ eas build --platform ios
 eas build --platform android
 
 eas local
-eas build --profile development --platform ios --local
-eas build --profile development --platform android --local
+npx eas build --profile development --platform ios --local
+npx eas build --profile development --platform android --local
 eas build --platform ios --local
 eas build --platform android --local
 
@@ -61,7 +61,7 @@ npx expo run:android
   <string>475065706028-11egj47k01ej9juk2o892q5os4gehkbp.apps.googleusercontent.com</string>
   
 
-  
+
   <key>CFBundleURLTypes</key>
   <array>
     <dict>
