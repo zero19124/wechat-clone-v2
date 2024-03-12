@@ -14,6 +14,7 @@ import axios from "axios";
 import config from "@/config/index";
 import { useChatList } from "app/store/chatList";
 import DeviceInfo from "react-native-device-info";
+import modelLog from "@/utils/modelLog";
 const PrivateChatList = (props: {
   dataOut: any[];
   flatListRef: React.MutableRefObject<FlatList<any> | undefined>;
@@ -24,10 +25,9 @@ const PrivateChatList = (props: {
   const { themeColor } = useTheme();
   const { chatListStore } = useChatList();
   const deviceModel = DeviceInfo.getModel();
-
-  if (deviceModel === "iPhone 15") {
-    console.log(dataOut, "dataOut-userInfo");
-  }
+  modelLog("iPhone 15", () => {
+    console.log(dataOut, "dataOut");
+  });
 
   const renderItem = ({ item }: { item: (typeof data)[0] }) => {
     // only me hava

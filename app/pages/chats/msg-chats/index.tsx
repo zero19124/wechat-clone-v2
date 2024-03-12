@@ -46,6 +46,7 @@ import Toast from "@/component/base/Toast";
 import Popup from "@/component/base/Popup";
 import UserAvatar from "@/component/complex/UserAvatar";
 import { Audio } from "expo-av";
+import modelLog from "@/utils/modelLog";
 
 const Page = () => {
   const navigate = useNavigation();
@@ -198,8 +199,9 @@ const Page = () => {
     pusherContext.socket?.on("messages", (messagesData) => {
       const data = messagesData.newMsgData;
       const type = messagesData.type;
-      // console.log(data, "messagesData-context");
-
+      modelLog("iPhone 15", () => {
+        console.log(data, "messagesData-context");
+      });
       try {
         const latestMessage = data.msg;
         //     // 这里会重新调对话窗口列表
@@ -218,15 +220,20 @@ const Page = () => {
         let newMsg = {};
         try {
           newMsg = {
-            userId: data.user._id,
-            userName: data.user.act,
+            userId: data?.user?._id || "undefined-msg-chat",
+            userName: data?.user?.act || "undefined-msg-chat",
             msgId: data?._id,
             type: data.type,
-            image: data.user.image,
+            image: data?.user?.image || "undefined-msg-chat",
             latestMessage,
+            ...data,
           };
         } catch (e) {
-          console.log(e, "newMsg destruct fail");
+          console.log(e, "newMsg destruct fail", data);
+        }
+        if (!Object.keys(newMsg).length) {
+          console.log("newMsg is null!!!");
+          return;
         }
         setDataOut((pre) => [newMsg, ...pre]);
       } catch (e) {
