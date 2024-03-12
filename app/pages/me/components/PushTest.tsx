@@ -12,8 +12,9 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
-Notifications.addNotificationReceivedListener((e) => {
+Notifications.addNotificationReceivedListener(async (e) => {
   console.log(23333, e);
+
   new Audio.Sound().loadAsync(require("@/assets/ding-long.mp3"), {
     shouldPlay: true,
   });
@@ -39,10 +40,6 @@ async function sendPushNotification(expoPushToken) {
       body: JSON.stringify(message),
     }).then((res) => res.json());
     console.log(111, res.data);
-    // Audio.setAudioModeAsync({ allowsRecordingIOS: false });
-    new Audio.Sound().loadAsync(require("@/assets/ding-long.mp3"), {
-      shouldPlay: true,
-    });
   } catch (e) {
     console.log(e, "eeee");
   }

@@ -56,7 +56,7 @@ const Page = () => {
   const { getChatList, chatListStore } = useChatList();
   const params = useLocalSearchParams<{ convoId: string; isGroup: string }>();
   const convoId = useMemo(() => {
-    console.log(params, "params-chat");
+    // console.log(params, "params-chat");
     return chatListStore.curConvo?.convoId;
   }, [params]);
   const { t } = useTranslation();
@@ -195,7 +195,7 @@ const Page = () => {
     pusherContext.socket?.on("messages", (messagesData) => {
       const data = messagesData.newMsgData;
       const type = messagesData.type;
-      console.log(data, "messagesData-context");
+      // console.log(data, "messagesData-context");
 
       try {
         const latestMessage = data.msg;

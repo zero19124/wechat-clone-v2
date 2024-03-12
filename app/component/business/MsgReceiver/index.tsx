@@ -102,7 +102,7 @@ const MsgWrapper = ({
   };
   // transId+amount+userid
   const getContent = () => {
-    console.log(msgType, "msgType");
+    // console.log(msgType, "msgType");
     if (msgType === "joined-group-chat") {
       return (
         <Text style={{ padding: 12, justifyContent: "center" }}>

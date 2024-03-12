@@ -23,7 +23,7 @@ const VoiceCard = ({ popover, text }) => {
       if (status.isLoaded) {
         const tempDurationMillis = status.durationMillis; // 音频总时长，以毫秒为单位
         setDurationMillis(Number(tempDurationMillis) / 1000);
-        console.log(`音频时长：${durationMillis} 毫秒`);
+        // console.log(`音频时长：${durationMillis} 毫秒`);
       } else {
         console.log("音频文件未成功加载");
       }

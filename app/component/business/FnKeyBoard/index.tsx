@@ -67,7 +67,7 @@ const FnKeyBoard = ({
   heightValue: number;
   handlers: (data: { type: string; val?: any }) => void;
 }) => {
-  console.log("FnKeyBoard", heightValue);
+  // console.log("FnKeyBoard", heightValue);
   const { themeColor } = useTheme();
   const router = useRouter();
   const navigator = useNavigation();
@@ -120,7 +120,7 @@ const FnKeyBoard = ({
   const [showIndicator, setShowIndicator] = useState(false);
   const onLayoutChange = (event: any) => {
     const { height } = event.nativeEvent.layout;
-    console.log(height, "height");
+    // console.log(height, "height");
     if (height > 200) {
       setShowIndicator(true);
       return;

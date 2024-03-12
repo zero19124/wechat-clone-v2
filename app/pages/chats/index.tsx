@@ -34,12 +34,12 @@ import config from "@/config/index";
 import { useUser } from "app/store/user";
 import { useChatList } from "app/store/chatList";
 const Chats = (prop) => {
-  console.log(prop, "prop,proppropprop");
+  // console.log(prop, "prop,proppropprop");
   // return <AppText />;
   const navigate = useNavigation();
   const { userStore, setUserStore } = useUser();
   useEffect(() => {
-    console.log(userStore, "userStoreuserStoreuserStore");
+    // console.log(userStore, "userStoreuserStoreuserStore");
   }, [userStore]);
   const temU = useMemo(() => {
     return userStore;
@@ -273,6 +273,7 @@ const Chats = (prop) => {
 
     // navigate.navigate("pages/contacts/screens/send-friend-request/index");
   }, [socket]);
+  console.log(11111111);
   return (
     <View style={{ backgroundColor: light.themeColor.white, flex: 1 }}>
       {/* <Text>Chats</Text>

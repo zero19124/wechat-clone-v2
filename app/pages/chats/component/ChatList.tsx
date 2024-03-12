@@ -53,35 +53,49 @@ import UserAvatar from "@/component/complex/UserAvatar";
 const ConvoList = () => {
   const navigate = useNavigation();
   const { userStore } = useUser();
+  const { onlineUsers } = useContext(PusherContext);
+
   const { themeColor } = useTheme();
+  const [init, setInit] = useState(false);
   const { chatListStore, getChatList, setChatListStoreV2 } = useChatList();
   const userId = useMemo(() => userStore.userInfo?._id, [userStore]);
   const style = getStyle(themeColor);
   useEffect(() => {
     // console.log(chatListStore.chatListState?.length, "chatListStore");
   }, [chatListStore]);
-
   const pusherContext = useContext(PusherContext);
   const deviceModel = DeviceInfo.getModel();
   useFocusEffect(() => {
     if (!userId) return;
     // getChatList(userId);
   });
+  const playSound = async () => {
+    // if (!init) return;
+    console.log("playSound");
+    Audio.setAudioModeAsync({ allowsRecordingIOS: false });
+    const sound = new Audio.Sound();
+    sound.loadAsync(require("@/assets/ding-short.mp3"), {
+      shouldPlay: true,
+    });
+  };
+  useEffect(() => {
+    console.log(onlineUsers, "onlineUsers");
+    console.log(onlineUsers[userStore.userInfo?._id + ""]);
+  }, [onlineUsers]);
   useEffect(() => {
     // 有新消息就更新会话列表
     pusherContext.socket?.on("convo:update", (data) => {
-      console.log(data, "getChatList-convo:update", userId);
+      console.log("convo:update");
+      // console.log(data, "getChatList-convo:update", userId);
       if (!userId) return;
       getChatList(userId);
+      playSound();
     });
     getChatList(userId + "");
-    if (userId) {
-      console.log('33333333332222');
-    Audio.setAudioModeAsync({ allowsRecordingIOS: false })
-      const sound = new Audio.Sound();
-      sound.loadAsync(require("@/assets/ding-short.mp3"), {
-        shouldPlay: true,
-      });
+    // if (userId) {
+    // }
+    if (pusherContext.socket && userId) {
+      setInit(true);
     }
   }, [pusherContext.socket, userId]);
   const renderItem = ({ item }: { item: any }) => {
@@ -106,13 +120,17 @@ const ConvoList = () => {
         children?: any;
       }) => {
         const { width, height, children } = props;
-
+        const isOnline = item.participants
+          ?.filter((item) => item._id !== userStore.userInfo?._id)
+          .find((item) => {
+            return onlineUsers[item?._id + ""];
+          });
         return (
           <View
             style={{
               width,
               height,
-              backgroundColor: "red",
+              backgroundColor: isOnline ? themeColor.green5 : themeColor.text3,
               borderRadius: width,
               position: "absolute",
               top: -(width / 3),
@@ -133,6 +151,7 @@ const ConvoList = () => {
           </View>
         );
       };
+
       return (
         <View>
           <UserAvatar
@@ -214,6 +233,7 @@ const ConvoList = () => {
       </TouchableOpacity>
     );
   };
+
   return (
     <FlatList
       data={chatListStore.chatListState}

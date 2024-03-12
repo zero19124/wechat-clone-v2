@@ -9,6 +9,8 @@ import { ThemeProvider } from "@/theme/useTheme";
 import { RecoilRoot } from "recoil";
 import { PusherProvider } from "./hooks/usePusherProvider";
 import { useUser } from "./store/user";
+import { Audio } from "expo-av";
+
 import { MutableRefObject, useContext, useEffect } from "react";
 import { I18nextProvider, initReactI18next } from "react-i18next";
 import i18n from "i18next";
@@ -74,7 +76,11 @@ const Layout = () => {
       },
     },
   };
-
+  // init audio
+  Audio.setAudioModeAsync({
+    allowsRecordingIOS: true,
+    playsInSilentModeIOS: true,
+  });
   // Initialize i18n
   i18n.use(initReactI18next).init({
     compatibilityJSON: "v3",
@@ -226,7 +232,7 @@ const Layout = () => {
                           presentation: "fullScreenModal",
                         }}
                       />
-                       <Stack.Screen
+                      <Stack.Screen
                         name="pages/me/components/PushTest"
                         options={{
                           title: "PushTest",

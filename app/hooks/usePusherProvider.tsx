@@ -5,14 +5,14 @@ import { useUser, userState } from "app/store/user";
 import config from "../config";
 export const PusherContext = createContext(
   {} as {
-    onlineUsers: any[];
+    onlineUsers: { [key: string]: string };
     socket: Socket | undefined;
   }
 );
 
 export const PusherProvider = ({ children }) => {
   const { userStore } = useUser();
-  const [onlineUsers, setOnlineUsers] = useState([]);
+  const [onlineUsers, setOnlineUsers] = useState({});
   const [socket, setSocket] = useState<Socket>();
 
   useEffect(() => {
@@ -26,8 +26,13 @@ export const PusherProvider = ({ children }) => {
         userId,
       },
     });
+    socketNew?.on("getOfflineUsers", (users) => {
+      console.log("getOfflineUsers-socketNew", users);
+      setOnlineUsers(users);
+    });
     socketNew?.on("getOnlineUsers", (users) => {
-      console.log("getOnlineUsers", users);
+      console.log("getOnlineUsers-socketNew", users);
+      setOnlineUsers(users);
       // setOnlineUsers(users);
     });
     // 每一个用户订阅一个频道 userid
@@ -39,6 +44,9 @@ export const PusherProvider = ({ children }) => {
     setSocket(socketNew);
 
     return () => {
+      if (!userStore?.userInfo?._id) {
+        socketNew?.disconnect();
+      }
       socketNew?.disconnect();
     };
   }, [userStore]);
