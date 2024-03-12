@@ -47,5 +47,3 @@ issue     >  handleBarCodeScanned this fn called after useeffect called
 go to github read the changes for the version.
 https://github.com/react-native-google-signin/google-signin/releases/tag/v11.0.0
 
-# voice play only trough earpiece
-https://github.com/expo/expo/issues/9915

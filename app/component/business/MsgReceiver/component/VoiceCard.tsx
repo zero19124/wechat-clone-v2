@@ -6,17 +6,14 @@ import { useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const VoiceCard = ({ popover, text }) => {
+  const sound = new Audio.Sound();
   const [durationMillis, setDurationMillis] = useState(0);
   const { t } = useTranslation();
-  const getStatus = async () => {
-    console.log("Loading Sound");
-    Audio.setAudioModeAsync({ allowsRecordingIOS: false })
-    const { sound } = await Audio.Sound.createAsync({
-      uri: text,
-    });
-    // await sound.unloadAsync();
+
+  const getSta = async () => {
+    await sound.unloadAsync();
     // 加载音频文件，这里假设你有一个有效的音频文件URI
-    // await sound.loadAsync({ uri: text + "" });
+    await sound.loadAsync({ uri: text + "" });
     // 获取音频状态
     sound.getStatusAsync().then((status) => {
       // console.log(status, "status11");
@@ -28,9 +25,8 @@ const VoiceCard = ({ popover, text }) => {
         console.log("音频文件未成功加载");
       }
     });
-    return sound;
   };
-  getStatus();
+  getSta();
   return (
     <TouchableOpacity
       style={{
@@ -50,8 +46,9 @@ const VoiceCard = ({ popover, text }) => {
         try {
           console.log(text, "tempUri");
           // 卸载之前的音频，以防重复播放
+
           // 播放音频
-          await (await getStatus()).playAsync();
+          await sound.playAsync();
         } catch (error) {
           // 错误处理
           console.error("播放音频时发生错误", error);

@@ -235,10 +235,8 @@ const AudioRecorder = ({ onVoiceEnd }) => {
     });
   };
 
-  const playSound = async () => {
-    Audio.setAudioModeAsync({ allowsRecordingIOS: false });
+  const playSound = useCallback(async () => {
     const sound = new Audio.Sound();
-
     try {
       console.log(tempUri, "tempUri");
       // 卸载之前的音频，以防重复播放
@@ -255,7 +253,7 @@ const AudioRecorder = ({ onVoiceEnd }) => {
       // 错误处理
       console.error("播放音频时发生错误", error);
     }
-  };
+  }, [tempUri]);
   return (
     <View style={{ flex: 1 }}>
       <View {...panResponderRef?.panHandlers}>
@@ -298,7 +296,7 @@ const AudioRecorder = ({ onVoiceEnd }) => {
                         type="primary"
                         style={{ marginBottom: 12 }}
                         onPress={() => {
-                          console.log(tempUri + "播放录音");
+                          console.log(tempUri);
                           playSound();
 
                           return;

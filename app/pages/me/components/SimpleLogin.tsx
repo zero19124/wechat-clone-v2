@@ -113,7 +113,7 @@ export default () => {
     // } else {
     //   setData({ psw: "12", act: "12" });
     // }
-    console.log(data, "data-login");
+    console.log(data, "data");
     fetch(config.apiDomain + "/api/user/register", {
       method: "POST",
       headers: {
