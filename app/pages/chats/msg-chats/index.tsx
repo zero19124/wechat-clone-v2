@@ -272,7 +272,7 @@ const Page = () => {
       name: t("Voice Call2"),
       callback: () => {
         console.log("Voice");
-      router.push('pages/chats/screens/video-call-send')
+        router.push("pages/chats/screens/video-call-send");
         // navigate.navigate("pages/chats/screens/video-call-send/index");
       },
     },
@@ -341,7 +341,7 @@ const Page = () => {
         >
           {chatListStore.curConvo?.convoMember.map((user) => {
             return (
-              <View className="items-center flex-row my-1">
+              <View className="items-center flex-row my-1" key={user._id}>
                 <UserAvatar source={{ uri: user.image }} />
                 <Text style={{ marginLeft: 12 }}>{user.act}</Text>
               </View>

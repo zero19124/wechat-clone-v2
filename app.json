@@ -13,10 +13,10 @@
     "scheme": "your-app-scheme",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/bella.jpeg",
+    "icon": "./assets/bella.png",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/bella.jpeg",
+      "image": "./assets/bella.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
