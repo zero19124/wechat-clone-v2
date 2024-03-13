@@ -21,16 +21,10 @@ import {
 } from "@/component/complex/CommonNavigateTitle";
 import { useTheme } from "@/theme/useTheme";
 
-interface FormValue {
-  username: string;
-  password: string;
-  gender: string;
-  avatar: string | null;
-  bio: string;
-}
 const defaultValues = {
-  username: "",
+  account: "",
   password: "",
+  nickname: "",
   gender: "male",
   bio: "",
   avatar: "",
@@ -57,9 +51,9 @@ const RegisterScreen: React.FC = () => {
   }
 
   const pickImage = async () => {
-    if (!permissionResponse?.granted) {
-      alert("permission is not granted");
-    }
+    // if (!permissionResponse?.granted) {
+    //   alert("permission is not granted");
+    // }
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -81,7 +75,7 @@ const RegisterScreen: React.FC = () => {
     const uploadedphotos = await uploadImages([
       {
         uri: data.avatar,
-        name: `user_avatar_${data.username}` + ".jpg",
+        name: `user_avatar_${data.account}` + ".jpg",
         type: "image",
       },
     ]);
@@ -89,9 +83,10 @@ const RegisterScreen: React.FC = () => {
     const image = uploadedphotos[0];
     await axios
       .post(config.apiDomain + "/api/user/register", {
-        act: data.username,
+        act: data.account,
         psw: data.password,
         gender: data.gender,
+        nickname: data.nickname,
         image,
         bio: data.bio,
         email: data.email,
@@ -104,6 +99,7 @@ const RegisterScreen: React.FC = () => {
           return;
         }
         Toast.success(t("register successfully"));
+        
         setTimeout(() => {
           router.back();
         }, 500);
@@ -112,7 +108,6 @@ const RegisterScreen: React.FC = () => {
   const { themeColor } = useTheme();
   const navigation = useNavigation();
   const { t } = useTranslation();
-  const formRef = useRef<FormInstance<FormValue>>(null);
   console.log(errors, "errors");
   useLayoutEffect(() => {
     const navigatorProps = useCommonNavigateProps({
@@ -156,7 +151,27 @@ const RegisterScreen: React.FC = () => {
         control={control}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
-            placeholder="username"
+            placeholder="nickname"
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+            style={{
+              width: "80%",
+              borderWidth: 1,
+              borderRadius: 8,
+              padding: 10,
+              marginBottom: 10,
+            }}
+          />
+        )}
+        name="nickname"
+        defaultValue=""
+      />
+      <Controller
+        control={control}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            placeholder="account"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
@@ -168,14 +183,14 @@ const RegisterScreen: React.FC = () => {
             }}
           />
         )}
-        name="username"
+        name="account"
         rules={{
-          required: "username is required",
+          required: "account is required",
         }}
         defaultValue=""
       />
-      {errors && errors.username && (
-        <Text style={{ color: "red" }}>{errors.username.message}</Text>
+      {errors && errors.account && (
+        <Text style={{ color: "red" }}>{errors.account.message}</Text>
       )}
       <Controller
         control={control}

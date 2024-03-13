@@ -57,7 +57,7 @@ const Wallet = () => {
       })
       .then((res) => {
         console.log(res, "res");
-        setWallet(res.data);
+        setWallet(res.data || { balance: 0, miniFund: 0 });
       });
     console.log(i18n.language);
   }, []);
@@ -66,7 +66,7 @@ const Wallet = () => {
       if (text === "Money") {
         return null;
       }
-      return wallet.balance !== -1 ? (
+      return wallet?.balance !== -1 ? (
         <Text
           style={{
             width: 100,
@@ -80,7 +80,10 @@ const Wallet = () => {
           ¥ {amount}
         </Text>
       ) : (
-        <Loading size={16} style={{ position: "absolute", bottom: getSize(-20) }} />
+        <Loading
+          size={16}
+          style={{ position: "absolute", bottom: getSize(-20) }}
+        />
       );
     };
     return (

@@ -279,12 +279,12 @@ const InputKeyboard = (props) => {
                 return res.data;
               });
             console.log(userWallet, "userWallet", amount);
-            if (amount > userWallet.balance) {
+            if (amount > userWallet?.balance) {
               Toast.info(
                 t("insufficient balance : ") +
                   t("u have") +
                   " " +
-                  userWallet.balance
+                  userWallet?.balance
               );
               return;
             }

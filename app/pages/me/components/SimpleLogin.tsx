@@ -218,8 +218,8 @@ export default () => {
               </Button>
               <Button
                 onPress={() => {
-                  router.push("/pages/me/components/PushTest");
-                  return;
+                  // router.push("/pages/me/components/PushTest");
+                  // return;
                   router.push("/pages/me/screens/register/");
                 }}
               >

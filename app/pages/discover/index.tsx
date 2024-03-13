@@ -30,6 +30,10 @@ const Discover = () => {
     {
       text: "Scan",
       url: require("@/icons/discover/scan-v2.jpeg"),
+      onPressHandler: () => {
+        navigator.navigate("pages/chats/screens/code-scanner/index");
+
+      },
     },
     {
       text: "Shake",

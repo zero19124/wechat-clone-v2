@@ -79,7 +79,7 @@ const Page = () => {
   }, [params, curReceiverInfo]);
   useLayoutEffect(() => {
     navigate.setOptions({
-      // headerShown: false,
+      headerShown: true,
       headerShadowVisible: false,
       headerRight: () => <ThreeDot />,
       headerLeftContainerStyle: { paddingLeft: 12 },
@@ -108,31 +108,36 @@ const Page = () => {
         );
       },
       headerTitleAlign: "center",
-      headerLeft: () => (
-        <View>
-          <TouchableOpacity
-            style={{ flexDirection: "row", alignItems: "center" }}
-            onPress={() => {
-              router.back();
-            }}
-          >
-            <GoBack width={24} height={24} />
-            <View
-              style={{
-                marginLeft: 4,
-                backgroundColor: themeColor.text2,
-                width: 22,
-                height: 22,
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 22,
+      headerLeft: () => {
+        if (Platform.OS === "android") {
+          return null;
+        }
+        return (
+          <View>
+            <TouchableOpacity
+              style={{ flexDirection: "row", alignItems: "center" }}
+              onPress={() => {
+                router.back();
               }}
             >
-              <Text>{parseInt(Math.random() * 10 + "")}</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      ),
+              <GoBack width={24} height={24} />
+              <View
+                style={{
+                  marginLeft: 4,
+                  backgroundColor: themeColor.text2,
+                  width: 22,
+                  height: 22,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 22,
+                }}
+              >
+                <Text>{parseInt(Math.random() * 10 + "")}</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        );
+      },
       headerRightContainerStyle: { paddingRight: 12 },
     } as TNavigationOptions);
   }, []);

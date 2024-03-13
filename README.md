@@ -40,7 +40,10 @@ theme
 1 quick action
 2 detect qrcode
 3 make a transfer or add friend by qrcode
-4 save money qrcode and personal qrcode to album and make features 5 5 above via qrcode - Location Sharing: Share your real-time location 6 with friends. - Group Chats: Create groups for communication with 7 7 multiple contacts. - People NearBy: To know who is nearby u.`,
+4 save money qrcode and personal qrcode to album and make features above via qrcode 
+- Location Sharing: Share your real-time location 
+6 with friends.
+ - Group Chats: Create groups , cant repeat create or join same one
 8 google login
 9 Push notifications
 10 user online status

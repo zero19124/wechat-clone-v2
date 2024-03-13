@@ -96,7 +96,6 @@ const Layout = () => {
     return null;
   };
 
-  
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
   const initPermit = async () => {
     await Notifications.getPermissionsAsync();
@@ -157,6 +156,7 @@ const Layout = () => {
                       <Stack.Screen
                         name="pages/chats/msg-chats/index"
                         options={{
+                          headerShown: false,
                           title: "msg-chats",
                         }}
                       />
