@@ -92,7 +92,7 @@ const Me = () => {
           }
         />
         <View className="flex-1">
-          <Text style={{ fontSize: 24, marginBottom: 8 }}>{userInfo?.act}</Text>
+          <Text style={{ fontSize: 24, marginBottom: 8 }}>{userInfo?.nickname ||userInfo?.act}</Text>
           <View className="flex-row justify-between items-center">
             <Text style={{ fontSize: 18, color: themeColor.text3 }}>
               Wechat Id: {userInfo?.wechatId}

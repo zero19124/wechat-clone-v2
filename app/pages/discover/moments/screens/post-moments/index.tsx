@@ -25,7 +25,10 @@ const PostMoments = () => {
   // return <Text>3</Text>
   const { t } = useTranslation();
   const navigator = useNavigation();
-  const params = useLocalSearchParams<{ uploadedImgs: string[] }>();
+  const params = useLocalSearchParams<{
+    uploadedImgs: string[];
+    type: string;
+  }>();
 
   const [contentText, setContentText] = useState("");
   const { themeColor } = useTheme();
@@ -50,7 +53,14 @@ const PostMoments = () => {
       .then((res) => {
         console.log(res, "res-postMomentsHandler");
         if (res?.code === 200) {
+          if (params.type === "fromCamera") {
+            navigator.goBack();
+            navigator.goBack();
+            return;
+          }
+          // setTimeout(() => {
           navigator.goBack();
+          // }, 100);
         } else {
           console.log(res?.data);
         }
@@ -141,6 +151,7 @@ const PostMoments = () => {
         <PostMomentsHeader />
         <View style={{ padding: 12 }}>
           <TextInput
+            autoFocus
             onChangeText={(val: string) => {
               setContentText(val);
             }}

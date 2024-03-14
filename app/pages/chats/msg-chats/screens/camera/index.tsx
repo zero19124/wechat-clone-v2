@@ -83,7 +83,7 @@ export default () => {
       cleanRecodingTime(stopRecording);
       try {
         await cameraRef.current.stopRecording();
-        console.log("Video recorded:", video);
+        // console.log("Video recorded:", video);
 
         setTimeout(() => {
           videoRef.current?.playAsync();
@@ -189,15 +189,18 @@ export default () => {
             ]);
             console.log("uploadedphotos-photo", uploadedphotos, params);
             if (params.useType === "moments") {
-              navigator.goBack();
-              setTimeout(() => {
-                navigator.navigate(
-                  "pages/discover/moments/screens/post-moments/index",
-                  {
-                    uploadedImgs: uploadedphotos,
-                  }
-                );
-              }, 100);
+              // router.replace("/pages/discover/moments/screens/post-moments/", {
+              //   uploadedImgs: uploadedphotos,
+              // });
+              // setTimeout(() => {
+              navigator.navigate(
+                "pages/discover/moments/screens/post-moments/index",
+                {
+                  uploadedImgs: uploadedphotos,
+                  type:'fromCamera'
+                }
+              );
+              // }, 100);
               return;
             }
             sendMsgHandler({
@@ -230,7 +233,8 @@ export default () => {
             const uploadedphotos = await uploadImages([
               { uri: video, name: Math.random() + ".mp4", type: "image" },
             ]);
-            console.log('video not support');
+            console.log("video not support");
+            Toast.info(t("video not support"));
             return;
             console.log("uploadedphotos-camera", uploadedphotos);
             if (params.useType === "moments") {

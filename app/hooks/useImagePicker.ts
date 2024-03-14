@@ -1,6 +1,7 @@
 import * as ImagePicker from "expo-image-picker";
 import config from "../config";
 import Toast from "@/component/base/Toast";
+import { Platform } from "react-native";
 export type TImageIns = {
   uri: string;
   type: "image" | "video" | undefined | "audio/mpeg";
@@ -41,21 +42,26 @@ export const uploadImages = async (
   const formData = new FormData();
   console.log(images.length, "images.length");
   images.forEach((image, index) => {
+    const type = image.uri.split(".").pop();
     formData.append(`files`, {
+      // uri: image.uri,
       uri: image.uri,
       name: image.name,
-      type: image.type,
+      type: "image/" + type,
     } as any);
   });
 
-  console.log(formData, "formData");
+  console.log(formData, "formData-uploadImages");
+  console.log(formData["_parts"], "files-uploadImages");
+
   try {
     const response = await fetch(config.apiDomain + "/api/utils/upload", {
       method: "POST",
       body: formData,
-      headers: {
-        "Content-Type": "application/json",
-      },
+      // data
+      // headers: {
+      //   "Content-Type": "application/json",
+      // },
     });
     const data = await response.json();
     if (data.code === 200) {
@@ -66,7 +72,7 @@ export const uploadImages = async (
       return [];
     }
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error-uploadImages:", error);
     return [];
   }
 };

@@ -99,7 +99,7 @@ const RegisterScreen: React.FC = () => {
           return;
         }
         Toast.success(t("register successfully"));
-        
+
         setTimeout(() => {
           router.back();
         }, 500);
@@ -151,6 +151,8 @@ const RegisterScreen: React.FC = () => {
         control={control}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
+            clearButtonMode="always"
+            placeholderTextColor={themeColor.text2}
             placeholder="nickname"
             onBlur={onBlur}
             onChangeText={onChange}
@@ -171,6 +173,8 @@ const RegisterScreen: React.FC = () => {
         control={control}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
+            clearButtonMode="always"
+            placeholderTextColor={themeColor.text2}
             placeholder="account"
             onBlur={onBlur}
             onChangeText={onChange}
@@ -196,8 +200,10 @@ const RegisterScreen: React.FC = () => {
         control={control}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
+            clearButtonMode="always"
             placeholder="email"
             onBlur={onBlur}
+            placeholderTextColor={themeColor.text2}
             onChangeText={onChange}
             value={value}
             style={{
@@ -223,8 +229,11 @@ const RegisterScreen: React.FC = () => {
         control={control}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
+            clearButtonMode="always"
+            secureTextEntry={true}
             placeholder="password"
             onBlur={onBlur}
+            placeholderTextColor={themeColor.text2}
             onChangeText={onChange}
             value={value}
             style={{
@@ -271,6 +280,7 @@ const RegisterScreen: React.FC = () => {
           <TextInput
             placeholder="bio"
             onBlur={onBlur}
+            placeholderTextColor={themeColor.text2}
             onChangeText={onChange}
             value={value}
             style={{

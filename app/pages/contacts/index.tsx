@@ -17,6 +17,7 @@ import UserAvatar from "@/component/complex/UserAvatar";
 import { isNumber } from "@/utils/typeof";
 import { useGetSameApiOfGet } from "@/hooks/useSameApi";
 import { PusherContext } from "@/hooks/usePusherProvider";
+import { useLoadingStore } from "app/store/globalLoading";
 const _ = require("lodash");
 const indexList: string[] = [];
 const customIndexList = [1, 2, 3, 4, 5, 6, 8, 9, 10];
@@ -27,31 +28,18 @@ for (let i = 0; i < tempNavigatorCount; i += 1) {
 }
 indexList.push("#");
 const Contacts = () => {
+  const { setLoadingStore } = useLoadingStore();
   const [friendList, setFriendList] = useState([]);
-  const router = useRouter();
   const [listMap, setListMap] = useState(new Map());
   const { themeColor } = useTheme();
   const { userStore } = useUser();
   const { getConvoIdByCurUserIdAndByFriendId } = useGetSameApiOfGet();
   const navigate = useNavigation();
 
-  useLayoutEffect(() => {
-    navigate.setOptions({
-      headerRight: () => (
-        <TouchableOpacity
-          onPress={() => {
-            navigate.navigate("pages/contacts/screens/add-contacts/index");
-          }}
-        >
-          <AddFriendIcon style={{ marginRight: 12 }} />
-        </TouchableOpacity>
-      ),
-    });
-  });
-
   const getFriendList = () => {
     setFriendList([]);
     setListMap(new Map());
+    setLoadingStore({ loading: false });
     fetch(
       config.apiDomain +
         "/api/friends/getFriendsByUserId?userId=" +
@@ -109,6 +97,9 @@ const Contacts = () => {
           // item.pinyinArrStr = pinyinArrStr;
         });
         console.log(listMap, "listMap-------");
+      })
+      .finally(() => {
+        setLoadingStore({ loading: false });
       });
   };
   const pusherContext = useContext(PusherContext);
@@ -121,11 +112,22 @@ const Contacts = () => {
       getFriendList();
     });
   }, [pusherContext.socket]);
-
   useEffect(() => {
     getFriendList();
   }, [userStore.userInfo]);
-
+  useLayoutEffect(() => {
+    navigate.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => {
+            navigate.navigate("pages/contacts/screens/add-contacts/index");
+          }}
+        >
+          <AddFriendIcon style={{ marginRight: 12 }} />
+        </TouchableOpacity>
+      ),
+    });
+  });
   return (
     <>
       <View

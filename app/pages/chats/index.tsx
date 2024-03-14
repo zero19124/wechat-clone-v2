@@ -102,17 +102,7 @@ const Chats = () => {
   const { chatListStore, getChatList, setChatListStoreV2 } = useChatList();
 
   const select = (option: PopoverAction) => {
-    if (option.text === "rec") {
-      // router.push('/pages/chats/screens/code-scanner/')
-      // router.push("pages/chats/screens/code-scanner/index");
-      navigate.navigate("pages/chats/screens/video-call-rec/index");
-    }
-    if (option.text === "send") {
-      // router.push('/pages/chats/screens/code-scanner/')
-      // router.push("pages/chats/screens/code-scanner/index");
-      // navigate.navigate("pages/chats/screens/video-call-send/index");
-      router.push("/pages/chats/screens/video-call-send/");
-    }
+    popover.current?.hide();
     if (option.text === "Scan") {
       navigate.navigate("pages/chats/screens/code-scanner/index");
     }
@@ -123,7 +113,6 @@ const Chats = () => {
       navigate.navigate("pages/chats/screens/money-qrcode/index");
     }
     if (option.text === "New Chat") {
-      popover.current?.hide();
       setIsNewRoom(true);
       setTimeout(() => {
         setVisible(true);
@@ -131,11 +120,11 @@ const Chats = () => {
     }
     if (option.text === "Join Group Chat") {
       setIsNewRoom(false);
-      popover.current?.hide();
       setTimeout(() => {
         setVisible(true);
       }, 600);
     }
+
     Toast.info(option.text);
   };
   const joinRoomHandler = async () => {
@@ -268,7 +257,7 @@ const Chats = () => {
 
       headerLeft: () => <Entypo name="dots-two-horizontal" size={20} />,
       headerLeftContainerStyle: { paddingLeft: 12 },
-      headerTitle: "Weixin(331)",
+      headerTitle: "Weixin",
       headerRight: () => (
         <View style={{}}>
           <Popover

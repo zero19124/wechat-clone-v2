@@ -27,10 +27,11 @@ import * as ImagePicker from "expo-image-picker";
 import { useCommonNavigateProps } from "@/component/complex/CommonNavigateTitle";
 import config from "@/config/index";
 import { useUser } from "app/store/user";
-import { TImageIns } from "@/hooks/useImagePicker";
+import { TImageIns, uploadImages } from "@/hooks/useImagePicker";
 import { TextInput } from "react-native-gesture-handler";
 import eventBus from "@/utils/eventBus";
 import { getSize } from "utils";
+import { useLoadingStore } from "app/store/globalLoading";
 type TMomentsComment = { sendHandler: (comment: string) => Promise<any> };
 const getMock = (type = "img", name = "读书方法") => {
   const Mock = {
@@ -71,23 +72,10 @@ const Moments = () => {
   const { t } = useTranslation();
   const { userStore } = useUser();
   const { themeColor } = useTheme();
-  const [momentsList, setMomentsList] = useState([
-    // getMock(),
-    // getMock(),
-    // getMock("video", "evan"),
-    // getMock("video", "evan"),
-  ]);
-
-  useLayoutEffect(() => {
-    const navigatorProps = useCommonNavigateProps({
-      title: t("Moments"),
-      rightComp: () => <CameraOutline />,
-      rightHandler: () => {
-        setVisible(true);
-      },
-    });
-    navigator.setOptions(navigatorProps as NativeStackNavigationOptions);
-  });
+  const [momentsList, setMomentsList] = useState([]);
+  const [visible, setVisible] = useState(false);
+  const [commentVisible, setCommentVisible] = useState(false);
+  const { setLoadingStore } = useLoadingStore();
 
   const pickImages = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -95,6 +83,7 @@ const Moments = () => {
       allowsMultipleSelection: true,
       quality: 1,
     });
+    console.log("pickImages.log");
 
     if (!result.canceled) {
       console.log(result, "result");
@@ -102,16 +91,16 @@ const Moments = () => {
         return {
           uri: image.uri,
           type: image.type,
-          name: image.fileName,
+          // no fileName property on android 
+          // name: image.fileName,
+          name: image.assetId,
         };
       });
       console.log(selectedImages.length, "selectedImages.length");
 
-      // setImages(selectedImages);
-      // console.log(selectedImages, "selectedImages");
-
       // return;
       const uploadedImgs = await uploadImages(selectedImages);
+      console.log(uploadedImgs, "uploadedImgs", 100);
       if (uploadedImgs?.length) {
         navigator.navigate(
           "pages/discover/moments/screens/post-moments/index",
@@ -124,38 +113,7 @@ const Moments = () => {
       }
     }
   };
-  const uploadImages = async (images: TImageIns[]) => {
-    const formData = new FormData();
-    console.log(images.length, "images.length");
-    images.forEach((image, index) => {
-      formData.append(`files`, {
-        uri: image.uri,
-        name: image.name,
-        type: image.type,
-      } as any);
-    });
-    console.log(formData, "formData");
-    try {
-      const response = await fetch(config.apiDomain + "/api/utils/upload", {
-        method: "POST",
-        body: formData,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      if (data.code === 200) {
-        console.log("ok");
-        return data.data;
-      } else {
-        Toast.fail("upload failed");
-        return [];
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      return [];
-    }
-  };
+
   const defaultActions: ActionSheetAction[] = [
     {
       name: t("Camera"),
@@ -176,13 +134,12 @@ const Moments = () => {
       },
     },
   ];
-  const [visible, setVisible] = useState(false);
-  const [commentVisible, setCommentVisible] = useState(false);
 
   const onClose = () => {
     setVisible(false);
   };
   const getMomentsList = () => {
+    setLoadingStore({ loading: true });
     fetch(
       config.apiDomain +
         "/api/moments/getFriendMomentsByUserId?userId=" +
@@ -196,6 +153,9 @@ const Moments = () => {
         } else {
           console.log(res.data);
         }
+      })
+      .finally(() => {
+        setLoadingStore({ loading: false });
       });
   };
   const curCommentData = useRef<TMomentsComment>();
@@ -209,11 +169,25 @@ const Moments = () => {
       getMomentsList();
     });
   }, []);
+  useLayoutEffect(() => {
+    const navigatorProps = useCommonNavigateProps({
+      title: t("Moments"),
+      rightComp: () => <CameraOutline />,
+      rightHandler: () => {
+        setVisible(true);
+      },
+    });
+    navigator.setOptions(navigatorProps as NativeStackNavigationOptions);
+  });
+  // after post need refresh  
   useFocusEffect(
     useCallback(() => {
       getMomentsList();
     }, [])
   );
+  // useEffect(() => {
+  //       getMomentsList();
+  // }, []);
   return (
     <KeyboardAvoidingView
       style={{

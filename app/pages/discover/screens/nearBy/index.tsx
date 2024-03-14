@@ -12,6 +12,7 @@ import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useTheme } from "@/theme/useTheme";
 import { useUser } from "app/store/user";
 import Toast from "@/component/base/Toast";
+import { useLoadingStore } from "app/store/globalLoading";
 
 const NearByView = ({
   type = "normal",
@@ -24,6 +25,8 @@ const NearByView = ({
   //   longitude: 113.93,
   //   latitude: 22.48,
   // };
+  const { setLoadingStore } = useLoadingStore();
+
   const { t } = useTranslation();
   const navigator = useNavigation();
   const [location, setLocation] = useState(null);
@@ -53,6 +56,9 @@ const NearByView = ({
       .then((res) => {
         console.log(res, "res");
         return res.data;
+      })
+      .finally(() => {
+        setLoadingStore({ loading: false });
       });
     setLocationData(locationData);
   };
@@ -78,6 +84,7 @@ const NearByView = ({
       console.log("chat-location");
       return;
     }
+    setLoadingStore({ loading: true });
     getCurUserLocation().then(async (coordinates) => {
       console.log(coordinates, "longitude, latitude");
       await getUserList(coordinates);
@@ -263,7 +270,6 @@ const NearByView = ({
                       )}
                     </View>
                     <TouchableOpacity
-                      
                       style={{
                         margin: 12,
                         borderRadius: 4,

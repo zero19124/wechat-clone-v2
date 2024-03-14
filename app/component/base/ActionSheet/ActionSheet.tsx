@@ -8,6 +8,7 @@ import { useThemeFactory } from "../Theme";
 import { createStyle } from "./style";
 import * as THEME_VARIABLE from "@/theme/styles/variables";
 import type { ActionSheetProps, ActionSheetAction } from "./type";
+import { getSize } from "utils";
 
 const ActionSheet = (props: ActionSheetProps): JSX.Element => {
   const {
@@ -38,7 +39,13 @@ const ActionSheet = (props: ActionSheetProps): JSX.Element => {
 
   const renderItem = (it: ActionSheetAction, index: number) => (
     <TouchableOpacity
-      style={[styles.item, it.style]}
+      style={[
+        styles.item,
+        it.style,
+        {
+          width: getSize(375),
+        },
+      ]}
       key={it.name}
       onPress={() => handleSelect(it, index)}
       activeBackgroundColor={activeBackground}
@@ -46,8 +53,8 @@ const ActionSheet = (props: ActionSheetProps): JSX.Element => {
     >
       {it.loading ? (
         <Loading
-          // size={theme.action_sheet_loading_icon_size}
-          // color={theme.action_sheet_item_disabled_text_color}
+        // size={theme.action_sheet_loading_icon_size}
+        // color={theme.action_sheet_item_disabled_text_color}
         />
       ) : (
         <>

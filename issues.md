@@ -49,3 +49,6 @@ https://github.com/react-native-google-signin/google-signin/releases/tag/v11.0.0
 
 # voice play only trough earpiece
 https://github.com/expo/expo/issues/9915
+
+#android upload fail
+set type : 'image/jpeg' cuz the android return jpeg but return jpg in ios

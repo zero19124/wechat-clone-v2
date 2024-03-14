@@ -15,7 +15,11 @@ import * as MediaLibrary from "expo-media-library";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import * as Notifications from "expo-notifications";
 import { MutableRefObject, useContext, useEffect } from "react";
-import { I18nextProvider, initReactI18next } from "react-i18next";
+import {
+  I18nextProvider,
+  initReactI18next,
+  useTranslation,
+} from "react-i18next";
 import i18n from "i18next";
 import io from "socket.io-client";
 import React from "react";
@@ -25,6 +29,10 @@ import { PusherContext } from "@/hooks/usePusherProvider";
 import setShortCut from "lib/setShortCut";
 import axios from "axios";
 import config from "./config";
+import Overlay from "./component/base/Overlay";
+import Loading from "./component/base/Loading";
+import { useLoading } from "./store/globalLoading";
+import GlobalLoading from "./component/complex/GlobalLoading";
 axios.defaults.baseURL = config.apiDomain; // 配置axios请求的地址
 axios.defaults.headers.post["Content-Type"] = "application/json; charset=utf-8";
 export const PortalRef =
@@ -89,7 +97,7 @@ const Layout = () => {
       escapeValue: false,
     },
   });
-
+  // const { t } = useTranslation();
   const InitializePortalRef = () => {
     const portal = usePortal();
     PortalRef.current = portal;
@@ -134,165 +142,167 @@ const Layout = () => {
               <BottomSheetModalProvider>
                 <ActionSheetProvider>
                   <RootSiblingParent>
-                    <Stack
-                      initialRouteName="(tabs)"
-                      screenOptions={{
-                        headerStyle: {
-                          backgroundColor: light.themeColor.fillColor,
-                        },
-                        // headerTintColor: "#fff",
-                        headerTitleStyle: {
-                          fontWeight: "bold",
-                        },
-                      }}
-                    >
-                      <Stack.Screen
-                        name="(tabs)"
-                        options={{
-                          headerShown: false,
+                    <GlobalLoading>
+                      <Stack
+                        initialRouteName="(tabs)"
+                        screenOptions={{
+                          headerStyle: {
+                            backgroundColor: light.themeColor.fillColor,
+                          },
+                          // headerTintColor: "#fff",
+                          headerTitleStyle: {
+                            fontWeight: "bold",
+                          },
                         }}
-                      />
-                      {/* chats  */}
-                      <Stack.Screen
-                        name="pages/chats/msg-chats/index"
-                        options={{
-                          headerShown: false,
-                          title: "msg-chats",
-                        }}
-                      />
-                      <Stack.Screen
-                        name="pages/chats/msg-chats/screens/camera/index"
-                        options={{
-                          headerShown: false,
-                        }}
-                      />
-                      <Stack.Screen
-                        name="pages/chats/msg-chats/screens/location/index"
-                        options={{
-                          headerShown: false,
-                        }}
-                      />
-                      <Stack.Screen
-                        name="pages/chats/msg-chats/screens/real-time-location/index"
-                        options={{
-                          headerShown: false,
-                        }}
-                      />
-                      <Stack.Screen
-                        name="pages/chats/screens/video-call-rec/index"
-                        options={{
-                          headerShown: false,
-                        }}
-                      />
-                      <Stack.Screen
-                        name="pages/chats/screens/video-call-send/index"
-                        options={{
-                          headerShown: false,
-                        }}
-                      />
+                      >
+                        <Stack.Screen
+                          name="(tabs)"
+                          options={{
+                            headerShown: false,
+                          }}
+                        />
+                        {/* chats  */}
+                        <Stack.Screen
+                          name="pages/chats/msg-chats/index"
+                          options={{
+                            headerShown: false,
+                            title: "msg-chats",
+                          }}
+                        />
+                        <Stack.Screen
+                          name="pages/chats/msg-chats/screens/camera/index"
+                          options={{
+                            headerShown: false,
+                          }}
+                        />
+                        <Stack.Screen
+                          name="pages/chats/msg-chats/screens/location/index"
+                          options={{
+                            headerShown: false,
+                          }}
+                        />
+                        <Stack.Screen
+                          name="pages/chats/msg-chats/screens/real-time-location/index"
+                          options={{
+                            headerShown: false,
+                          }}
+                        />
+                        <Stack.Screen
+                          name="pages/chats/screens/video-call-rec/index"
+                          options={{
+                            headerShown: false,
+                          }}
+                        />
+                        <Stack.Screen
+                          name="pages/chats/screens/video-call-send/index"
+                          options={{
+                            headerShown: false,
+                          }}
+                        />
 
-                      <Stack.Screen
-                        name="pages/chats/screens/code-scanner/index"
-                        options={{ headerShown: false }}
-                      />
-                      <Stack.Screen name="pages/chats/screens/transfer-receive/index" />
-                      <Stack.Screen name="pages/chats/screens/money-qrcode/index" />
+                        <Stack.Screen
+                          name="pages/chats/screens/code-scanner/index"
+                          options={{ headerShown: false }}
+                        />
+                        <Stack.Screen name="pages/chats/screens/transfer-receive/index" />
+                        <Stack.Screen name="pages/chats/screens/money-qrcode/index" />
 
-                      {/* contacts  */}
-                      <Stack.Screen
-                        name="pages/contacts/screens/new-friends/index"
-                        options={{ headerShadowVisible: false }}
-                      />
-                      <Stack.Screen
-                        name="pages/contacts/screens/add-contacts/index"
-                        options={{}}
-                      />
-                      <Stack.Screen
-                        name="pages/contacts/screens/add-contacts-search/index"
-                        options={{
-                          headerShown: false,
-                        }}
-                      />
-                      <Stack.Screen
-                        name="pages/discover/screens/nearBy/index"
-                        options={{
-                          headerShown: false,
-                        }}
-                      />
-                      <Stack.Screen name="pages/contacts/screens/friend-info/index" />
-                      <Stack.Screen name="pages/contacts/screens/send-friend-request/index" />
-                      {/* discover  */}
-                      <Stack.Screen
-                        name="pages/discover/moments/index"
-                        options={{
-                          title: "moments",
-                        }}
-                      />
-                      <Stack.Screen
-                        name="pages/discover/moments/screens/post-moments/index"
-                        options={{
-                          headerShown: false,
-                          presentation: "fullScreenModal",
-                          title: "post-moments",
-                        }}
-                      />
+                        {/* contacts  */}
+                        <Stack.Screen
+                          name="pages/contacts/screens/new-friends/index"
+                          options={{ headerShadowVisible: false }}
+                        />
+                        <Stack.Screen
+                          name="pages/contacts/screens/add-contacts/index"
+                          options={{}}
+                        />
+                        <Stack.Screen
+                          name="pages/contacts/screens/add-contacts-search/index"
+                          options={{
+                            headerShown: false,
+                          }}
+                        />
+                        <Stack.Screen
+                          name="pages/discover/screens/nearBy/index"
+                          options={{
+                            headerShown: false,
+                          }}
+                        />
+                        <Stack.Screen name="pages/contacts/screens/friend-info/index" />
+                        <Stack.Screen name="pages/contacts/screens/send-friend-request/index" />
+                        {/* discover  */}
+                        <Stack.Screen
+                          name="pages/discover/moments/index"
+                          options={{
+                            title: "moments",
+                          }}
+                        />
+                        <Stack.Screen
+                          name="pages/discover/moments/screens/post-moments/index"
+                          options={{
+                            headerShown: false,
+                            presentation: "fullScreenModal",
+                            title: "post-moments",
+                          }}
+                        />
 
-                      {/* me  */}
-                      <Stack.Screen
-                        name="pages/me/setting/index"
-                        options={{
-                          title: "setting",
-                        }}
-                      />
-                      {/* my qrcode */}
-                      <Stack.Screen
-                        name="pages/me/screens/my-qrcode/index"
-                        options={{
-                          title: "qrcode",
-                          presentation: "fullScreenModal",
-                        }}
-                      />
-                      <Stack.Screen
-                        name="pages/me/components/PushTest"
-                        options={{
-                          title: "PushTest",
-                        }}
-                      />
-                      {/* register  */}
-                      <Stack.Screen
-                        name="pages/me/screens/register/index"
-                        options={{
-                          title: "register",
-                        }}
-                      />
-                      <Stack.Screen
-                        name="pages/map/src/App"
-                        options={{
-                          title: "map",
-                        }}
-                      />
-                      {/* my qrcode */}
-                      <Stack.Screen
-                        name="pages/me/screens/wallet/index"
-                        options={{
-                          title: "wallet",
-                        }}
-                      />
-                      {/* comomns  */}
-                      <Stack.Screen
-                        name="component/business/individual-payment/index"
-                        options={{
-                          headerShadowVisible: false,
-                          title: "Payment",
-                        }}
-                      />
-                      <Stack.Screen
-                        name="component/business/PayDone/index"
-                        options={{
-                          headerShown: false,
-                        }}
-                      />
-                    </Stack>
+                        {/* me  */}
+                        <Stack.Screen
+                          name="pages/me/setting/index"
+                          options={{
+                            title: "setting",
+                          }}
+                        />
+                        {/* my qrcode */}
+                        <Stack.Screen
+                          name="pages/me/screens/my-qrcode/index"
+                          options={{
+                            title: "qrcode",
+                            presentation: "fullScreenModal",
+                          }}
+                        />
+                        <Stack.Screen
+                          name="pages/me/components/PushTest"
+                          options={{
+                            title: "PushTest",
+                          }}
+                        />
+                        {/* register  */}
+                        <Stack.Screen
+                          name="pages/me/screens/register/index"
+                          options={{
+                            title: "register",
+                          }}
+                        />
+                        <Stack.Screen
+                          name="pages/map/src/App"
+                          options={{
+                            title: "map",
+                          }}
+                        />
+                        {/* my qrcode */}
+                        <Stack.Screen
+                          name="pages/me/screens/wallet/index"
+                          options={{
+                            title: "wallet",
+                          }}
+                        />
+                        {/* comomns  */}
+                        <Stack.Screen
+                          name="component/business/individual-payment/index"
+                          options={{
+                            headerShadowVisible: false,
+                            title: "Payment",
+                          }}
+                        />
+                        <Stack.Screen
+                          name="component/business/PayDone/index"
+                          options={{
+                            headerShown: false,
+                          }}
+                        />
+                      </Stack>
+                    </GlobalLoading>
                   </RootSiblingParent>
                 </ActionSheetProvider>
               </BottomSheetModalProvider>

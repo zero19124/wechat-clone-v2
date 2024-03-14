@@ -21,12 +21,17 @@ import { useNavigation, useRouter } from "expo-router";
 import Button from "@/component/base/Button/Button";
 import { useTranslation } from "react-i18next";
 import { useChatList } from "app/store/chatList";
+import { useLoadingStore } from "app/store/globalLoading";
 
 const style = StyleSheet.create({
   inputStyle: {
-    height: 30,
-    backgroundColor: "grey",
-    marginBottom: 20,
+    width: "70%",
+    margin: "auto",
+    marginRight: 12,
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 8,
+    marginBottom: 8,
   },
 });
 export default () => {
@@ -34,6 +39,8 @@ export default () => {
   const deviceModel = DeviceInfo.getModel();
   const { t } = useTranslation();
   const router = useRouter();
+  const { setLoadingStore } = useLoadingStore();
+
   const [googleUser, setGoogleUser] = useState();
   const [isInProgress, setIsInProgress] = useState(false);
   const [data, setData] = useState({ psw: "1", act: "1" });
@@ -123,6 +130,7 @@ export default () => {
     //   setData({ psw: "12", act: "12" });
     // }
     console.log(data, "data-login");
+    setLoadingStore({ loading: true, text: "Login..." });
     fetch(config.apiDomain + "/api/user/register", {
       method: "POST",
       headers: {
@@ -148,7 +156,10 @@ export default () => {
         }
       })
       .catch((e) => {
-        console.log(e, "eeee");
+        console.log(e, "register-error");
+      })
+      .finally(() => {
+        setLoadingStore({ loading: false, text: "" });
       });
   };
   // Network Images
@@ -183,22 +194,51 @@ export default () => {
           </Button>
         </View>
       ) : (
-        <View className="">
-          <TextInput
-            className="w-full"
-            style={style.inputStyle}
-            onChangeText={(val) => {
-              data.act = val;
-              setData(data);
-            }}
-          />
-          <TextInput
-            style={style.inputStyle}
-            onChangeText={(val) => {
-              data.psw = val;
-              setData(data);
-            }}
-          />
+        <View className="flex items-center">
+          <View className="flex-row justify-between  w-full px-2">
+            <TextInput
+              clearButtonMode="always"
+              className="w-full"
+              style={style.inputStyle}
+              onChangeText={(val) => {
+                data.act = val;
+                setData(data);
+              }}
+            />
+            <Button
+              size="small"
+              type="primary"
+              onPress={() => {
+                loginHandler();
+                console.log(data, "data", config.apiDomain);
+              }}
+            >
+              {t("Login")}
+            </Button>
+          </View>
+          <View className="flex-row  justify-between w-full px-2">
+            <TextInput
+              clearButtonMode="always"
+              secureTextEntry={true}
+              style={style.inputStyle}
+              onChangeText={(val) => {
+                data.psw = val;
+                setData(data);
+              }}
+            />
+
+            <Button
+              size="small"
+              onPress={() => {
+                // router.push("/pages/me/components/PushTest");
+                // return;
+                router.push("/pages/me/screens/register/");
+              }}
+            >
+              {t("Register")}
+            </Button>
+          </View>
+
           <View className=" justify-center items-center">
             <View
               style={{
@@ -206,26 +246,7 @@ export default () => {
                 justifyContent: "space-around",
                 width: "100%",
               }}
-            >
-              <Button
-                type="primary"
-                onPress={() => {
-                  loginHandler();
-                  console.log(data, "data", config.apiDomain);
-                }}
-              >
-                {t("Login")}
-              </Button>
-              <Button
-                onPress={() => {
-                  // router.push("/pages/me/components/PushTest");
-                  // return;
-                  router.push("/pages/me/screens/register/");
-                }}
-              >
-                {t("Register")}
-              </Button>
-            </View>
+            ></View>
             <GoogleSigninButton
               className="flex-1"
               size={GoogleSigninButton.Size.Wide}

@@ -20,7 +20,9 @@ const ImageCard = ({ text, popover }) => {
       onPress={openPreview}
     >
       <Image
+      
         source={{
+          cache:'only-if-cached',
           uri:
             // "https://placekitten.com/302/302"
             // ||

@@ -377,7 +377,10 @@ const Page = () => {
         </View>
       </Popup>
       <ActionSheet
-        style={{ backgroundColor: themeColor.white, borderRadius: 8 }}
+        style={{
+          backgroundColor: themeColor.white,
+          borderRadius: 8,
+        }}
         visible={visible}
         actions={defaultActions}
         onClose={onClose}

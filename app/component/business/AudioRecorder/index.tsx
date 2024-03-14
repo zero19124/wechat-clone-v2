@@ -226,7 +226,7 @@ const AudioRecorder = ({ onVoiceEnd }) => {
               }
             );
           } catch (e) {
-            console.log(e, "eeeeee");
+            console.log(e, "audio-recorder-error");
           }
         }
       });
