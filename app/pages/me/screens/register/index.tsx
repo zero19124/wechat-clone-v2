@@ -99,7 +99,6 @@ const RegisterScreen: React.FC = () => {
           return;
         }
         Toast.success(t("register successfully"));
-
         setTimeout(() => {
           router.back();
         }, 500);

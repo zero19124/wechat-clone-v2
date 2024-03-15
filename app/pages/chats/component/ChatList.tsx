@@ -18,7 +18,6 @@ import DeviceInfo from "react-native-device-info";
 import { TThemeType, useTheme } from "@/theme/useTheme";
 import { goToMsgChat } from "@/hooks/useSameRouter";
 import UserAvatar from "@/component/complex/UserAvatar";
-
 const ConvoList = () => {
   const navigate = useNavigation();
   const { userStore } = useUser();
@@ -30,7 +29,7 @@ const ConvoList = () => {
   const userId = useMemo(() => userStore.userInfo?._id, [userStore]);
   const style = getStyle(themeColor);
   useEffect(() => {
-    console.log(chatListStore.chatListState?.length, "chatListStore");
+    // console.log(chatListStore.chatListState?.length, "chatListStore");
   }, [chatListStore]);
   const pusherContext = useContext(PusherContext);
   const deviceModel = DeviceInfo.getModel();

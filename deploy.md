@@ -74,7 +74,6 @@ npx expo run:android
   </array>
 
 
-
 local.properties
 sdk.dir=/Users/Zhuanz/Library/Android/sdk
 
