@@ -16,7 +16,7 @@
     "icon": "./assets/bella.jpeg",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/bella.jpeg",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

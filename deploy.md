@@ -22,6 +22,7 @@ npx eas build --platform ios --local
 npx eas build --profile preview --platform ios --local
 npx eas build --profile preview --platform android --local
 
+npx eas build -p android --profile preview --local
 
 upa install
 https://www.diawi.com/

@@ -133,7 +133,7 @@ const RegisterScreen: React.FC = () => {
           source={
             watchAvatar
               ? { uri: watchAvatar }
-              : require("@/assets/img-default.png")
+              : require("@/assets/img-default.jpg")
           }
           style={{ width: 75, height: 75 }}
         />

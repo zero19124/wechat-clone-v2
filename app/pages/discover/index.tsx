@@ -1,3 +1,4 @@
+import Toast from "@/component/base/Toast";
 import Divider from "@/component/complex/Divider";
 import ItemCard from "@/component/complex/ItemCard";
 import ArrowRightIcon from "@/icons/common/arrow-right.svg";
@@ -5,7 +6,14 @@ import { themeColor } from "@/theme/light";
 import { useNavigation, useRouter } from "expo-router";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { SafeAreaView, Text, Image, View, Pressable } from "react-native";
+import {
+  SafeAreaView,
+  Text,
+  Image,
+  View,
+  Pressable,
+  Platform,
+} from "react-native";
 const Discover = () => {
   const navigator = useNavigation();
   const { t } = useTranslation();
@@ -32,7 +40,6 @@ const Discover = () => {
       url: require("@/icons/discover/scan-v2.jpeg"),
       onPressHandler: () => {
         navigator.navigate("pages/chats/screens/code-scanner/index");
-
       },
     },
     {
@@ -51,6 +58,10 @@ const Discover = () => {
       text: "Nearby",
       url: require("@/icons/discover/nearby.jpeg"),
       onPressHandler: () => {
+        if (Platform.OS === "android") {
+          Toast.info("android not support this");
+          return;
+        }
         navigator.navigate("pages/discover/screens/nearBy/index");
       },
     },

@@ -11,6 +11,7 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import config from "@/config/index";
 import DeviceInfo from "react-native-device-info";
@@ -247,16 +248,18 @@ export default () => {
                 width: "100%",
               }}
             ></View>
-            <GoogleSigninButton
-              className="flex-1"
-              size={GoogleSigninButton.Size.Wide}
-              color={GoogleSigninButton.Color.Dark}
-              onPress={() => {
-                signIn();
-                // initiate sign in
-              }}
-              disabled={isInProgress}
-            />
+            {Platform.OS === "ios" && (
+              <GoogleSigninButton
+                className="flex-1"
+                size={GoogleSigninButton.Size.Wide}
+                color={GoogleSigninButton.Color.Dark}
+                onPress={() => {
+                  signIn();
+                  // initiate sign in
+                }}
+                disabled={isInProgress}
+              />
+            )}
           </View>
         </View>
       )}

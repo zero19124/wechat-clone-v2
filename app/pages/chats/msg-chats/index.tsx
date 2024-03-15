@@ -176,6 +176,10 @@ const Page = () => {
     {
       name: t("Send Location"),
       callback: () => {
+        if (Platform.OS === "android") {
+          Toast.info("android not support this");
+          return;
+        }
         console.log("Location");
         navigate.navigate("pages/chats/msg-chats/screens/location/index");
       },
@@ -183,6 +187,10 @@ const Page = () => {
     {
       name: t("Real-time Location"),
       callback: () => {
+        if (Platform.OS === "android") {
+          Toast.info("android not support this");
+          return;
+        }
         console.log("Location2");
         setLoadingStore({ loading: true });
 
@@ -221,7 +229,7 @@ const Page = () => {
     setVisible(false);
   };
   const memoed = useMemo(() => <PrivateChatList />, []);
-  console.log('PrivateChatList-render');
+  console.log("PrivateChatList-render");
   return (
     <SafeAreaView
       style={{

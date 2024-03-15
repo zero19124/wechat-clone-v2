@@ -1,7 +1,8 @@
+import Toast from "@/component/base/Toast";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { Text, TouchableOpacity } from "react-native";
+import { Platform, Text, TouchableOpacity } from "react-native";
 
 const RealTimeLocationCard = ({ msgId }) => {
   const navigator = useNavigation();
@@ -11,6 +12,10 @@ const RealTimeLocationCard = ({ msgId }) => {
     <TouchableOpacity
       style={{ flexDirection: "row", alignItems: "center", paddingLeft: 8 }}
       onPress={() => {
+        if (Platform.OS === "android") {
+          Toast.info("android not support this");
+          return;
+        }
         console.log("RealTimeLocationCard-msgid///", msgId);
         navigator.navigate(
           "pages/chats/msg-chats/screens/real-time-location/index",
