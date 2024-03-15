@@ -49,7 +49,7 @@ export const uploadImages = async (
       name: image.name,
       // todo  photo from camera error 
       // https://github.com/facebook/react-native/issues/28551
-      type: "image/" + type,
+      type: "image/jpg",
     } as any);
   });
 
