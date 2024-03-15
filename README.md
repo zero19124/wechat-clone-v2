@@ -1,16 +1,14 @@
-demo video is below
+demo video is here
 Youtube 👉 https://youtu.be/_NZPz8je7rE
-BiliBili with chinese and english subtitle 👉 https://www.bilibili.com/video/BV1kW421A7Fh
-
+<br>
+BiliBili with chinese and english subtitle 👇 <br>
+https://www.bilibili.com/video/BV1kW421A7Fh
 
 or check out my ai project >
-https://www.youtube.com/watch?v=3rfHoSe_oMU&t=59s
+https://www.youtube.com/watch?v=3rfHoSe_oMU&t=59s<br>
 
-github give it a star if u like it!
+github give it a star if u like it!👇 <br>
 https://github.com/zero19124/wechat-clone-v2
--feature
--page
-fn
 
 ## preview
 
@@ -21,7 +19,7 @@ fn
 ![Alt Text](./demo/demo5.jpg)
 ![Alt Text](./demo/demo6.jpg)
 
-## a real-time chat app.
+# a real-time chat app.
 
 ### tech stack
 
@@ -42,10 +40,14 @@ msg recall<br>
 recall only the themself can recall<br>
 transfer<br>
 -accept page<br>
--Location Sharing(real time by socket)<br>
+
+### -Location Sharing(real time by socket)<br>
+
 animated locating<br>
 relocate mock<br>
--\*voiceMsg animated effect
+
+### -\*voiceMsg animated effect
+
 voice msg smooth change and autofocus details of (duration)<br>
 check the voice and send<br>
 cancel<br>
@@ -92,7 +94,9 @@ theme<br>
 ### others
 
 1 quick action<br>
-2 img detect qrcode<br>
+
+### 2 img detect qrcode<br>
+
 3 make a transfer or add friend by qrcode<br>
 4 save money qrcode and personal qrcode to album and make features above via qrcode<br>
 9 Push notifications<br>
@@ -108,7 +112,11 @@ npx expo
 
 ```
 
+### dont forget below
+
 add google map key
 <meta-data
      android:name="com.google.android.geo.API_KEY"
      android:value="Your Google maps API Key Here"/>
+
+add google login secret key
