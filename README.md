@@ -14,70 +14,70 @@ fn
 ### chats
 
 -chat
-texing, img, voice, emoji,transfer,recall,location pin,video.
-taking pic or video to send (video autio compress)
-key panel
-video call
-msg recall
-recall only the themself can recall
-transfer
--accept page
--Location Sharing(real time by socket)
-animated locating
-relocate mock
+texing, img, voice, emoji,transfer,recall,location pin,video<br>
+taking pic or video to send (video autio compress)<br>
+key panel<br>
+video call<br>
+msg recall<br>
+recall only the themself can recall<br>
+transfer<br>
+-accept page<br>
+-Location Sharing(real time by socket)<br>
+animated locating<br>
+relocate mock<br>
 -\*voiceMsg animated effect
-voice msg smooth change and autofocus details of (duration)
-check the voice and send
-cancel
+voice msg smooth change and autofocus details of (duration)<br>
+check the voice and send<br>
+cancel<br>
 
 - \*Group Chats
-  create groups
-  cant repeat create or join same one
-  memberList
+  create groups<br>
+  cant repeat create or join same one<br>
+  memberList<br>
 
 ### contacts
 
--friendsList
--add friends
-add by qrcode
+-friendsList<br>
+-add friends<br>
+add by qrcode<br>
 
-- search friend
-  friend status controll
-  \*index bar effect
+- search friend<br>
+  friend status controll<br>
+  \*index bar effect<br>
 
 ### discovery
 
--moments
-post pics or video
-take a photo or video
-like or comment
-who can see
--People NearBy
-online status
-say hi
-relocate
+-moments<br>
+post pics or video<br>
+take a photo or video<br>
+like or comment<br>
+who can see<br>
+-People NearBy<br>
+online status<br>
+say hi<br>
+relocate<br>
 
 ### me
 
--wallet
-login
-google-login
--register
--qrcode
--setting
-i18n
-theme
--others
+-wallet<br>
+login<br>
+google-login<br>
+-register<br>
+-qrcode<br>
+-setting<br>
+i18n<br>
+theme<br>
+-others<br>
 
 ### others
 
-1 quick action
-2 img detect qrcode
-3 make a transfer or add friend by qrcode
-4 save money qrcode and personal qrcode to album and make features above via qrcode
-9 Push notifications
-10 user online status
-compare with real wechat on iphone
+1 quick action<br>
+2 img detect qrcode<br>
+3 make a transfer or add friend by qrcode<br>
+4 save money qrcode and personal qrcode to album and make features above via qrcode<br>
+9 Push notifications<br>
+10 user online status<br>
+compare with real wechat on iphone<br>
 
 ### Start the app
 
