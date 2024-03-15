@@ -1,11 +1,10 @@
 demo video is below
+Youtube 👉 https://youtu.be/_NZPz8je7rE
+BiliBili with chinese and english subtitle 👉 https://www.bilibili.com/video/BV1kW421A7Fh
 
-https://www.bilibili.com/video/BV1kW421A7Fh
 
-or check out my ai project > 
+or check out my ai project >
 https://www.youtube.com/watch?v=3rfHoSe_oMU&t=59s
-
-a real-time chat app.
 
 github give it a star if u like it!
 https://github.com/zero19124/wechat-clone-v2
@@ -22,11 +21,13 @@ fn
 ![Alt Text](./demo/demo5.jpg)
 ![Alt Text](./demo/demo6.jpg)
 
+## a real-time chat app.
+
 ### tech stack
-  react native<br>
-  typescript<br>
-  expo<br>
-  
+
+react native<br>
+typescript<br>
+expo<br>
 
 ## features
 
