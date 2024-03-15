@@ -18,8 +18,10 @@ eas local
 npx eas build --profile development --platform ios --local
 npx eas build --profile development --platform android --local
 npx eas build --platform ios --local
+
 npx eas build --profile preview --platform ios --local
-npx eas build --platform android --local
+npx eas build --profile preview --platform android --local
+
 
 upa install
 https://www.diawi.com/

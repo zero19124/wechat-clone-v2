@@ -221,6 +221,7 @@ const Page = () => {
     setVisible(false);
   };
   const memoed = useMemo(() => <PrivateChatList />, []);
+  console.log('PrivateChatList-render');
   return (
     <SafeAreaView
       style={{

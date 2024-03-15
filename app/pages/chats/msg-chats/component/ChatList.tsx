@@ -149,7 +149,7 @@ const PrivateChatList = (props: {
     setLoadingStore({ loading: true });
   }, []);
   modelLog("iPhone 15", () => {
-    console.log(dataOut, "dataOut");
+    // console.log(dataOut, "dataOut");
   });
   console.log(2222233333);
   const renderItem = useCallback(({ item }: { item: (typeof data)[0] }) => {

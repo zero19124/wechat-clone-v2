@@ -361,6 +361,7 @@ const Chats = () => {
 
     // navigate.navigate("pages/contacts/screens/send-friend-request/index");
   }, [socket]);
+  console.log('chatlist-render');
 
   return (
     <>

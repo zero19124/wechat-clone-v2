@@ -37,7 +37,7 @@ const useSendMsg = () => {
       .then((res) => res.json())
       .then(async (res) => {
         if (res.code === 200) {
-          console.log("add-suc");
+          console.log("add-msg-suc");
         } else {
           Toast.fail("sendMsg failed");
         }

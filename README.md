@@ -2,7 +2,7 @@ demo video is here
 Youtube 👉 https://youtu.be/_NZPz8je7rE
 <br>
 BiliBili with chinese and english subtitle 👇 <br>
-https://www.bilibili.com/video/BV1kW421A7Fh
+https://www.bilibili.com/video/BV192421N7Xt/
 
 or check out my ai project >
 https://www.youtube.com/watch?v=3rfHoSe_oMU&t=59s<br>
@@ -25,7 +25,7 @@ https://github.com/zero19124/wechat-clone-v2
 
 react native<br>
 typescript<br>
-expo<br>
+expo - socket - webrtc<br>
 
 ## features
 
