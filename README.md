@@ -1,6 +1,10 @@
 demo video is below
 
 https://www.bilibili.com/video/BV1kW421A7Fh
+
+or check out my ai project > 
+https://www.youtube.com/watch?v=3rfHoSe_oMU&t=59s
+
 a real-time chat app.
 
 github give it a star if u like it!
@@ -11,14 +15,20 @@ fn
 
 ## preview
 
-## features
-
 ![Alt Text](./demo/demo1.jpg)
 ![Alt Text](./demo/demo2.jpg)
 ![Alt Text](./demo/demo3.jpg)
 ![Alt Text](./demo/demo4.jpg)
 ![Alt Text](./demo/demo5.jpg)
 ![Alt Text](./demo/demo6.jpg)
+
+### tech stack
+  react native<br>
+  typescript<br>
+  expo<br>
+  
+
+## features
 
 ### chats
 
