@@ -121,11 +121,12 @@ const Layout = () => {
 
     requestPermission();
   };
+  setShortCut(navigate);
+
   useEffect(() => {
-    setShortCut(navigate);
     // init permit
     initPermit();
-    LogBox.ignoreAllLogs()
+    LogBox.ignoreAllLogs();
     // navigate.navigate("pages/contacts/screens/send-friend-request/index");
   }, []);
   // return (

@@ -56,7 +56,7 @@ export const jumpSomeWhereAfterGotQrcodeData = (
       });
     };
     const goToTransfer = (userId: string) => {
-      navigator.navigate("component/business/individual-payment/index/index", {
+      navigator.navigate("component/business/individual-payment/index", {
         recipientId: userId,
         type: "direct",
       });

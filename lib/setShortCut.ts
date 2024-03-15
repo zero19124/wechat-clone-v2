@@ -1,10 +1,27 @@
 import QuickActions from "react-native-quick-actions";
-import { DeviceEventEmitter } from "react-native";
+import { DeviceEventEmitter, Platform } from "react-native";
 // icon
 // https://developer.apple.com/documentation/uikit/uiapplicationshortcuticontype/uiapplicationshortcuticontypeplay?language=objc
 export default (navigate: any) => {
   // console.log("init setShortCut", DeviceEventEmitter);
   setTimeout(() => {
+    // if (Platform.OS == "ios") {
+      QuickActions.isSupported((error, supported) => {
+        console.log("supported---1", supported);
+        // if (!supported) {
+        //   return;
+        // }
+        let action = QuickActions.popInitialAction();
+        console.log("supported---2", action);
+
+        if (action) {
+          console.log(33333);
+        }
+        DeviceEventEmitter.addListener("quickActionShortcut", () => {
+          console.log("quickActionShortcut---");
+        });
+      });
+    // }
     DeviceEventEmitter.addListener(
       "quickActionShortcut",
       (data: {
@@ -18,7 +35,7 @@ export default (navigate: any) => {
         navigate.navigate(userInfo.url);
       }
     );
-    console.log("quickActionShortcut-1");
+    console.log("quickActionShortcut-14");
   }, 2000);
   const action = QuickActions.popInitialAction();
   console.log(action, "action");
@@ -32,7 +49,7 @@ export default (navigate: any) => {
     //   },
     // },
     {
-      type: "Scan Qrcode", // Required
+      type: "Scan Qrcode1", // Required
       title: "Scan Qrcode", // Optional, if empty, `type` will be used instead
       subtitle: "add friend or pay",
       icon: "CapturePhoto", // Icons instructions below

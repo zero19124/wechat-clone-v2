@@ -21,7 +21,7 @@ const CodeScanner = () => {
   const { t } = useTranslation();
   useEffect(() => {
     jumpSomeWhereAfterGotQrcodeData(text, navigator, t, reset);
-  }, [text, setText]);
+  }, [text]);
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();

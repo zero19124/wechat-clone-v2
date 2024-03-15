@@ -9,7 +9,11 @@ https://github.com/zero19124/wechat-clone-v2
 -page
 fn
 
+## preview
+
 ## features
+
+![Alt Text](./demo/demo1.jpg)
 
 ### chats
 
