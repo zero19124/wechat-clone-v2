@@ -14,6 +14,11 @@ fn
 ## features
 
 ![Alt Text](./demo/demo1.jpg)
+![Alt Text](./demo/demo2.jpg)
+![Alt Text](./demo/demo3.jpg)
+![Alt Text](./demo/demo4.jpg)
+![Alt Text](./demo/demo5.jpg)
+![Alt Text](./demo/demo6.jpg)
 
 ### chats
 
