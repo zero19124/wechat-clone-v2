@@ -10,6 +10,7 @@ import Toast from "@/component/base/Toast";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "expo-router";
 import config from "@/config/index";
+import { useLoadingStore } from "app/store/globalLoading";
 const PayDone = () => {
   const navigator = useNavigation();
   const { amount } = useLocalSearchParams();
@@ -18,6 +19,8 @@ const PayDone = () => {
   const { chatListStore } = useChatList();
   const { t } = useTranslation();
   const { sendMsgHandler } = useSendMsg();
+  const { setLoadingStore } = useLoadingStore();
+
   const params = useLocalSearchParams<{ type: string }>();
   return (
     <SafeAreaView style={{ alignItems: "center" }}>
@@ -76,6 +79,7 @@ const PayDone = () => {
             Toast.fail("convoId is null");
             return;
           }
+          setLoadingStore({ loading: true });
 
           sendMsgHandler({
             val: "transferId+" + amount,
@@ -83,6 +87,7 @@ const PayDone = () => {
             type: "transfer",
             convoId: chatListStore.curConvo?.convoId + "",
             doneHandler: () => {
+              setLoadingStore({ loading: false });
               navigator.navigate("pages/chats/msg-chats/index");
             },
           });

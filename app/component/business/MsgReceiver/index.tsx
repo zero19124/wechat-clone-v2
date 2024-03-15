@@ -77,6 +77,7 @@ const MsgWrapper = ({
         convoId: chatListStore.curConvo?.convoId + "",
         doneHandler: () => {},
       });
+      return;
     }
     await Clipboard.setStringAsync(text);
     Toast.success("copied");

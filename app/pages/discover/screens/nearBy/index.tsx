@@ -110,6 +110,49 @@ const NearByView = ({
   };
   return (
     <View style={styles.container}>
+      {
+        <View
+          style={{
+            position: "absolute",
+            top: 80,
+            zIndex: 1,
+            flexDirection: "row",
+          }}
+        >
+          <MaterialCommunityIcons
+            style={{
+              marginLeft: 32,
+            }}
+            onPress={() => {
+              navigator.goBack();
+            }}
+            name="arrow-left"
+            size={24}
+            color="black"
+          />
+          {type === "normal" && (
+            <View
+              style={{
+                backgroundColor: themeColor.overlay2,
+                marginLeft: "25%",
+                justifyContent: "center",
+                alignItems: "center",
+                paddingHorizontal: 24,
+                borderRadius: 4,
+              }}
+            >
+              <TouchableOpacity onPress={() => {}}>
+                <Text style={{ color: themeColor.white }}>
+                  {t("people near u: ")}
+                  {locationData?.length}
+                  {/* {onLineUserList?.map((user) => user.userName).join(",")} */}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      }
+
       <MapView
         onPress={onMapPress}
         initialRegion={{
@@ -120,19 +163,6 @@ const NearByView = ({
         }}
         style={[styles.map, { position: "relative" }]}
       >
-        <MaterialCommunityIcons
-          onPress={() => {
-            console.log(3);
-            navigator.goBack();
-          }}
-          style={{
-            marginTop: getSize(80),
-            marginLeft: 32,
-          }}
-          name="arrow-left"
-          size={24}
-          color="black"
-        />
         {marker && (
           <Marker coordinate={marker}>
             <Popover
@@ -155,6 +185,7 @@ const NearByView = ({
                     return;
                   }
                   setMarker(null);
+                  setLoadingStore({ loading: true });
                   fetch(
                     config.apiDomain + "/api/utils/updateUserLocationByUserId",
                     {
@@ -186,6 +217,9 @@ const NearByView = ({
                       //   }
                       //   return [...pre];
                       // });
+                    })
+                    .finally(() => {
+                      setLoadingStore({ loading: false });
                     });
                 }}
               >

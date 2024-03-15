@@ -12,6 +12,7 @@ const UserAvatar = ({
   source,
   style,
   rounded = false,
+  ...rest
 }: {
   source?: ImageSourcePropType;
   rounded?: boolean;
@@ -29,6 +30,7 @@ const UserAvatar = ({
   }, [source]);
   return (
     <Image
+      {...rest}
       source={finalSource}
       style={[
         avatarStyle.itemContainerAvatar,

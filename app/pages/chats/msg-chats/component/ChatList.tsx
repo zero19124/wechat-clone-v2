@@ -23,6 +23,7 @@ import { useChatList } from "app/store/chatList";
 import DeviceInfo from "react-native-device-info";
 import modelLog from "@/utils/modelLog";
 import { PusherContext } from "@/hooks/usePusherProvider";
+import { useLoadingStore } from "app/store/globalLoading";
 const PrivateChatList = (props: {
   // flatListRef: React.MutableRefObject<FlatList<any> | undefined>;
 }) => {
@@ -87,8 +88,13 @@ const PrivateChatList = (props: {
         } else {
           console.log(res?.msg);
         }
+      })
+      .finally(() => {
+        setLoadingStore({ loading: false });
       });
   };
+  const { setLoadingStore } = useLoadingStore();
+
   const pusherContext = useContext(PusherContext);
   useEffect(() => {
     // 有新消息就更新会话列表
@@ -140,6 +146,7 @@ const PrivateChatList = (props: {
 
   useEffect(() => {
     getMsgList();
+    setLoadingStore({ loading: true });
   }, []);
   modelLog("iPhone 15", () => {
     console.log(dataOut, "dataOut");

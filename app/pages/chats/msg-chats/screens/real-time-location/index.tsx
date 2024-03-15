@@ -5,18 +5,13 @@ import {
   TouchableOpacity,
   Animated,
   Easing,
-  Pressable,
+  Keyboard,
 } from "react-native";
-import config from "@/config/index";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import UserAvatar from "@/component/complex/UserAvatar";
-import { Popover, PopoverInstance } from "@/component/base/Popover";
 import { useTranslation } from "react-i18next";
-import GoBack from "@/component/complex/GoBack";
-import { getSize } from "utils";
-import GoBackIcon from "@/icons/common/go-back.svg";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useTheme } from "@/theme/useTheme";
@@ -24,7 +19,6 @@ import { useUser } from "app/store/user";
 import Toast from "@/component/base/Toast";
 import { PusherContext } from "@/hooks/usePusherProvider";
 import { TextInput } from "react-native-gesture-handler";
-import Button from "@/component/base/Button/Button";
 import DeviceInfo from "react-native-device-info";
 import { useLoadingStore } from "app/store/globalLoading";
 type TUserListInRoomData = {
@@ -57,9 +51,6 @@ const NearByView = ({
   };
   const { t } = useTranslation();
   const navigator = useNavigation();
-  const [location, setLocation] = useState<Location.LocationObject>();
-  const [locationData, setLocationData] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
   const [showView, setShowView] = useState(false);
   const { themeColor } = useTheme();
   const params = useLocalSearchParams<{
@@ -80,6 +71,7 @@ const NearByView = ({
   const { setLoadingStore } = useLoadingStore();
 
   useEffect(() => {
+    setLoadingStore({ loading: true });
     Location.getCurrentPositionAsync({}).then((coordinates) => {
       console.log(params, "params-real-time-location-join", coordinates);
       // step1
@@ -105,7 +97,6 @@ const NearByView = ({
         updateCurLocationByUserId(location.coords);
       }, 3000);
     });
-
     pusherContext.socket?.on(
       "real-time-location-joined",
       (userListInRoom: TUserListInRoomData[]) => {
@@ -220,6 +211,7 @@ const NearByView = ({
             }}
           >
             <TextInput
+              keyboardType="numeric"
               value={String(mockLocation.longitude).substring(0, 6)}
               style={{ width: 100, height: 30, backgroundColor: "red" }}
               onChangeText={(l) => {
@@ -229,6 +221,7 @@ const NearByView = ({
               }}
             />
             <TextInput
+              keyboardType="numeric"
               value={String(mockLocation.latitude).substring(0, 6)}
               style={{ width: 100, height: 30, backgroundColor: "blue" }}
               onChangeText={(la) => {
@@ -263,6 +256,9 @@ const NearByView = ({
           latitudeDelta: 0.0522,
           longitudeDelta: 0.0521,
         }}
+        onPress={() => {
+          Keyboard.dismiss();
+        }}
         style={[styles.map, { position: "relative" }]}
       >
         {onLineUserList?.map((item, index) => {
@@ -279,7 +275,11 @@ const NearByView = ({
                 latitude,
               }}
             >
-              <UserAvatar rounded source={{ uri: item.userImg }} />
+              <UserAvatar
+                defaultSource={require("@/assets/loading-image.png")}
+                rounded
+                source={{ uri: item.userImg }}
+              />
             </Marker.Animated>
           );
         })}

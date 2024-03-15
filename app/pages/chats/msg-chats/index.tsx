@@ -29,12 +29,16 @@ import { TNavigationOptions } from "@/component/complex/CommonNavigateTitle";
 import { getSize } from "utils";
 import { uploadImages } from "@/hooks/useImagePicker";
 import MemberList from "./component/MemberList";
+import Toast from "@/component/base/Toast";
+import { useLoadingStore } from "app/store/globalLoading";
 
 const Page = () => {
   const navigate = useNavigation();
   // 获取设备型号
   const deviceModel = DeviceInfo.getModel();
   const { userInfo } = useUser().userStore;
+  const { setLoadingStore } = useLoadingStore();
+
   const { getChatList, chatListStore } = useChatList();
   const params = useLocalSearchParams<{ convoId: string; chatType: string }>();
   const convoId = useMemo(() => {
@@ -151,7 +155,7 @@ const Page = () => {
 
   const VideoCallActions = [
     {
-      name: t("Video Call"),
+      name: t("📹 Video Call"),
       callback: () => {
         console.log("Video");
         navigate.navigate("pages/chats/screens/video-call-send/index", {
@@ -160,7 +164,7 @@ const Page = () => {
       },
     },
     {
-      name: t("Voice Call2"),
+      name: t("🔊 Voice Call"),
       callback: () => {
         console.log("Voice");
         router.push("pages/chats/screens/video-call-send");
@@ -180,14 +184,24 @@ const Page = () => {
       name: t("Real-time Location"),
       callback: () => {
         console.log("Location2");
+        setLoadingStore({ loading: true });
+
         sendMsgHandler({
           val:
             "realTimeLocation+" + "sharing real time location+" + userInfo?._id,
           userId: userInfo?._id + "",
           type: "realTimeLocation",
           convoId: convoId + "",
-          doneHandler: (data: any) => {
-            console.log(data, "latest data");
+          doneHandler: (res: any) => {
+            setLoadingStore({ loading: false });
+
+            if (res.code !== 200) {
+              Toast.info("sth went wrong in Real-time Location");
+              return;
+            }
+            const data = res.data;
+            console.log(data, "latest-data-Real-time-Location");
+
             navigate.navigate(
               "pages/chats/msg-chats/screens/real-time-location/index",
               { messageIdForRoom: data._id }

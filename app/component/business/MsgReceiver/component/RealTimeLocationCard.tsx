@@ -6,10 +6,12 @@ import { Text, TouchableOpacity } from "react-native";
 const RealTimeLocationCard = ({ msgId }) => {
   const navigator = useNavigation();
   const { t } = useTranslation();
+
   return (
     <TouchableOpacity
       style={{ flexDirection: "row", alignItems: "center", paddingLeft: 8 }}
       onPress={() => {
+        console.log("RealTimeLocationCard-msgid///", msgId);
         navigator.navigate(
           "pages/chats/msg-chats/screens/real-time-location/index",
           { messageIdForRoom: msgId }
