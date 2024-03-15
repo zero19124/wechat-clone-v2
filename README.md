@@ -5,49 +5,79 @@ a real-time chat app.
 
 github give it a star if u like it!
 https://github.com/zero19124/wechat-clone-v2
+-feature
+-page
+fn
 
-features
+## features
+
+### chats
+
 -chat
--texing img voice emoji
--taking pic or video to send (video autio compress)
--voice msg smooth change and autofocus details of the length
--key panel
--video call
--msg recall
--transfer
-accept page
--recall only the themself can recall
--Location Sharing(real time by socket) and animated locating
--voiceMsg animated effect
--contacts - add friends or add by qrcode - search friend - friend status controll - index bar effect - discover
+texing, img, voice, emoji,transfer,recall,location pin,video.
+taking pic or video to send (video autio compress)
+key panel
+video call
+msg recall
+recall only the themself can recall
+transfer
+-accept page
+-Location Sharing(real time by socket)
+animated locating
+relocate mock
+-\*voiceMsg animated effect
+voice msg smooth change and autofocus details of (duration)
+check the voice and send
+cancel
+
+- \*Group Chats
+  create groups
+  cant repeat create or join same one
+  memberList
+
+### contacts
+
+-friendsList
+-add friends
+add by qrcode
+
+- search friend
+  friend status controll
+  \*index bar effect
+
+### discovery
+
 -moments
 post pics or video
- take a photo or video
+take a photo or video
 like or comment
 who can see
 -People NearBy
- online status
- say hi
--me
-wallet
+online status
+say hi
+relocate
+
+### me
+
+-wallet
 login
-qrcode
+google-login
+-register
+-qrcode
 -setting
 i18n
 theme
 -others
 
+### others
+
 1 quick action
-2 detect qrcode
+2 img detect qrcode
 3 make a transfer or add friend by qrcode
-4 save money qrcode and personal qrcode to album and make features above via qrcode 
-- Location Sharing: Share your real-time location 
-6 with friends.
- - Group Chats: Create groups , cant repeat create or join same one
-8 google login
+4 save money qrcode and personal qrcode to album and make features above via qrcode
 9 Push notifications
 10 user online status
-    compare with real wechat on iphone
+compare with real wechat on iphone
 
 ### Start the app
 
