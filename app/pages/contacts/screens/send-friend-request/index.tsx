@@ -20,12 +20,15 @@ import {
 } from "react-native";
 import { getSize } from "utils";
 import BottomWidthDivider from "@/component/complex/BottomWidthDivider";
+import { useLoadingStore } from "app/store/globalLoading";
 const FriendInfoConfirm = () => {
   const name = "Send Friend Request";
   const navigate = useNavigation();
   const { themeColor } = useTheme();
   const { t } = useTranslation();
   const { userStore } = useUser();
+  const { setLoadingStore } = useLoadingStore();
+
   const params = useLocalSearchParams();
   const [extraData, setExtraData] = useState({ aliasName: "", remark: "" });
   console.log(params, "params");
@@ -50,6 +53,8 @@ const FriendInfoConfirm = () => {
     console.log(params, "prams", data);
 
     if (params?.sendFriendRequestTitle) {
+      setLoadingStore({ loading: true });
+
       // confirm add friend  and create a convo and add msg say hi
       fetch(config.apiDomain + "/api/friends/requestFriendUpdate", {
         method: "POST",
@@ -64,7 +69,7 @@ const FriendInfoConfirm = () => {
         })
         .then((res) => {
           console.log(res, "requestFriendUpdate");
-          // confirm go to chat? 
+          // confirm go to chat?
           fetch(config.apiDomain + "/api/convo/add-convo", {
             method: "POST",
             headers: {
@@ -74,13 +79,18 @@ const FriendInfoConfirm = () => {
               type: "added-new-friend",
               participants: [userId, friendId],
             }),
-          }).then(() => {
-            navigate.goBack();
-            console.log("add-convo");
-          });
+          })
+            .then(() => {
+              navigate.goBack();
+              console.log("add-convo");
+            })
+            .finally(() => {
+              setLoadingStore({ loading: false });
+            });
         });
       return;
     }
+    setLoadingStore({ loading: true });
 
     fetch(config.apiDomain + "/api/friends/requestFriend", {
       method: "POST",
@@ -94,6 +104,9 @@ const FriendInfoConfirm = () => {
         console.log(res, "requestFriend");
         // request then goback to info
         navigate.goBack();
+      })
+      .finally(() => {
+        setLoadingStore({ loading: false });
       });
   };
   return (

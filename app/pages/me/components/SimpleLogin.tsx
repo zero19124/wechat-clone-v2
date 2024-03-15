@@ -166,7 +166,7 @@ export default () => {
 
   return (
     <View>
-      <Text>{config.apiDomain}</Text>
+      {/* <Text>{config.apiDomain}</Text> */}
       {userStore?.userInfo?.act ? (
         <View>
           <TouchableOpacity

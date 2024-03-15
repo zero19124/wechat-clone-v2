@@ -24,6 +24,7 @@ import { useChatList } from "app/store/chatList";
 import VoiceCard from "./component/VoiceCard";
 import ImageCard from "./component/ImageCard";
 import LocationCard from "./component/LocationCard";
+import RealTimeLocationCard from "./component/RealTimeLocationCard";
 const MsgWrapper = ({
   msgType = "text",
   type = "left",
@@ -103,8 +104,8 @@ const MsgWrapper = ({
   // transId+amount+userid
   const getContent = () => {
     // console.log(msgType, "msgType");
- 
-    // move to chatlisht component 
+
+    // move to chatlisht component
     // if (msgType === "recallMsg") {
     //   return (
     //     <Text style={{ padding: 12, justifyContent: "center" }}>
@@ -117,22 +118,7 @@ const MsgWrapper = ({
     }
     if (msgType === "realTimeLocation") {
       console.log(msgId, "sss");
-      return (
-        <TouchableOpacity
-          style={{ flexDirection: "row", alignItems: "center", paddingLeft: 8 }}
-          onPress={() => {
-            navigator.navigate(
-              "pages/chats/msg-chats/screens/real-time-location/index",
-              { messageIdForRoom: msgId }
-            );
-          }}
-        >
-          <FontAwesome5 name="location-arrow" size={14} color="black" />
-          <Text style={{ padding: 12, justifyContent: "center" }}>
-            {t("real time location sharing ...")}
-          </Text>
-        </TouchableOpacity>
-      );
+      return <RealTimeLocationCard msgId={msgId} />;
     }
     if (msgType === "voice") {
       return <VoiceCard popover={popover} text={text} />;

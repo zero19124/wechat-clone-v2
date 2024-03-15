@@ -1,15 +1,10 @@
 import {
   Animated,
-  Button,
   FlatList,
-  Image,
   Keyboard,
   KeyboardAvoidingView,
-  NativeSyntheticEvent,
   Platform,
   Text,
-  TextInput,
-  TextInputSubmitEditingEventData,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -18,14 +13,7 @@ import EmojiPicker from "rn-emoji-keyboard";
 import DeviceInfo from "react-native-device-info";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
-import {
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import ThreeDot from "@/icons/three-dot.svg";
 import GoBack from "@/icons/common/go-back.svg";
 import FnKeyBoard, { FN_TYPE_MAPS } from "@/component/business/FnKeyBoard";
@@ -33,20 +21,14 @@ import PrivateChatList from "./component/ChatList";
 import ChatInput from "./component/ChatInput";
 import { useTheme } from "@/theme/useTheme";
 import { useUser } from "app/store/user";
-import config from "@/config/index";
 import { useChatList } from "app/store/chatList";
-import { PusherContext } from "@/hooks/usePusherProvider";
 import useSendMsg from "@/hooks/useSendMsg";
 import { useTranslation } from "react-i18next";
 import ActionSheet, { ActionSheetAction } from "@/component/base/ActionSheet";
 import { TNavigationOptions } from "@/component/complex/CommonNavigateTitle";
-import { getHeight, getSize } from "utils";
+import { getSize } from "utils";
 import { uploadImages } from "@/hooks/useImagePicker";
-import Toast from "@/component/base/Toast";
-import Popup from "@/component/base/Popup";
-import UserAvatar from "@/component/complex/UserAvatar";
-import { Audio } from "expo-av";
-import modelLog from "@/utils/modelLog";
+import MemberList from "./component/MemberList";
 
 const Page = () => {
   const navigate = useNavigation();
@@ -63,7 +45,6 @@ const Page = () => {
   const curReceiverInfo = useMemo(() => {
     return chatListStore.curConvo?.curReceiverInfo;
   }, [chatListStore]);
-  const [dataOut, setDataOut] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const title = useMemo(() => {
     if (params.chatType === "isGroup") {
@@ -88,11 +69,6 @@ const Page = () => {
           <TouchableOpacity
             onPress={() => {
               setMemberListVisible(true);
-              // Toast.info(
-              //   chatListStore.curConvo?.convoMember
-              //     ?.map((item) => item.act)
-              //     .join(",")
-              // );
             }}
           >
             <Text
@@ -173,114 +149,6 @@ const Page = () => {
     startAnimation(_270);
   };
 
-  const updateConvoLatestMsgById = (convoId: string, latestMessage: string) => {
-    if (!convoId) {
-      console.log("convoId is null updateConvoLatestMsgById ");
-      return;
-    }
-    fetch(config.apiDomain + "/api/convo/updateConvoLatestMsgById", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        convoId,
-        latestMessage,
-      }),
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res, "res");
-        if (res?.code === 200) {
-          getChatList(userInfo?._id + "");
-        } else {
-          console.log(res?.msg);
-        }
-      });
-  };
-  const pusherContext = useContext(PusherContext);
-  useEffect(() => {
-    // 有新消息就更新会话列表
-    pusherContext.socket?.on("messages", (messagesData) => {
-      const data = messagesData.newMsgData;
-      const type = messagesData.type;
-      modelLog("iPhone 15", () => {
-        console.log(data, "messagesData-context");
-      });
-      try {
-        const latestMessage = data.msg;
-        //     // 这里会重新调对话窗口列表
-        updateConvoLatestMsgById(convoId + "", latestMessage);
-        // 如果有转账的 更新对应的信息转账状态
-        // 直接重新拉新数据 后面再优化状态更新问题
-        if (data.type === "recallMsg") {
-          getMsgList();
-          return;
-        }
-        if (type && type === "isTransferAccepted") {
-          getMsgList();
-          return;
-        }
-        // 插入信息列表
-        let newMsg = {};
-        try {
-          newMsg = {
-            userId: data?.user?._id || "undefined-msg-chat",
-            userName: data?.user?.act || "undefined-msg-chat",
-            msgId: data?._id,
-            type: data.type,
-            image: data?.user?.image || "undefined-msg-chat",
-            latestMessage,
-            ...data,
-          };
-        } catch (e) {
-          console.log(e, "newMsg destruct fail", data);
-        }
-        if (!Object.keys(newMsg).length) {
-          console.log("newMsg is null!!!");
-          return;
-        }
-        setDataOut((pre) => [newMsg, ...pre]);
-      } catch (e) {
-        console.error(e, "mgsList-error");
-      }
-    });
-  }, [pusherContext.socket]);
-  const getMsgList = () => {
-    fetch(config.apiDomain + `/api/msg/allMsgByConvoId?convoId=${convoId}`)
-      .then((res) => res.json())
-      .then((res) => {
-        if (res?.code === 200) {
-          // console.log(res.data, "dadad");
-          setDataOut([
-            ...res.data
-              // ?.filter((item) => {
-              //   return item.type !== "recalledMsg";
-              // })
-              .map((item) => {
-                return {
-                  type: item.type,
-                  userName: item.user.act,
-                  userId: item.userId,
-                  msgId: item._id,
-                  image: item.user.image,
-                  latestMessage: item.msg,
-                };
-              }),
-          ]);
-          // 接受完后 清空输入框
-          setMsg("");
-        } else {
-          console.log(res?.msg);
-        }
-      });
-  };
-  useEffect(() => {
-    console.log(heightValue, "heightValue._value");
-
-    getMsgList();
-  }, []);
-
   const VideoCallActions = [
     {
       name: t("Video Call"),
@@ -338,6 +206,7 @@ const Page = () => {
   const onClose = () => {
     setVisible(false);
   };
+  const memoed = useMemo(() => <PrivateChatList />, []);
   return (
     <SafeAreaView
       style={{
@@ -346,36 +215,12 @@ const Page = () => {
       }}
       edges={["bottom"]}
     >
-      <Popup
-        visible={memberListVisible}
-        position="top"
-        closeable
+      <MemberList
+        memberListVisible={memberListVisible}
         onClose={() => {
           setMemberListVisible(false);
         }}
-      >
-        <View
-          style={{
-            width: getSize(375),
-            padding: 24,
-            paddingTop: 80,
-            backgroundColor: "white",
-          }}
-        >
-          {chatListStore.curConvo?.convoMember?.map?.((user) => {
-            return (
-              <View className="items-center flex-row my-1" key={user._id}>
-                <UserAvatar source={{ uri: user.image }} />
-                <Text style={{ marginLeft: 12 }}>{user.act}</Text>
-              </View>
-            );
-          })}
-          <Text style={{ textAlign: "center" }}>
-            {t("total member:")}
-            {chatListStore.curConvo?.convoMember.length}
-          </Text>
-        </View>
-      </Popup>
+      />
       <ActionSheet
         style={{
           backgroundColor: themeColor.white,
@@ -407,13 +252,7 @@ const Page = () => {
           }}
         >
           {/* 聊天列表 */}
-          <View style={{ flex: 1 }}>
-            {dataOut.length ? (
-              <PrivateChatList dataOut={dataOut} flatListRef={flatListRef} />
-            ) : (
-              <></>
-            )}
-          </View>
+          <View style={{ flex: 1 }}>{memoed}</View>
         </TouchableWithoutFeedback>
         {/* keyboard 内容 */}
         <ChatInput

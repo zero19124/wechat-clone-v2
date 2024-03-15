@@ -1,1 +1,1 @@
-popover loading icon toast swipecell
+<!-- flikering chat img -->

@@ -24,7 +24,7 @@ import i18n from "i18next";
 import io from "socket.io-client";
 import React from "react";
 import { PortalService } from "./component/base/ConfigProvider/ConfigProvider";
-import { View, Text } from "react-native";
+import { View, Text, LogBox } from "react-native";
 import { PusherContext } from "@/hooks/usePusherProvider";
 import setShortCut from "lib/setShortCut";
 import axios from "axios";
@@ -125,6 +125,7 @@ const Layout = () => {
     setShortCut(navigate);
     // init permit
     initPermit();
+    LogBox.ignoreAllLogs()
     // navigate.navigate("pages/contacts/screens/send-friend-request/index");
   }, []);
   // return (
@@ -132,6 +133,7 @@ const Layout = () => {
   //     <Text>3</Text>
   //   </View>
   // );
+
   return (
     <ThemeProvider>
       <PortalProvider>

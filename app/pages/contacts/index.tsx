@@ -39,7 +39,7 @@ const Contacts = () => {
   const getFriendList = () => {
     setFriendList([]);
     setListMap(new Map());
-    setLoadingStore({ loading: false });
+    setLoadingStore({ loading: true });
     fetch(
       config.apiDomain +
         "/api/friends/getFriendsByUserId?userId=" +
@@ -108,7 +108,7 @@ const Contacts = () => {
     if (!pusherContext.socket) return;
     // 有新消息就更新会话列表
     pusherContext.socket?.on("friend:new", (data) => {
-      console.log("riend:new");
+      console.log("friend:new");
       getFriendList();
     });
   }, [pusherContext.socket]);

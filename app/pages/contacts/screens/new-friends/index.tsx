@@ -23,11 +23,14 @@ import Toast from "@/component/base/Toast";
 import ItemCard from "@/component/complex/ItemCard";
 import { AntDesign } from "@expo/vector-icons";
 import { useTheme } from "@/theme/useTheme";
+import { useLoadingStore } from "app/store/globalLoading";
 const NewFriends = () => {
   const navigate = useNavigation();
   const { t } = useTranslation();
-  const {themeColor} = useTheme()
+  const { themeColor } = useTheme();
   const { userStore } = useUser();
+  const { setLoadingStore } = useLoadingStore();
+
   const userId = useMemo(() => userStore.userInfo?._id, [userStore]);
   const [friendRequestList, setFriendRequestList] = useState([]);
   useLayoutEffect(() => {
@@ -47,16 +50,22 @@ const NewFriends = () => {
   });
   const { getFriendRequestListByUserId } = useGetSameApiOfGet();
   const getFriendRequestingList = () => {
-    getFriendRequestListByUserId(userId + "").then((res) => {
-      console.log(res, "res1");
-      if (res.code === 200) {
-        if (!res.data) return;
-        setFriendRequestList(res.data.friendRequestList);
-        console.log(res.data.friendRequestList, "friendRequestList");
-      } else {
-        Toast.fail(res.data);
-      }
-    });
+    setLoadingStore({ loading: true });
+
+    getFriendRequestListByUserId(userId + "")
+      .then((res) => {
+        console.log(res, "res1");
+        if (res.code === 200) {
+          if (!res.data) return;
+          setFriendRequestList(res.data.friendRequestList);
+          console.log(res.data.friendRequestList, "friendRequestList");
+        } else {
+          Toast.fail(res.data);
+        }
+      })
+      .finally(() => {
+        setLoadingStore({ loading: false });
+      });
   };
 
   useFocusEffect(

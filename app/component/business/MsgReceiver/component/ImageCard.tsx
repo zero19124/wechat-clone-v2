@@ -22,7 +22,7 @@ const ImageCard = ({ text, popover }) => {
       <Image
       
         source={{
-          cache:'only-if-cached',
+          cache:'force-cache',
           uri:
             // "https://placekitten.com/302/302"
             // ||

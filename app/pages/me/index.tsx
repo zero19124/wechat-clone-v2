@@ -36,7 +36,7 @@ import { useChatList } from "app/store/chatList";
 
 const Me = () => {
   // return <PusherTester />;
- 
+
   const avatars = [
     require("@/assets/bella.jpeg"),
     require("@/assets/me.png"),
@@ -92,10 +92,12 @@ const Me = () => {
           }
         />
         <View className="flex-1">
-          <Text style={{ fontSize: 24, marginBottom: 8 }}>{userInfo?.nickname ||userInfo?.act}</Text>
+          <Text style={{ fontSize: 24, marginBottom: 8 }}>
+            {userInfo?.nickname || userInfo?.act}
+          </Text>
           <View className="flex-row justify-between items-center">
             <Text style={{ fontSize: 18, color: themeColor.text3 }}>
-              Wechat Id: {userInfo?.wechatId}
+              Wechat Id: {userInfo?.act}
             </Text>
             <TouchableOpacity
               onPress={() => {

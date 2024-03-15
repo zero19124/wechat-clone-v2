@@ -35,7 +35,7 @@ const MomentsImg = (props: IMomentsImgPros) => {
             <Image
               style={{ width: getSize(80), height: 80 }}
               key={index}
-              source={{ uri: imgUri }}
+              source={{ uri: imgUri, cache: "force-cache" }}
             />
           </Pressable>
         );

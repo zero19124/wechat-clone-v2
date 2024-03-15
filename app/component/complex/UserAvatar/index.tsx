@@ -22,6 +22,7 @@ const UserAvatar = ({
       if (!source?.uri) {
         return require("@/assets/avatar-default.jpeg");
       }
+      source.cache = "force-cache";
       return source;
     }
     return source;

@@ -6,7 +6,14 @@ import data from "@/mocks/msgList.json";
 import { useUser } from "app/store/user";
 import { getSize } from "utils";
 import { Text } from "react-native";
-import { useTransition } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@/theme/useTheme";
 import Dialog from "@/component/base/Dialog";
@@ -15,21 +22,130 @@ import config from "@/config/index";
 import { useChatList } from "app/store/chatList";
 import DeviceInfo from "react-native-device-info";
 import modelLog from "@/utils/modelLog";
+import { PusherContext } from "@/hooks/usePusherProvider";
 const PrivateChatList = (props: {
-  dataOut: any[];
-  flatListRef: React.MutableRefObject<FlatList<any> | undefined>;
+  // flatListRef: React.MutableRefObject<FlatList<any> | undefined>;
 }) => {
   const { t } = useTranslation();
-  const { dataOut, flatListRef } = props;
+  // const { flatListRef } = props;
   const { userInfo } = useUser().userStore;
   const { themeColor } = useTheme();
-  const { chatListStore } = useChatList();
+  const { chatListStore, getChatList } = useChatList();
   const deviceModel = DeviceInfo.getModel();
+  const [dataOut, setDataOut] = useState<any[]>([]);
+  const convoId = useMemo(() => {
+    console.log("chatListStore.curConvo-msg-chat", chatListStore.curConvo);
+    return chatListStore.curConvo?.convoId;
+  }, [chatListStore.curConvo]);
+  const updateConvoLatestMsgById = (convoId: string, latestMessage: string) => {
+    if (!convoId) {
+      console.log("convoId is null updateConvoLatestMsgById ");
+      return;
+    }
+    fetch(config.apiDomain + "/api/convo/updateConvoLatestMsgById", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        convoId,
+        latestMessage,
+      }),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res, "res");
+        if (res?.code === 200) {
+          getChatList(userInfo?._id + "");
+        } else {
+          console.log(res?.msg);
+        }
+      });
+  };
+  const getMsgList = () => {
+    fetch(config.apiDomain + `/api/msg/allMsgByConvoId?convoId=${convoId}`)
+      .then((res) => res.json())
+      .then((res) => {
+        if (res?.code === 200) {
+          // console.log(res.data, "dadad");
+          setDataOut([
+            ...res.data
+              // ?.filter((item) => {
+              //   return item.type !== "recalledMsg";
+              // })
+              .map((item) => {
+                return {
+                  type: item.type,
+                  userName: item.user.act,
+                  userId: item.userId,
+                  msgId: item._id,
+                  image: item.user.image,
+                  latestMessage: item.msg,
+                };
+              }),
+          ]);
+        } else {
+          console.log(res?.msg);
+        }
+      });
+  };
+  const pusherContext = useContext(PusherContext);
+  useEffect(() => {
+    // 有新消息就更新会话列表
+    pusherContext.socket?.on("messages", (messagesData) => {
+      const data = messagesData.newMsgData;
+      const type = messagesData.type;
+      modelLog("iPhone 15", () => {
+        console.log(data, "messagesData-context");
+      });
+      try {
+        const latestMessage = data.msg;
+        //     // 这里会重新调对话窗口列表
+        updateConvoLatestMsgById(convoId + "", latestMessage);
+        // 如果有转账的 更新对应的信息转账状态
+        // 直接重新拉新数据 后面再优化状态更新问题
+        if (data.type === "recallMsg") {
+          getMsgList();
+          return;
+        }
+        if (type && type === "isTransferAccepted") {
+          getMsgList();
+          return;
+        }
+        // 插入信息列表
+        let newMsg = {};
+        try {
+          newMsg = {
+            userId: data?.user?._id || "undefined-msg-chat",
+            userName: data?.user?.act || "undefined-msg-chat",
+            msgId: data?._id,
+            type: data.type,
+            image: data?.user?.image || "undefined-msg-chat",
+            latestMessage,
+            ...data,
+          };
+        } catch (e) {
+          console.log(e, "newMsg destruct fail", data);
+        }
+        if (!Object.keys(newMsg).length) {
+          console.log("newMsg is null!!!");
+          return;
+        }
+        setDataOut((pre) => [newMsg, ...pre]);
+      } catch (e) {
+        console.error(e, "mgsList-error");
+      }
+    });
+  }, [pusherContext.socket]);
+
+  useEffect(() => {
+    getMsgList();
+  }, []);
   modelLog("iPhone 15", () => {
     console.log(dataOut, "dataOut");
   });
-
-  const renderItem = ({ item }: { item: (typeof data)[0] }) => {
+  console.log(2222233333);
+  const renderItem = useCallback(({ item }: { item: (typeof data)[0] }) => {
     // only me hava
     // console.log(item.image, "item.image----");
     const isJoinedGroupChat = item.type === "joinedGroupChat";
@@ -162,7 +278,7 @@ const PrivateChatList = (props: {
       );
     };
     return <ItemWrapper key={item.msgId} />;
-  };
+  }, []);
   return (
     <FlatList
       // style={{ paddingBottom: 58 }}
@@ -175,7 +291,7 @@ const PrivateChatList = (props: {
         // flex: 1,
       }}
       data={dataOut || data}
-      keyExtractor={(item) => item.msgId}
+      keyExtractor={(item) => item._id}
       renderItem={renderItem}
     />
   );

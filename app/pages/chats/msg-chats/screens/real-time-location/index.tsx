@@ -26,6 +26,7 @@ import { PusherContext } from "@/hooks/usePusherProvider";
 import { TextInput } from "react-native-gesture-handler";
 import Button from "@/component/base/Button/Button";
 import DeviceInfo from "react-native-device-info";
+import { useLoadingStore } from "app/store/globalLoading";
 type TUserListInRoomData = {
   userId: string;
   messageIdForRoom: string;
@@ -59,14 +60,15 @@ const NearByView = ({
   const [location, setLocation] = useState<Location.LocationObject>();
   const [locationData, setLocationData] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [showView, setShowView] = useState(null);
+  const [showView, setShowView] = useState(false);
   const { themeColor } = useTheme();
   const params = useLocalSearchParams<{
     messageIdForRoom: string;
   }>();
 
+  // when user joined and interval this to get realtime location
   const updateCurLocationByUserId = (coordinates: TCoords) => {
-    return;
+    // return;
     pusherContext.socket?.emit("real-time-location-update", {
       messageIdForRoom: params.messageIdForRoom,
       userId: userInfo?._id,
@@ -75,11 +77,15 @@ const NearByView = ({
     } as TUserListInRoomData);
   };
   const intervalId = useRef<NodeJS.Timeout>();
+  const { setLoadingStore } = useLoadingStore();
+
   useEffect(() => {
     Location.getCurrentPositionAsync({}).then((coordinates) => {
       console.log(params, "params-real-time-location-join", coordinates);
       // step1
       // join a room
+
+      setLoadingStore({ loading: true });
 
       pusherContext.socket?.emit("real-time-location-join", {
         messageIdForRoom: params.messageIdForRoom,
@@ -87,11 +93,14 @@ const NearByView = ({
         userImg: userInfo?.image,
         coordinates: {
           coords:
-            deviceModel === "iPhone 13 Pro" ? coordinates.coords : curUserLocation,
+            deviceModel === "iPhone 13 Pro"
+              ? coordinates.coords
+              : curUserLocation,
         } as any,
       } as TUserListInRoomData);
-
+      // todo
       intervalId.current = setInterval(async () => {
+        return;
         let location = await Location.getCurrentPositionAsync({});
         updateCurLocationByUserId(location.coords);
       }, 3000);
@@ -100,6 +109,7 @@ const NearByView = ({
     pusherContext.socket?.on(
       "real-time-location-joined",
       (userListInRoom: TUserListInRoomData[]) => {
+        setLoadingStore({ loading: false });
         // console.log(userListInRoom, "real-time-location-joined");
         setOnLineUserList(userListInRoom);
         Toast.info("friend joined");
@@ -109,13 +119,13 @@ const NearByView = ({
     pusherContext.socket?.on(
       "real-time-location-updated",
       (data: TUserListInRoomData) => {
-        // console.log(data, "real-time-location-updated");
+        console.log(data, "real-time-location-updated");
         setOnLineUserList(data);
       }
     );
     pusherContext.socket?.on("real-time-location-sb-left", (data) => {
       setOnLineUserList(data);
-      // console.log(data, "real-time-location-sb-left");
+      console.log("real-time-location-sb-left");
       Toast.info("friend left");
     });
     return () => {
@@ -159,31 +169,56 @@ const NearByView = ({
   // console.log(mockLocation, "mockLocationmockLocation11");
   return (
     <View style={styles.container}>
-      <MapView
-        initialRegion={{
-          ...curUserLocation,
-          latitudeDelta: 0.0522,
-          longitudeDelta: 0.0521,
+      <View
+        style={{
+          position: "absolute",
+          top: 80,
+          zIndex: 1,
+          flexDirection: "row",
         }}
-        style={[styles.map, { position: "relative" }]}
       >
         <MaterialCommunityIcons
-          onLongPress={() => {
-            setShowView(true);
+          style={{
+            marginLeft: 32,
           }}
           onPress={() => {
             navigator.goBack();
-          }}
-          style={{
-            marginTop: getSize(80),
-            marginLeft: 32,
           }}
           name="arrow-left"
           size={24}
           color="black"
         />
+        <View
+          style={{
+            backgroundColor: themeColor.overlay2,
+            marginLeft: "30%",
+            justifyContent: "center",
+            alignItems: "center",
+            paddingHorizontal: 24,
+            borderRadius: 4,
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              setShowView(true);
+            }}
+          >
+            <Text style={{ color: themeColor.white }}>
+              {t(" joined: ")}
+              {onLineUserList?.length}
+              {/* {onLineUserList?.map((user) => user.userName).join(",")} */}
+            </Text>
+          </TouchableOpacity>
+        </View>
         {showView && (
-          <View style={{ paddingTop: 150, width: 200, marginLeft: 50 }}>
+          <View
+            style={{
+              width: 200,
+              marginLeft: 50,
+              position: "absolute",
+              top: 80,
+            }}
+          >
             <TextInput
               value={String(mockLocation.longitude).substring(0, 6)}
               style={{ width: 100, height: 30, backgroundColor: "red" }}
@@ -215,9 +250,21 @@ const NearByView = ({
                   return pre;
                 });
               }}
-            ></TouchableOpacity>
+            >
+              <Text>mock moving</Text>
+            </TouchableOpacity>
           </View>
         )}
+      </View>
+
+      <MapView
+        initialRegion={{
+          ...curUserLocation,
+          latitudeDelta: 0.0522,
+          longitudeDelta: 0.0521,
+        }}
+        style={[styles.map, { position: "relative" }]}
+      >
         {onLineUserList?.map((item, index) => {
           // console.log(item, "item", item.coordinates.coords);
           // console.log(item.coordinates, "item.coordinates.coords;");

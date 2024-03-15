@@ -19,6 +19,7 @@ import BottomWidthDivider from "@/component/complex/BottomWidthDivider";
 import ItemCard from "@/component/complex/ItemCard";
 import UserAvatar from "@/component/complex/UserAvatar";
 import { useUser } from "app/store/user";
+import { useLoadingStore } from "app/store/globalLoading";
 const AddContactsSearch = () => {
   const navigate = useNavigation();
   const { userInfo } = useUser().userStore;
@@ -28,25 +29,30 @@ const AddContactsSearch = () => {
   const { t } = useTranslation();
   const { themeColor } = useTheme();
   const textInputRef = useRef<TextInput>();
-  useEffect(() => {
-    textInputRef.current?.focus();
-  }, []);
+  const { setLoadingStore } = useLoadingStore();
 
   // 定义处理文本变化的函数
   const handleTextChange = (inputText: string) => {
     setText(inputText);
+    setLoadingStore({ loading: true });
     fetch(config.apiDomain + `/api/user/getUserByName?userName=${inputText}`)
       .then((res) => res.json())
       .then((userList) => {
         console.log(userList, "userList");
         setResultList(userList.filter((user) => user._id !== userInfo?._id));
         setShowResult(true);
+      })
+      .finally(() => {
+        setLoadingStore({ loading: false });
       });
     // 在这里处理文本变化的逻辑
   };
 
   // 使用 debounce 包装处理文本变化的函数，延迟执行 500 毫秒
   const debouncedHandleTextChange = _.debounce(handleTextChange, 500);
+  useEffect(() => {
+    textInputRef.current?.focus();
+  }, []);
   return (
     <SafeAreaView
       style={{
