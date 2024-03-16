@@ -56,7 +56,7 @@ const Wallet = () => {
         return res.json();
       })
       .then((res) => {
-        console.log(res, "res");
+        console.log(res, "res-wallet");
         setWallet(res.data || { balance: 0, miniFund: 0 });
       });
     console.log(i18n.language);

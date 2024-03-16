@@ -1,5 +1,4 @@
 import {
-  Image,
   ImageSourcePropType,
   ImageStyle,
   StyleProp,
@@ -8,6 +7,8 @@ import {
 import { getSize } from "utils";
 import { themeColor } from "@/theme/light";
 import { useMemo } from "react";
+import FastImage from "react-native-fast-image";
+
 const UserAvatar = ({
   source,
   style,
@@ -23,13 +24,12 @@ const UserAvatar = ({
       if (!source?.uri) {
         return require("@/assets/avatar-default.jpeg");
       }
-      source.cache = "force-cache";
       return source;
     }
     return source;
   }, [source]);
   return (
-    <Image
+    <FastImage
       {...rest}
       source={finalSource}
       style={[

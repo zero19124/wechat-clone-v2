@@ -275,7 +275,7 @@ const InputKeyboard = (props) => {
                 return res.json();
               })
               .then((res) => {
-                console.log(res, "res");
+                console.log(res, "res-key-input");
                 return res.data;
               });
             console.log(userWallet, "userWallet", amount);

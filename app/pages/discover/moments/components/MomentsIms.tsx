@@ -1,5 +1,6 @@
 import ImagePreview from "@/component/base/ImagePreview";
 import { Image, View, Text, Pressable } from "react-native";
+import FastImage from "react-native-fast-image";
 import { getSize } from "utils";
 interface IMomentsImgPros {
   imgList: string[];
@@ -32,10 +33,10 @@ const MomentsImg = (props: IMomentsImgPros) => {
               });
             }}
           >
-            <Image
+            <FastImage
               style={{ width: getSize(80), height: 80 }}
               key={index}
-              source={{ uri: imgUri, cache: "force-cache" }}
+              source={{ uri: imgUri }}
             />
           </Pressable>
         );

@@ -1,6 +1,6 @@
 import ImagePreview from "@/component/base/ImagePreview";
-import { Text, View, Image, TouchableOpacity } from "react-native";
-
+import { TouchableOpacity } from "react-native";
+import FastImage from "react-native-fast-image";
 const ImageCard = ({ text, popover }) => {
   const openPreview = () => {
     console.log(text, "text-im1g");
@@ -19,10 +19,8 @@ const ImageCard = ({ text, popover }) => {
       }}
       onPress={openPreview}
     >
-      <Image
-      
+      <FastImage
         source={{
-          cache:'force-cache',
           uri:
             // "https://placekitten.com/302/302"
             // ||

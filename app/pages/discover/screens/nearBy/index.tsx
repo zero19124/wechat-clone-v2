@@ -54,7 +54,7 @@ const NearByView = ({
         return res.json();
       })
       .then((res) => {
-        console.log(res, "res");
+        console.log(res, "res-location-1");
         return res.data;
       })
       .finally(() => {
@@ -70,7 +70,7 @@ const NearByView = ({
         return res.json();
       })
       .then((res) => {
-        console.log(res, "res");
+        console.log(res, "res-location-3");
         return res.data.location.coordinates;
       });
   };
@@ -258,7 +258,7 @@ const NearByView = ({
                         return res.json();
                       })
                       .then((res) => {
-                        console.log(res, "res");
+                        console.log(res, "res-location-2");
 
                         setLocationData(
                           locationData.map((item) => {

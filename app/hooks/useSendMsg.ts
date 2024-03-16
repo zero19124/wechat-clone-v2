@@ -20,7 +20,7 @@ const useSendMsg = () => {
       console.log("input is empty");
       return;
     }
-    console.log("change", val, userId, convoId);
+    console.log("send-msg:useSendMsg", val, userId, convoId);
     fetch(config.apiDomain + "/api/msg/add-msg", {
       method: "POST",
       headers: {

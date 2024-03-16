@@ -31,6 +31,7 @@ export const useChatList = () => {
   };
   const [chatListStore, setChatListStore] = useRecoilState(chatListState);
   const getChatList = (userId: string) => {
+    console.log('getChatList-requesting');
     return fetch(
       config.apiDomain + `/api/convo/getConvoByUserId?userId=${userId}`
     )

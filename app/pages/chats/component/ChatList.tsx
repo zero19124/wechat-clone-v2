@@ -201,7 +201,12 @@ const ConvoList = () => {
       </TouchableOpacity>
     );
   };
-
+  useFocusEffect(() => {
+    if (init) {
+      console.log(2222);
+      // getChatList(userStore.userInfo?._id + "");
+    }
+  });
   return (
     chatListStore.chatListState && (
       <FlatList

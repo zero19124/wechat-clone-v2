@@ -1,8 +1,6 @@
-import ImagePreview from "@/component/base/ImagePreview";
-import UserAvatar from "@/component/complex/UserAvatar";
 import { useNavigation } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { Text, View, Image, TouchableOpacity, Pressable, Platform } from "react-native";
+import { Text, Pressable, Platform } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { getSize } from "utils";
 
@@ -10,9 +8,9 @@ const LocationCard = ({ text, popover }) => {
   const value = JSON.parse(text.split("+")[1]);
   console.log(text, "LocationCard", value);
   const navigator = useNavigation();
-  const {t} = useTranslation()
-  if(Platform.OS ==='android'){
-    return <Text>{t('android not support map')}</Text>
+  const { t } = useTranslation();
+  if (Platform.OS === "android") {
+    return <Text>{t("android not support map")}</Text>;
   }
   return (
     <Pressable

@@ -38,31 +38,7 @@ const PrivateChatList = (props: {
     console.log("chatListStore.curConvo-msg-chat", chatListStore.curConvo);
     return chatListStore.curConvo?.convoId;
   }, [chatListStore.curConvo]);
-  const updateConvoLatestMsgById = (convoId: string, latestMessage: string) => {
-    if (!convoId) {
-      console.log("convoId is null updateConvoLatestMsgById ");
-      return;
-    }
-    fetch(config.apiDomain + "/api/convo/updateConvoLatestMsgById", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        convoId,
-        latestMessage,
-      }),
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res, "res");
-        if (res?.code === 200) {
-          getChatList(userInfo?._id + "");
-        } else {
-          console.log(res?.msg);
-        }
-      });
-  };
+
   const getMsgList = () => {
     fetch(config.apiDomain + `/api/msg/allMsgByConvoId?convoId=${convoId}`)
       .then((res) => res.json())
@@ -107,7 +83,8 @@ const PrivateChatList = (props: {
       try {
         const latestMessage = data.msg;
         //     // 这里会重新调对话窗口列表
-        updateConvoLatestMsgById(convoId + "", latestMessage);
+        // update  when chatpage focus and get the latest
+        // updateConvoLatestMsgById(convoId + "", latestMessage);
         // 如果有转账的 更新对应的信息转账状态
         // 直接重新拉新数据 后面再优化状态更新问题
         if (data.type === "recallMsg") {
@@ -151,7 +128,7 @@ const PrivateChatList = (props: {
   modelLog("iPhone 15", () => {
     // console.log(dataOut, "dataOut");
   });
-  console.log(2222233333);
+  // console.log(2222233333);
   const renderItem = useCallback(({ item }: { item: (typeof data)[0] }) => {
     // only me hava
     // console.log(item.image, "item.image----");
@@ -286,6 +263,7 @@ const PrivateChatList = (props: {
     };
     return <ItemWrapper key={item.msgId} />;
   }, []);
+  console.log("--------PrivateChatList-----------");
   return (
     <FlatList
       // style={{ paddingBottom: 58 }}
@@ -297,7 +275,8 @@ const PrivateChatList = (props: {
         // dont give flex:1  it will strict the list on the sreen and cant scroll up everytime u scroll up it will automaticly bounce back
         // flex: 1,
       }}
-      data={dataOut || data}
+      data={dataOut}
+      extraData={dataOut}
       keyExtractor={(item) => item._id}
       renderItem={renderItem}
     />
