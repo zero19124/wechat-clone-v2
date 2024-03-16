@@ -7,7 +7,6 @@ import {
   StyleSheet,
 } from "react-native";
 import { getSize } from "utils";
-import { Audio } from "expo-av";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { useUser } from "app/store/user";
@@ -24,7 +23,6 @@ const ConvoList = () => {
   const { onlineUsers } = useContext(PusherContext);
 
   const { themeColor } = useTheme();
-  const [init, setInit] = useState(false);
   const { chatListStore, getChatList, setChatListStoreV2 } = useChatList();
   const userId = useMemo(() => userStore.userInfo?._id, [userStore]);
   const style = getStyle(themeColor);
@@ -37,35 +35,13 @@ const ConvoList = () => {
     if (!userId) return;
     // getChatList(userId);
   });
-  const playSound = async () => {
-    // if (!init) return;
-    console.log("playSound");
-    Audio.setAudioModeAsync({ allowsRecordingIOS: false });
-    const sound = new Audio.Sound();
-    sound.loadAsync(require("@/assets/ding-short.mp3"), {
-      shouldPlay: true,
-    });
-  };
+
   useEffect(() => {
     console.log(onlineUsers, "onlineUsers");
     console.log(onlineUsers[userStore.userInfo?._id + ""]);
   }, [onlineUsers]);
-  useEffect(() => {
-    // 有新消息就更新会话列表
-    pusherContext.socket?.on("convo:update", (data) => {
-      console.log("convo:update");
-      // console.log(data, "getChatList-convo:update", userId);
-      if (!userId) return;
-      getChatList(userId);
-      playSound();
-    });
-    getChatList(userId + "");
-    // if (userId) {
-    // }
-    if (pusherContext.socket && userId) {
-      setInit(true);
-    }
-  }, [pusherContext.socket, userId]);
+
+ 
   const renderItem = ({ item }: { item: any }) => {
     // console.log(item._id, item.isGroup, "ConvoList");
     {
@@ -201,12 +177,7 @@ const ConvoList = () => {
       </TouchableOpacity>
     );
   };
-  useFocusEffect(() => {
-    if (init) {
-      console.log(2222);
-      // getChatList(userStore.userInfo?._id + "");
-    }
-  });
+
   return (
     chatListStore.chatListState && (
       <FlatList

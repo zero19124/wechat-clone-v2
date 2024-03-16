@@ -228,8 +228,8 @@ const Page = () => {
   const onClose = () => {
     setVisible(false);
   };
-  const memoed = useMemo(() => <PrivateChatList />, []);
-  console.log("PrivateChatList-render");
+
+  console.log("PrivateChatLis-outside-with-input-render");
   return (
     <SafeAreaView
       style={{
@@ -275,7 +275,9 @@ const Page = () => {
           }}
         >
           {/* 聊天列表 */}
-          <View style={{ flex: 1 }}>{memoed}</View>
+          <View style={{ flex: 1 }}>
+            <PrivateChatList />
+          </View>
         </TouchableWithoutFeedback>
         {/* keyboard 内容 */}
         <ChatInput

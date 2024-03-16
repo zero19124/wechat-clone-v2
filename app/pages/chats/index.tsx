@@ -36,6 +36,7 @@ import { useChatList } from "app/store/chatList";
 import Overlay from "@/component/base/Overlay";
 import Button from "@/component/base/Button/Button";
 import { PortalHost } from "@/component/business/Portal";
+import { playSound } from "@/utils/sound";
 const Chats = () => {
   const pusherContext = useContext(PusherContext);
   const socket = pusherContext.socket;
@@ -44,7 +45,8 @@ const Chats = () => {
   const roomName = useRef("");
   const navigate = useNavigation();
   const { userStore, setUserStore } = useUser();
-
+  const [init, setInit] = useState(false);
+  const userId = useMemo(() => userStore.userInfo?._id || "", [userStore]);
   const { t } = useTranslation();
   const { themeColor } = useTheme();
   const popover = useRef<PopoverInstance>(null);
@@ -76,18 +78,7 @@ const Chats = () => {
         <ScanFilled style={{ width: 22, height: 22 }} fill={themeColor.white} />
       ),
     },
-    // {
-    //   text: t("rec"),
-    //   icon: (
-    //     <ScanFilled style={{ width: 22, height: 22 }} fill={themeColor.white} />
-    //   ),
-    // },
-    // {
-    //   text: t("send"),
-    //   icon: (
-    //     <ScanFilled style={{ width: 22, height: 22 }} fill={themeColor.white} />
-    //   ),
-    // },
+
     {
       text: t("Money"),
       icon: (
@@ -131,7 +122,7 @@ const Chats = () => {
     console.log(roomName.current, "joinRoomHandler");
 
     // if user already in the group then cant join
-    if (!userStore.userInfo?._id) {
+    if (!userId) {
       Toast.info("userId is null");
       return;
     }
@@ -169,11 +160,7 @@ const Chats = () => {
       setVisible(false);
       roomName.current = "";
     };
-    if (
-      resultByGroupName?.participants?.find(
-        (item) => item._id === userStore.userInfo?._id
-      )
-    ) {
+    if (resultByGroupName?.participants?.find((item) => item._id === userId)) {
       console.log(2222222, resultByGroupName);
       setVisible(false);
       roomName.current = "";
@@ -197,7 +184,7 @@ const Chats = () => {
     axios
       .post(config.apiDomain + "/api/convo/updateConvoMemberById", {
         convoId: resultByGroupName._id,
-        attendId: userStore.userInfo?._id,
+        attendId: userId,
         type: "add",
       })
       .then(() => {
@@ -207,7 +194,7 @@ const Chats = () => {
   const newRoomHandle = async () => {
     console.log(roomName.current, "newRoomHandle");
     // will emit socket
-    if (!userStore.userInfo?._id) {
+    if (!userId) {
       Toast.info("userId is null");
       return;
     }
@@ -215,7 +202,7 @@ const Chats = () => {
       .post(config.apiDomain + "/api/convo/add-convo", {
         groupName: roomName.current,
         type: "new-chat",
-        participants: [userStore.userInfo?._id],
+        participants: [userId],
       })
       .then((res) => {
         if (res.data.code === 400) {
@@ -253,8 +240,6 @@ const Chats = () => {
   };
   useLayoutEffect(() => {
     navigate.setOptions({
-      // headerShown: false,
-
       headerLeft: () => <Entypo name="dots-two-horizontal" size={20} />,
       headerLeftContainerStyle: { paddingLeft: 12 },
       headerTitle: "Weixin",
@@ -312,7 +297,6 @@ const Chats = () => {
       },
     });
   }, [userStore]);
-  console.log("chats");
   useEffect(() => {
     // console.log(userStore, "userStoreuserStoreuserStore");
   }, [userStore]);
@@ -361,8 +345,47 @@ const Chats = () => {
 
     // navigate.navigate("pages/contacts/screens/send-friend-request/index");
   }, [socket]);
-  console.log('chatlist-render');
+  console.log("chatlist-render");
+  const route = useRouter();
 
+  useEffect(() => {
+    console.log(navigate.getState(), "route.name", navigate.getParent()); // 当前路由名称
+
+    const unsubscribeBlur = navigate.addListener("focus", (state) => {
+      console.log(state, "route-name-focus");
+    });
+    const unsubscribe = navigate.addListener("blur", (blur) => {
+      console.log(blur, "route-name-blur");
+    });
+    return () => {
+      unsubscribeBlur();
+      unsubscribe();
+    };
+    // 当前路由参数
+  }, [route]);
+
+  useEffect(() => {
+    // 有新消息就更新会话列表
+    pusherContext.socket?.on("convo:update", (data) => {
+      console.log("convo:update", navigate.isFocused());
+      if (!navigate.isFocused()) {
+        console.log("navigate.isFocused is null");
+        return;
+      }
+      if (!userId) {
+        console.log("navigate.isFocused-userId is null");
+        return;
+      }
+      // console.log(data, "getChatList-convo:update", userId);
+      getChatList(userId);
+      playSound();
+    });
+    getChatList(userId + "");
+
+    if (pusherContext.socket && userId) {
+      setInit(true);
+    }
+  }, [pusherContext.socket, userId]);
   return (
     <>
       {visible && (

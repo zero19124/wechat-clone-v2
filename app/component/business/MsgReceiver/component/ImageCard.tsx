@@ -12,6 +12,7 @@ const ImageCard = ({ text, popover }) => {
       onChange: (index) => console.log(`当前展示第${index + 1}张`),
     });
   };
+  console.log("imige-------");
   return (
     <TouchableOpacity
       onLongPress={() => {
