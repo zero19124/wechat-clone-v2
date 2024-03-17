@@ -1,7 +1,7 @@
 import { themeColor } from "@/theme/light";
 import MsgReceiver from "app/component/business/MsgReceiver";
 import UserAvatar from "app/component/complex/UserAvatar";
-import { FlatList, TouchableOpacity, View } from "react-native";
+import { FlatList, ScrollView, TouchableOpacity, View } from "react-native";
 import data from "@/mocks/msgList.json";
 import { useUser } from "app/store/user";
 import { getSize } from "utils";
@@ -12,6 +12,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   useTransition,
 } from "react";
@@ -47,12 +48,9 @@ const PrivateChatList = memo(
         .then((res) => {
           if (res?.code === 200) {
             // console.log(res.data, "dadad");
-            setDataOut([
-              ...res.data
-                // ?.filter((item) => {
-                //   return item.type !== "recalledMsg";
-                // })
-                .map((item) => {
+            setDataOut(
+              [
+                ...res.data.map((item) => {
                   return {
                     type: item.type,
                     userName: item.user.act,
@@ -62,7 +60,8 @@ const PrivateChatList = memo(
                     latestMessage: item.msg,
                   };
                 }),
-            ]);
+              ].reverse()
+            );
           } else {
             console.log(res?.msg);
           }
@@ -116,13 +115,16 @@ const PrivateChatList = memo(
             console.log("newMsg is null!!!");
             return;
           }
-          setDataOut((pre) => [newMsg, ...pre]);
+          setDataOut((pre) => [...pre, newMsg]);
+          // setDataOut((pre) => [newMsg, ...pre]);
         } catch (e) {
           console.error(e, "mgsList-error");
         }
       });
     }, [pusherContext.socket]);
-
+    const isGroup = useMemo(() => {
+      return chatListStore.curConvo?.isGroup;
+    }, [chatListStore.curConvo]);
     useEffect(() => {
       getMsgList();
       setLoadingStore({ loading: true });
@@ -130,146 +132,207 @@ const PrivateChatList = memo(
     modelLog("iPhone 15", () => {
       // console.log(dataOut, "dataOut");
     });
-    // console.log(2222233333);
-    const RenderItem = memo(({ item }: { item: (typeof data)[0] }) => {
-      // console.log('RenderItem-re-render');
-      // only me hava
-      // console.log(item.image, "item.image----");
-      const isJoinedGroupChat = item.type === "joinedGroupChat";
-      if (item.type === "recalledMsg") {
-        return <></>;
-      }
 
-      if (item.type === "recallMsg" || isJoinedGroupChat) {
-        return (
-          <View
-            style={{
-              marginVertical: 24,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+    const ItemWrapper = memo(({ isMe, item, isGroup }) => {
+      return (
+        <View
+          style={{
+            marginBottom: 16,
+            flexDirection: "row",
+          }}
+        >
+          {isMe ? (
             <View
               style={{
-                backgroundColor: isJoinedGroupChat
-                  ? themeColor.bg1
-                  : themeColor.overlay1,
-                padding: 12,
-                borderRadius: 2,
-                paddingVertical: 4,
-                margin: "auto",
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                flex: 1,
               }}
             >
-              <Text
+              <MsgReceiver
+                msgId={item.msgId}
+                msgType={item.type}
+                msgSenderId={item.userId}
+                type="right"
+                text={item.latestMessage}
+              />
+              <UserAvatar
+                source={{ uri: userInfo?.image }}
                 style={{
-                  textAlign: "center",
+                  marginLeft: 8,
+                  width: getSize(45),
+                  height: getSize(45),
                 }}
-              >
-                {isJoinedGroupChat
-                  ? item.latestMessage
-                  : t("you recalled a message")}
-              </Text>
+              />
             </View>
-          </View>
-        );
-      }
-      const isMe = item.userId === userInfo?._id;
-      const ItemWrapper = () => {
-        return (
-          <View
-            style={{
-              marginBottom: 16,
-              flexDirection: "row",
-            }}
-          >
-            {isMe ? (
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "flex-end",
-                  flex: 1,
+          ) : (
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-start",
+                flex: 1,
+              }}
+            >
+              <TouchableOpacity
+                onLongPress={async () => {
+                  console.log(item, "do u want to kick out this member");
+                  // if(groupOwnerId === curID){}
+                  await Dialog.confirm({
+                    cancelButtonText: t("kick out"),
+                    confirmButtonText: t("cancel"),
+                    title: t("warning"),
+                    message: t(
+                      `do u want to kick out this member ${item.userName}?`
+                    ),
+                  })
+                    .then(() => {
+                      axios
+                        .post(
+                          config.apiDomain + "/api/convo/updateConvoMemberById",
+                          {
+                            convoId: chatListStore.curConvo?.convoId,
+                            attendId: item.userId,
+                            type: "kick-out",
+                          }
+                        )
+                        .then(() => {
+                          console.log("updateConvoMemberById-kickout");
+                        });
+                    })
+                    .catch(() => {});
                 }}
               >
-                <MsgReceiver
-                  msgId={item.msgId}
-                  msgType={item.type}
-                  msgSenderId={item.userId}
-                  type="right"
-                  text={item.latestMessage}
-                />
                 <UserAvatar
-                  source={{ uri: userInfo?.image }}
+                  source={{ uri: item.image }}
                   style={{
-                    marginLeft: 8,
+                    marginRight: 8,
                     width: getSize(45),
                     height: getSize(45),
                   }}
                 />
-              </View>
-            ) : (
+              </TouchableOpacity>
+              <MsgReceiver
+                userName={isGroup ? item.userName : ""}
+                msgId={item.msgId}
+                msgSenderId={item.userId}
+                msgType={item.type}
+                text={item.latestMessage}
+              ></MsgReceiver>
+            </View>
+          )}
+        </View>
+      );
+    });
+    const [list, setList] = useState<any[]>([]);
+    // console.log(2222233333);
+    const RenderItem = memo(
+      ({ item }: { item: (typeof data)[0] }) => {
+        console.log("memo-RenderItem");
+        // item = dataOut.find((data) => data.msgId === msgId);
+        // console.log('RenderItem-re-render');
+        // only me hava
+        // console.log(item.image, "item.image----");
+        const isJoinedGroupChat = item.type === "joinedGroupChat";
+        if (item.type === "recalledMsg") {
+          return <></>;
+        }
+
+        if (item.type === "recallMsg" || isJoinedGroupChat) {
+          return (
+            <View
+              style={{
+                marginVertical: 24,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <View
                 style={{
-                  flexDirection: "row",
-                  justifyContent: "flex-start",
-                  flex: 1,
+                  backgroundColor: isJoinedGroupChat
+                    ? themeColor.bg1
+                    : themeColor.overlay1,
+                  padding: 12,
+                  borderRadius: 2,
+                  paddingVertical: 4,
+                  margin: "auto",
                 }}
               >
-                <TouchableOpacity
-                  onLongPress={async () => {
-                    console.log(item, "do u want to kick out this member");
-                    // if(groupOwnerId === curID){}
-                    await Dialog.confirm({
-                      cancelButtonText: t("kick out"),
-                      confirmButtonText: t("cancel"),
-                      title: t("warning"),
-                      message: t(
-                        `do u want to kick out this member ${item.userName}?`
-                      ),
-                    })
-                      .then(() => {
-                        axios
-                          .post(
-                            config.apiDomain +
-                              "/api/convo/updateConvoMemberById",
-                            {
-                              convoId: chatListStore.curConvo?.convoId,
-                              attendId: item.userId,
-                              type: "kick-out",
-                            }
-                          )
-                          .then(() => {
-                            console.log("updateConvoMemberById-kickout");
-                          });
-                      })
-                      .catch(() => {});
+                <Text
+                  style={{
+                    textAlign: "center",
                   }}
                 >
-                  <UserAvatar
-                    source={{ uri: item.image }}
-                    style={{
-                      marginRight: 8,
-                      width: getSize(45),
-                      height: getSize(45),
-                    }}
-                  />
-                </TouchableOpacity>
-                <MsgReceiver
-                  userName={
-                    chatListStore.curConvo?.isGroup ? item.userName : ""
-                  }
-                  msgId={item.msgId}
-                  msgSenderId={item.userId}
-                  msgType={item.type}
-                  text={item.latestMessage}
-                ></MsgReceiver>
+                  {isJoinedGroupChat
+                    ? item.latestMessage
+                    : t("you recalled a message")}
+                </Text>
               </View>
-            )}
-          </View>
-        );
-      };
-      return <ItemWrapper key={item.msgId} />;
-    });
+            </View>
+          );
+        }
+        const isMe = item.userId === userInfo?._id;
+
+        return <ItemWrapper isMe={isMe} item={item} isGroup={isGroup} />;
+      },
+      (pre, next) => {
+        console.log("RenderItemRenderItemRenderItemRenderItem", pre, next);
+        return true;
+      }
+    );
     console.log("--------ChatList-----------");
+    const Test = memo((msgId) => {
+      return <></>;
+    });
+    useEffect(() => {
+      setTimeout(() => {
+        reList.current?.scrollTo({ y: 1000 });
+      }, 500);
+      if (list.length) {
+        setList((pre) => {
+          console.log(dataOut, dataOut.length, "dataOut[dataOut.length]");
+          pre.push(
+            <RenderItem
+              item={dataOut[dataOut.length - 1]}
+              key={dataOut[dataOut.length - 1].msgId}
+            />
+          );
+          return pre;
+        });
+        return;
+      }
+      dataOut.forEach((item) => {
+        setList((pre) => {
+          pre.push(<RenderItem item={item} key={item.msgId} />);
+          return pre;
+        });
+      });
+    }, [dataOut]);
+    // console.log(
+    //   dataOut.map((item) => {
+    //     return <RenderItem item={item} key={item.msgId} />;
+    //   }),
+    //   "2222223232"
+    // );
+    console.log(list, "setlistsetlistsetlistsetlist+", list.length);
+    const reList = useRef<ScrollView>();
+    const mmmList = useMemo(() => {
+      console.log("mmmList");
+      return <Text>{list.length}</Text>;
+    }, [list]);
+    return (
+      <>
+        {mmmList}
+        <Text>{list.length}</Text>
+        <ScrollView ref={reList}>
+          {list.map((Item) => {
+            return Item;
+          })}
+          {/* {dataOut.map((item) => {
+          return <RenderItem item={item} key={item.msgId} />;
+        })} */}
+        </ScrollView>
+      </>
+    );
     return (
       <FlatList
         // style={{ paddingBottom: 58 }}
@@ -282,7 +345,6 @@ const PrivateChatList = memo(
           // flex: 1,
         }}
         data={dataOut}
-        extraData={dataOut}
         keyExtractor={(item) => item._id}
         renderItem={({ item, index }) => {
           return <RenderItem item={item} />;

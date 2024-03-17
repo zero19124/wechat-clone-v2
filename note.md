@@ -47,3 +47,8 @@ So,
 Had a clean working directory by committing the work
 Ran npx expo prebuild --clean
 Finally, npx expo run:ios
+
+
+!!!! flickering fix
+usecallback + memo 
+usestate + render

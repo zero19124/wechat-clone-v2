@@ -13,6 +13,7 @@ import { useState } from "react";
 import { pickImages } from "@/hooks/useImagePicker";
 import Swiper from "@/component/base/Swiper";
 import { useTheme } from "@/theme/useTheme";
+import { useLoadingStore } from "app/store/globalLoading";
 export const FN_TYPE_MAPS = {
   Album: "Album",
   Camera: "Camera",
@@ -70,6 +71,8 @@ const FnKeyBoard = ({
   // console.log("FnKeyBoard", heightValue);
   const { themeColor } = useTheme();
   const router = useRouter();
+  const { setLoadingStore } = useLoadingStore();
+
   const navigator = useNavigation();
   const styles = getStyle(themeColor);
   const svgHandler = async (name: string) => {
@@ -79,14 +82,12 @@ const FnKeyBoard = ({
         navigator.navigate("component/business/individual-payment/index");
         handlers?.({ type: FN_TYPE_MAPS.Transfer, val: "" });
         break;
-      // case "ImgPicker":
-      //   console.log(222);
-      //   router.push("/pages/socket-test");
-      //   handlers?.(FN_TYPE_MAPS.Album, "");
-
-      //   break;
       case "Album":
+        setLoadingStore({ loading: true, text: "uploading..." });
+
         const imageList = await pickImages();
+        // setLoadingStore({ loading: false });
+
         if (imageList.length === 1) {
           handlers?.({ type: FN_TYPE_MAPS.Album, val: imageList[0] });
         }

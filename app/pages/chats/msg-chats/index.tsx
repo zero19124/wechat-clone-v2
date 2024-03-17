@@ -31,15 +31,23 @@ import { uploadImages } from "@/hooks/useImagePicker";
 import MemberList from "./component/MemberList";
 import Toast from "@/component/base/Toast";
 import { useLoadingStore } from "app/store/globalLoading";
+const _270 = getSize(220);
 
 const Page = () => {
   const navigate = useNavigation();
   // 获取设备型号
   const deviceModel = DeviceInfo.getModel();
+  const [visible, setVisible] = useState(false);
+  const [memberListVisible, setMemberListVisible] = useState(false);
+  const { themeColor } = useTheme();
+  const [msg, setMsg] = useState("");
+  const heightValue = useRef(new Animated.Value(10)).current;
+  const height = useRef(0);
+  const { sendMsgHandler } = useSendMsg();
+  const flatListRef = useRef<FlatList>();
   const { userInfo } = useUser().userStore;
   const { setLoadingStore } = useLoadingStore();
-
-  const { getChatList, chatListStore } = useChatList();
+  const { chatListStore } = useChatList();
   const params = useLocalSearchParams<{ convoId: string; chatType: string }>();
   const convoId = useMemo(() => {
     console.log("chatListStore.curConvo-msg-chat", chatListStore.curConvo);
@@ -62,71 +70,7 @@ const Page = () => {
     }
     return curReceiverInfo?.act;
   }, [params, curReceiverInfo]);
-  useLayoutEffect(() => {
-    navigate.setOptions({
-      headerShown: true,
-      headerShadowVisible: false,
-      headerRight: () => <ThreeDot />,
-      headerLeftContainerStyle: { paddingLeft: 12 },
-      headerTitle: () => {
-        return (
-          <TouchableOpacity
-            onPress={() => {
-              setMemberListVisible(true);
-            }}
-          >
-            <Text
-              style={{
-                color: themeColor.bg5,
-                fontSize: 18,
-                fontWeight: "bold",
-              }}
-            >
-              {title}
-            </Text>
-          </TouchableOpacity>
-        );
-      },
-      headerTitleAlign: "center",
-      headerLeft: () => {
-        if (Platform.OS === "android") {
-          return null;
-        }
-        return (
-          <View>
-            <TouchableOpacity
-              style={{ flexDirection: "row", alignItems: "center" }}
-              onPress={() => {
-                router.back();
-              }}
-            >
-              <GoBack width={24} height={24} />
-              <View
-                style={{
-                  marginLeft: 4,
-                  backgroundColor: themeColor.text2,
-                  width: 22,
-                  height: 22,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 22,
-                }}
-              >
-                <Text>{parseInt(Math.random() * 10 + "")}</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        );
-      },
-      headerRightContainerStyle: { paddingRight: 12 },
-    } as TNavigationOptions);
-  }, []);
-  const { toggleTheme, themeColor, themeName } = useTheme();
-  const [msg, setMsg] = useState("");
-  const heightValue = useRef(new Animated.Value(10)).current;
-  const height = useRef(0);
-  const { sendMsgHandler } = useSendMsg();
-  const flatListRef = useRef<FlatList>();
+
   const startAnimation = (toValue) => {
     Animated.timing(heightValue, {
       toValue,
@@ -139,7 +83,6 @@ const Page = () => {
     startAnimation(0);
   });
 
-  const _270 = getSize(220);
   const setH = () => {
     console.log(heightValue, "cH.current");
     Keyboard.dismiss();
@@ -222,13 +165,68 @@ const Page = () => {
   const [defaultActions, setDefaultActions] =
     useState<ActionSheetAction[]>(VideoCallActions);
 
-  const [visible, setVisible] = useState(false);
-  const [memberListVisible, setMemberListVisible] = useState(false);
-
   const onClose = () => {
     setVisible(false);
   };
-
+  useLayoutEffect(() => {
+    navigate.setOptions({
+      headerShown: true,
+      headerShadowVisible: false,
+      headerRight: () => <ThreeDot />,
+      headerLeftContainerStyle: { paddingLeft: 12 },
+      headerTitle: () => {
+        return (
+          <TouchableOpacity
+            onPress={() => {
+              setMemberListVisible(true);
+            }}
+          >
+            <Text
+              style={{
+                color: themeColor.bg5,
+                fontSize: 18,
+                fontWeight: "bold",
+              }}
+            >
+              {title}
+            </Text>
+          </TouchableOpacity>
+        );
+      },
+      headerTitleAlign: "center",
+      headerLeft: () => {
+        if (Platform.OS === "android") {
+          return null;
+        }
+        return (
+          <View>
+            <TouchableOpacity
+              style={{ flexDirection: "row", alignItems: "center" }}
+              onPress={() => {
+                router.back();
+              }}
+            >
+              <GoBack width={24} height={24} />
+              <View
+                style={{
+                  marginLeft: 4,
+                  backgroundColor: themeColor.text2,
+                  width: 22,
+                  height: 22,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 22,
+                }}
+              >
+                <Text>{parseInt(Math.random() * 10 + "")}</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        );
+      },
+      headerRightContainerStyle: { paddingRight: 12 },
+    } as TNavigationOptions);
+  }, []);
   console.log("PrivateChatLis-outside-with-input-render");
   return (
     <SafeAreaView
@@ -287,6 +285,7 @@ const Page = () => {
           }}
           onVoiceEnd={async (uri) => {
             console.log(111, uri);
+            // upload the audio 
             const uploadedphotos = await uploadImages([
               {
                 uri: uri,

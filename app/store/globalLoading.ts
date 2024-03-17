@@ -11,9 +11,11 @@ export const loadingStore = atom<TLoadingStore>({
 
 export const useLoadingStore = () => {
   const [loadingState, setLoadingStore] = useRecoilState(loadingStore);
-
+  useEffect(() => {
+    console.log(loadingState, "loadingState");
+  }, [loadingState]);
   // useEffect(() => {
-  //   // reset the default text 
+  //   // reset the default text
   //   console.log('reset-useLoadingStore');
   //   loadingState.text = "Loading";
   // }, [loadingState]);

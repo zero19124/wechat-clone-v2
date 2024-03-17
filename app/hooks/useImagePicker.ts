@@ -2,6 +2,7 @@ import * as ImagePicker from "expo-image-picker";
 import config from "../config";
 import Toast from "@/component/base/Toast";
 import { Platform } from "react-native";
+import { useLoadingStore } from "app/store/globalLoading";
 export type TImageIns = {
   uri: string;
   type: "image" | "video" | undefined | "audio/mpeg";
@@ -23,7 +24,7 @@ export const pickImages = async () => {
         name: image.fileName,
       };
     });
-    console.log(selectedImages.length, "selectedImages.length");
+    console.log(selectedImages.length, "selectedImages.length-v2");
 
     // setImages(selectedImages);
     // console.log(selectedImages, "selectedImages");
@@ -39,15 +40,17 @@ export const uploadImages = async (
   images: TImageIns[],
   type: "img" | "audio/mpeg" | "video" = "img"
 ) => {
+
   const formData = new FormData();
-  console.log(images.length, "images.length");
+  console.log(images.length, "images.length-uploadImages");
+
   images.forEach((image, index) => {
     const type = image.uri.split(".").pop();
     formData.append(`files`, {
       // uri: image.uri,
       uri: image.uri,
       name: image.name,
-      // todo  photo from camera error 
+      // todo  photo from camera error
       // https://github.com/facebook/react-native/issues/28551
       type: "image/jpg",
     } as any);
@@ -57,6 +60,7 @@ export const uploadImages = async (
   console.log(formData["_parts"], "files-uploadImages");
 
   try {
+
     const response = await fetch(config.apiDomain + "/api/utils/upload", {
       method: "POST",
       body: formData,
@@ -76,5 +80,6 @@ export const uploadImages = async (
   } catch (error) {
     console.error("Error-uploadImages:", error);
     return [];
+  } finally {
   }
 };

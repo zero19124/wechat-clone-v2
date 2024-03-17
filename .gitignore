@@ -9,7 +9,7 @@ android/
 .expo/
 dist/
 web-build/
-
+deploy.md
 # Native
 *.orig.*
 *.jks

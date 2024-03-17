@@ -1,31 +1,66 @@
 import { useNavigation } from "expo-router";
-import { memo } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Text, Pressable, Platform } from "react-native";
+import { Text, Pressable, Image, Platform } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { getSize } from "utils";
 
-const LocationCard = memo(
-  ({ text, popover }) => {
-    const value = JSON.parse(text.split("+")[1]);
-    console.log(text, "LocationCard", value);
-    const navigator = useNavigation();
-    const { t } = useTranslation();
-    if (Platform.OS === "android") {
-      return (
-        <Text style={{ paddingHorizontal: 8, paddingVertical: 2 }}>
-          {t("android not support map")}
-        </Text>
-      );
-    }
+const LocationCard = ({ text, popover }) => {
+  const value = JSON.parse(text.split("+")[1]);
+  const [count, setCount] = useState(0);
+  const navigator = useNavigation();
+  const { t } = useTranslation();
+  // useEffect(() => {
+  //   setCount((pre) => ++pre);
+  // }, []);
+  console.log(text, "LocationCard-log", count);
 
+  if (Platform.OS === "android") {
     return (
-      <Pressable
-        onLongPress={() => {
-          popover.current?.show();
-        }}
-      >
-        <MapView
+      <Text style={{ paddingHorizontal: 8, paddingVertical: 2 }}>
+        {t("android not support map")}
+      </Text>
+    );
+  }
+  const MoI = useCallback(
+    memo(
+      function MoI({ val }: { val: string }) {
+        console.log("MoIMoIMoIMoIMoIMoI");
+        return (
+          <Image
+            key={val}
+            style={{ width: 50, height: 50 }}
+            source={{
+              uri: "https://wechat-server-jhc0.onrender.com/files/1710523292686.jpg",
+            }}
+          />
+        );
+      },
+      () => {
+        console.log(22222223333344);
+        return true;
+      }
+    ),
+    [text]
+  );
+  return (
+    <Pressable
+      onPress={() => {
+        setCount((pre) => ++pre);
+      }}
+      onLongPress={() => {
+        popover.current?.show();
+      }}
+    >
+      <Text>{count}</Text>
+      <MoI val={text} />
+    </Pressable>
+  );
+};
+export default memo(LocationCard);
+
+{
+  /* <MapView
           onPress={() => {
             navigator.navigate("pages/discover/screens/nearBy/index", {
               routeType: "chat-location-check",
@@ -46,12 +81,5 @@ const LocationCard = memo(
           <Marker coordinate={value}>
             <Text>🔥</Text>
           </Marker>
-        </MapView>
-      </Pressable>
-    );
-  },(pre,next)=>{
-    console.log(2222244444);
-    return true
-  }
-);
-export default memo(LocationCard);
+        </MapView> */
+}

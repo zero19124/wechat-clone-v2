@@ -181,7 +181,7 @@ const MsgWrapper = React.memo(
         </>
       );
     };
-
+    console.log("msgreceiver-rerender");
     return (
       <View key={msgId}>
         <Popover ref={popover} theme="dark">
