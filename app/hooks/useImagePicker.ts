@@ -8,13 +8,19 @@ export type TImageIns = {
   type: "image" | "video" | undefined | "audio/mpeg";
   name: string | null | undefined;
 };
-export const pickImages = async () => {
+export const pickImages = async ({
+  startPicking = () => {},
+  endPicking = () => {},
+  afterUploaded = () => {},
+  beforeUploaded = () => {},
+} = {}) => {
+  startPicking();
   let result = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ImagePicker.MediaTypeOptions.Images,
     allowsMultipleSelection: true,
     quality: 1,
   });
-
+  endPicking();
   if (!result.canceled) {
     console.log(result, "result");
     const selectedImages = result?.assets?.map((image) => {
@@ -28,8 +34,9 @@ export const pickImages = async () => {
 
     // setImages(selectedImages);
     // console.log(selectedImages, "selectedImages");
-
+    beforeUploaded();
     const uploadedImgs = await uploadImages(selectedImages);
+    afterUploaded();
     if (uploadedImgs?.length) {
       return uploadedImgs;
     }
@@ -40,6 +47,7 @@ export const uploadImages = async (
   images: TImageIns[],
   type: "img" | "audio/mpeg" | "video" = "img"
 ) => {
+  // const { setLoadingStore } = useLoadingStore();
 
   const formData = new FormData();
   console.log(images.length, "images.length-uploadImages");
@@ -60,6 +68,7 @@ export const uploadImages = async (
   console.log(formData["_parts"], "files-uploadImages");
 
   try {
+    // setLoadingStore({ loading: true, text: "uploading..." });
 
     const response = await fetch(config.apiDomain + "/api/utils/upload", {
       method: "POST",
@@ -81,5 +90,6 @@ export const uploadImages = async (
     console.error("Error-uploadImages:", error);
     return [];
   } finally {
+    // setLoadingStore({ loading: false });
   }
 };

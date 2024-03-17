@@ -21,6 +21,8 @@ const ImageCard = ({ text, popover }) => {
       onPress={openPreview}
     >
       <FastImage
+      
+        defaultSource={require("@/assets/loading-image.png")}
         source={{
           uri:
             // "https://placekitten.com/302/302"

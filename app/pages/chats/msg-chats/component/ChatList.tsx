@@ -352,7 +352,7 @@ const PrivateChatList = memo(
       setLoadingStore({ loading: true });
       setTimeout(() => {
         reList.current?.scrollTo({ y: 2000 });
-      }, 200);
+      }, 600);
     }, []);
     return (
       // <KeyboardAvoidingView

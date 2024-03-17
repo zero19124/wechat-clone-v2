@@ -343,6 +343,8 @@ const Page = () => {
             console.log("c");
           }}
           plusPress={() => {
+          
+
             console.log("p");
             setH();
           }}

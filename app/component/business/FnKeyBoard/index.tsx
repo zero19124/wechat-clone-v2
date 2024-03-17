@@ -83,15 +83,21 @@ const FnKeyBoard = ({
         handlers?.({ type: FN_TYPE_MAPS.Transfer, val: "" });
         break;
       case "Album":
-        setLoadingStore({ loading: true, text: "uploading..." });
+        console.log("Album-step-1");
 
-        const imageList = await pickImages();
-        // setLoadingStore({ loading: false });
+        const imageList = await pickImages({
+          beforeUploaded: () => {
+            setLoadingStore({ loading: true, text: "uploading..." });
+          },
+          afterUploaded: () => {
+            setLoadingStore({ loading: false });
+          },
+        });
 
         if (imageList.length === 1) {
           handlers?.({ type: FN_TYPE_MAPS.Album, val: imageList[0] });
         }
-        console.log("Album", imageList);
+        console.log("Album-step-2", imageList);
 
         break;
       case "Camera":

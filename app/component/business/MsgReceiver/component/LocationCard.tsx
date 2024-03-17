@@ -21,7 +21,7 @@ const LocationCard = ({ text, popover }) => {
         {t("android not support map")}
       </Text>
     );
-  }
+  }0
   // const MoI = useCallback(
   //   memo(
   //     function MoI({ val }: { val: string }) {
