@@ -267,18 +267,15 @@ const Page = () => {
       />
       <KeyboardAvoidingView
         style={{
-          backgroundColor: "yellow",
+          // backgroundColor: "yellow",
           flex: 1,
         }}
-        keyboardVerticalOffset={90}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? screenHeight * 0.15 : 0}
+        behavior={Platform.OS === "ios" ? "padding" : ""}
       >
         {/* 聊天content  */}
         {/* 聊天列表 */}
-        <View
-          
-          style={{ flex: 1, backgroundColor: "red", overflow: "scroll" }}
-        >
+        <View style={{ flex: 1, overflow: "scroll" }}>
           <PrivateChatList
             onPress={() => {
               console.log(444);

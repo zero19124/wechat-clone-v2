@@ -368,7 +368,7 @@ const PrivateChatList = memo(
         onLayout={(e) => {
           setTimeout(() => {
             reList.current?.scrollTo({ y: 2000 });
-          }, 200);
+          }, 10);
           e.nativeEvent.layout.height;
           console.log(
             e.nativeEvent.layout.height,
