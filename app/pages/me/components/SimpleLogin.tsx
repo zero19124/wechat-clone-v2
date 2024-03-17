@@ -64,7 +64,7 @@ export default () => {
       console.log(11111);
 
       await GoogleSignin.hasPlayServices();
-      console.log(22222, GoogleSignin);
+      console.log(22222, "GoogleSignin", GoogleSignin);
       const userInfo = await GoogleSignin.signIn();
       console.log(33333, userInfo);
 
