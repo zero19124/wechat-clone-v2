@@ -1,9 +1,11 @@
 import {
   Animated,
+  Dimensions,
   FlatList,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -34,6 +36,7 @@ import { useLoadingStore } from "app/store/globalLoading";
 const _270 = getSize(220);
 
 const Page = () => {
+  const screenHeight = Dimensions.get("screen").height - 300;
   const navigate = useNavigation();
   // 获取设备型号
   const deviceModel = DeviceInfo.getModel();
@@ -42,6 +45,7 @@ const Page = () => {
   const { themeColor } = useTheme();
   const [msg, setMsg] = useState("");
   const heightValue = useRef(new Animated.Value(10)).current;
+  const screenHeightValue = useRef(new Animated.Value(screenHeight)).current;
   const height = useRef(0);
   const { sendMsgHandler } = useSendMsg();
   const flatListRef = useRef<FlatList>();
@@ -81,6 +85,7 @@ const Page = () => {
 
   Keyboard.addListener("keyboardWillShow", () => {
     startAnimation(0);
+    setChatListHeight(300);
   });
 
   const setH = () => {
@@ -227,6 +232,13 @@ const Page = () => {
       headerRightContainerStyle: { paddingRight: 12 },
     } as TNavigationOptions);
   }, []);
+  const setChatListHeight = (toValue: number) => {
+    Animated.timing(screenHeightValue, {
+      toValue,
+      duration: 100, // 动画持续时间
+      useNativeDriver: false, // 在 Android 上需要设置为 false
+    }).start();
+  };
   console.log("PrivateChatLis-outside-with-input-render");
   return (
     <SafeAreaView
@@ -255,28 +267,31 @@ const Page = () => {
       />
       <KeyboardAvoidingView
         style={{
-          // backgroundColor: "yellow",
+          backgroundColor: "yellow",
           flex: 1,
         }}
         keyboardVerticalOffset={90}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         {/* 聊天content  */}
-        <TouchableWithoutFeedback
-          style={{
-            backgroundColor: "purple",
-          }}
-          onPress={() => {
-            startAnimation(0);
-            setH();
-            Keyboard.dismiss();
-          }}
+        {/* 聊天列表 */}
+        <View
+          
+          style={{ flex: 1, backgroundColor: "red", overflow: "scroll" }}
         >
-          {/* 聊天列表 */}
-          <View style={{ flex: 1 }}>
-            <PrivateChatList />
-          </View>
-        </TouchableWithoutFeedback>
+          <PrivateChatList
+            onPress={() => {
+              console.log(444);
+              startAnimation(0);
+              setChatListHeight(screenHeight);
+              setH();
+              Keyboard.dismiss();
+            }}
+          />
+        </View>
+        {/* <View
+          style={{ width: "100%", height: 10, backgroundColor: "purple" }}
+        ></View> */}
         {/* keyboard 内容 */}
         <ChatInput
           emojiPress={() => {
@@ -285,7 +300,7 @@ const Page = () => {
           }}
           onVoiceEnd={async (uri) => {
             console.log(111, uri);
-            // upload the audio 
+            // upload the audio
             const uploadedphotos = await uploadImages([
               {
                 uri: uri,

@@ -1,7 +1,15 @@
 import { themeColor } from "@/theme/light";
 import MsgReceiver from "app/component/business/MsgReceiver";
 import UserAvatar from "app/component/complex/UserAvatar";
-import { FlatList, ScrollView, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import data from "@/mocks/msgList.json";
 import { useUser } from "app/store/user";
 import { getSize } from "utils";
@@ -31,7 +39,7 @@ const PrivateChatList = memo(
     // flatListRef: React.MutableRefObject<FlatList<any> | undefined>;
   }) => {
     const { t } = useTranslation();
-    // const { flatListRef } = props;
+    const { onPress } = props;
     const { userInfo } = useUser().userStore;
     const { themeColor } = useTheme();
     const { chatListStore, getChatList } = useChatList();
@@ -48,20 +56,39 @@ const PrivateChatList = memo(
         .then((res) => {
           if (res?.code === 200) {
             // console.log(res.data, "dadad");
-            setDataOut(
-              [
-                ...res.data.map((item) => {
-                  return {
-                    type: item.type,
-                    userName: item.user.act,
-                    userId: item.userId,
-                    msgId: item._id,
-                    image: item.user.image,
-                    latestMessage: item.msg,
-                  };
-                }),
-              ].reverse()
-            );
+            [
+              ...res.data.map((item) => {
+                return {
+                  type: item.type,
+                  userName: item.user.act,
+                  userId: item.userId,
+                  msgId: item._id,
+                  image: item.user.image,
+                  latestMessage: item.msg,
+                };
+              }),
+            ]
+              .reverse()
+              .forEach((item) => {
+                setList((pre) => {
+                  pre.push(<RenderItem item={item} key={item.msgId} />);
+                  return pre;
+                });
+              });
+            // setDataOut(
+            //   [
+            //     ...res.data.map((item) => {
+            //       return {
+            //         type: item.type,
+            //         userName: item.user.act,
+            //         userId: item.userId,
+            //         msgId: item._id,
+            //         image: item.user.image,
+            //         latestMessage: item.msg,
+            //       };
+            //     }),
+            //   ].reverse()
+            // );
           } else {
             console.log(res?.msg);
           }
@@ -115,7 +142,12 @@ const PrivateChatList = memo(
             console.log("newMsg is null!!!");
             return;
           }
-          setDataOut((pre) => [...pre, newMsg]);
+          setList((pre) => {
+            console.log(dataOut, dataOut.length, "dataOut[dataOut.length]");
+            pre.push(<RenderItem item={newMsg} key={newMsg.msgId} />);
+            return [...pre];
+          });
+          // setDataOut((pre) => [...pre, newMsg]);
           // setDataOut((pre) => [newMsg, ...pre]);
         } catch (e) {
           console.error(e, "mgsList-error");
@@ -125,10 +157,7 @@ const PrivateChatList = memo(
     const isGroup = useMemo(() => {
       return chatListStore.curConvo?.isGroup;
     }, [chatListStore.curConvo]);
-    useEffect(() => {
-      getMsgList();
-      setLoadingStore({ loading: true });
-    }, []);
+
     modelLog("iPhone 15", () => {
       // console.log(dataOut, "dataOut");
     });
@@ -283,30 +312,30 @@ const PrivateChatList = memo(
     const Test = memo((msgId) => {
       return <></>;
     });
-    useEffect(() => {
-      setTimeout(() => {
-        reList.current?.scrollTo({ y: 1000 });
-      }, 500);
-      if (list.length) {
-        setList((pre) => {
-          console.log(dataOut, dataOut.length, "dataOut[dataOut.length]");
-          pre.push(
-            <RenderItem
-              item={dataOut[dataOut.length - 1]}
-              key={dataOut[dataOut.length - 1].msgId}
-            />
-          );
-          return pre;
-        });
-        return;
-      }
-      dataOut.forEach((item) => {
-        setList((pre) => {
-          pre.push(<RenderItem item={item} key={item.msgId} />);
-          return pre;
-        });
-      });
-    }, [dataOut]);
+    // useEffect(() => {
+    //   setTimeout(() => {
+    //     reList.current?.scrollTo({ y: 1000 });
+    //   }, 500);
+    //   if (list.length) {
+    //     setList((pre) => {
+    //       console.log(dataOut, dataOut.length, "dataOut[dataOut.length]");
+    //       pre.push(
+    //         <RenderItem
+    //           item={dataOut[dataOut.length - 1]}
+    //           key={dataOut[dataOut.length - 1].msgId}
+    //         />
+    //       );
+    //       return pre;
+    //     });
+    //     return;
+    //   }
+    //   dataOut.forEach((item) => {
+    //     setList((pre) => {
+    //       pre.push(<RenderItem item={item} key={item.msgId} />);
+    //       return pre;
+    //     });
+    //   });
+    // }, [dataOut]);
     // console.log(
     //   dataOut.map((item) => {
     //     return <RenderItem item={item} key={item.msgId} />;
@@ -315,23 +344,48 @@ const PrivateChatList = memo(
     // );
     console.log(list, "setlistsetlistsetlistsetlist+", list.length);
     const reList = useRef<ScrollView>();
-    const mmmList = useMemo(() => {
-      console.log("mmmList");
-      return <Text>{list.length}</Text>;
+    useEffect(() => {
+      reList.current?.scrollTo({ y: 2000 });
     }, [list]);
+    useEffect(() => {
+      getMsgList();
+      setLoadingStore({ loading: true });
+      setTimeout(() => {
+        reList.current?.scrollTo({ y: 2000 });
+      }, 200);
+    }, []);
     return (
-      <>
-        {mmmList}
-        <Text>{list.length}</Text>
-        <ScrollView ref={reList}>
+      // <KeyboardAvoidingView
+      //   style={{
+      //     // backgroundColor: "yellow",
+      //     flex: 1,
+      //   }}
+      //   keyboardVerticalOffset={90}
+      //   behavior={Platform.OS === "ios" ? "padding" : "height"}
+      // >
+      <ScrollView
+        ref={reList}
+        onLayout={(e) => {
+          setTimeout(() => {
+            reList.current?.scrollTo({ y: 2000 });
+          }, 200);
+          e.nativeEvent.layout.height;
+          console.log(
+            e.nativeEvent.layout.height,
+            "e.nativeEvent.layout.height"
+          );
+        }}
+      >
+        <Pressable
+          onPress={() => {
+            onPress?.();
+          }}
+        >
           {list.map((Item) => {
             return Item;
           })}
-          {/* {dataOut.map((item) => {
-          return <RenderItem item={item} key={item.msgId} />;
-        })} */}
-        </ScrollView>
-      </>
+        </Pressable>
+      </ScrollView>
     );
     return (
       <FlatList

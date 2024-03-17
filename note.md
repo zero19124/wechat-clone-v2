@@ -49,6 +49,20 @@ Ran npx expo prebuild --clean
 Finally, npx expo run:ios
 
 
+# 优化
 !!!! flickering fix
 usecallback + memo 
 usestate + render
+
+
+when keyboad open the chatlist should be set diff height
+ onLayout={(e) => {
+          setTimeout(() => {
+            reList.current?.scrollTo({ y: 2000 });
+          }, 200);
+          e.nativeEvent.layout.height;
+          console.log(
+            e.nativeEvent.layout.height,
+            "e.nativeEvent.layout.height"
+          );
+        }}
