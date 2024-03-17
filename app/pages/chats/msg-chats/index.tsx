@@ -45,7 +45,6 @@ const Page = () => {
   const { themeColor } = useTheme();
   const [msg, setMsg] = useState("");
   const heightValue = useRef(new Animated.Value(10)).current;
-  const screenHeightValue = useRef(new Animated.Value(screenHeight)).current;
   const height = useRef(0);
   const { sendMsgHandler } = useSendMsg();
   const flatListRef = useRef<FlatList>();
@@ -85,7 +84,6 @@ const Page = () => {
 
   Keyboard.addListener("keyboardWillShow", () => {
     startAnimation(0);
-    setChatListHeight(300);
   });
 
   const setH = () => {
@@ -232,13 +230,7 @@ const Page = () => {
       headerRightContainerStyle: { paddingRight: 12 },
     } as TNavigationOptions);
   }, []);
-  const setChatListHeight = (toValue: number) => {
-    Animated.timing(screenHeightValue, {
-      toValue,
-      duration: 100, // 动画持续时间
-      useNativeDriver: false, // 在 Android 上需要设置为 false
-    }).start();
-  };
+
   console.log("PrivateChatLis-outside-with-input-render");
   return (
     <SafeAreaView
@@ -280,7 +272,6 @@ const Page = () => {
             onPress={() => {
               console.log(444);
               startAnimation(0);
-              setChatListHeight(screenHeight);
               setH();
               Keyboard.dismiss();
             }}
@@ -321,6 +312,8 @@ const Page = () => {
             setMsg(() => val);
           }}
           onFocus={() => {
+            startAnimation(0);
+
             // console.log(flatListRef.current?.props, "flatListRef");
             // flatListRef.current?.scrollToIndex({ animated: true, index: 0 });
           }}
@@ -343,8 +336,6 @@ const Page = () => {
             console.log("c");
           }}
           plusPress={() => {
-          
-
             console.log("p");
             setH();
           }}
