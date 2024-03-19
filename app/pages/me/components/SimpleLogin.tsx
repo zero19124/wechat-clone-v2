@@ -167,18 +167,23 @@ export default () => {
 
   return (
     <View>
-      {/* <Text>{config.apiDomain}</Text> */}
       {userStore?.userInfo?.act ? (
         <View>
-          <TouchableOpacity
-            onPress={async () => {
-              await Clipboard.setStringAsync(userStore?.userInfo?._id || "");
-              Toast.success("copied");
-            }}
-          >
-            <Text>userID ===={userStore.userInfo._id} copy userId </Text>
-          </TouchableOpacity>
-          {/* <Text>{userStore?.userInfo?.act}</Text> */}
+          {process.env.NODE_ENV === "development" && (
+            <>
+              <TouchableOpacity
+                onPress={async () => {
+                  await Clipboard.setStringAsync(
+                    userStore?.userInfo?._id || ""
+                  );
+                  Toast.success("copied");
+                }}
+              >
+                <Text>userID ===={userStore.userInfo._id} copy userId </Text>
+              </TouchableOpacity>
+              <Text>{config.apiDomain}</Text>
+            </>
+          )}
           <Button
             onPress={() => {
               console.log(data, "data");

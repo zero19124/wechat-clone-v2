@@ -15,11 +15,15 @@ eas build --platform ios
 eas build --platform android
 
 eas local
+## development
 npx eas build --profile development --platform ios --local
 npx eas build --profile development --platform android --local
+## preview
+cant install 
+npx eas build --profile preview --platform ios --local
+this ok
 npx eas build --platform ios --local
 
-npx eas build --profile preview --platform ios --local
 npx eas build --profile preview --platform android --local
 
 npx eas build -p android --profile preview --local
@@ -81,3 +85,14 @@ local.properties
 sdk.dir=/Users/Zhuanz/Library/Android/sdk
 
 
+eas node
+ "preview": {
+      "ios": {
+        // 不添加则没有注册设备无法安装 
+        "distribution": "internal"
+      },
+      "android": {
+        "distribution": "internal",
+        "buildType": "apk"
+      }
+    },

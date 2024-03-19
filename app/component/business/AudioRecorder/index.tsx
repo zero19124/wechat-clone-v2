@@ -7,16 +7,12 @@ import {
 } from "react-native";
 import { useCallback, useEffect, useRef, useState } from "react";
 import _ from "lodash";
-
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@/theme/useTheme";
 import { getSize } from "utils";
 import { Audio } from "expo-av";
-import { uploadImages } from "@/hooks/useImagePicker";
-import { PortalRef } from "app/_layout";
 import { Portal } from "../Portal";
 import Button from "@/component/base/Button/Button";
-import Toast from "@/component/base/Toast";
 import { RecordingObject } from "expo-av/build/Audio";
 const debouncedHandleTextChange = _.debounce((handler) => {
   handler();

@@ -4,13 +4,14 @@ import { useTranslation } from "react-i18next";
 import { Audio } from "expo-av";
 import { useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { playSound } from "@/utils/sound";
 
 const VoiceCard = ({ popover, text }) => {
   const [durationMillis, setDurationMillis] = useState(0);
   const { t } = useTranslation();
   const getStatus = async () => {
     console.log("Loading Sound");
-    Audio.setAudioModeAsync({ allowsRecordingIOS: false })
+    Audio.setAudioModeAsync({ allowsRecordingIOS: false });
     const { sound } = await Audio.Sound.createAsync({
       uri: text,
     });
@@ -51,7 +52,11 @@ const VoiceCard = ({ popover, text }) => {
           console.log(text, "tempUri");
           // 卸载之前的音频，以防重复播放
           // 播放音频
-          await (await getStatus()).playAsync();
+          // const { sound } = await Audio.Sound.createAsync({
+          //   uri: text,
+          // });
+          // await sound.playAsync();
+          playSound()
         } catch (error) {
           // 错误处理
           console.error("播放音频时发生错误", error);

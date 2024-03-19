@@ -18,6 +18,9 @@
       "distribution": "internal"
     },
     "preview": {
+      "ios": {
+        "distribution": "internal"
+      },
       "android": {
         "distribution": "internal",
         "buildType": "apk"
