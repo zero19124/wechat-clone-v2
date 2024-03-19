@@ -17,6 +17,7 @@ import DeviceInfo from "react-native-device-info";
 import { TThemeType, useTheme } from "@/theme/useTheme";
 import { goToMsgChat } from "@/hooks/useSameRouter";
 import UserAvatar from "@/component/complex/UserAvatar";
+import axios from "axios";
 const ConvoList = () => {
   const navigate = useNavigation();
   const { userStore } = useUser();
@@ -56,7 +57,8 @@ const ConvoList = () => {
     }
 
     const LeftPart = () => {
-      const MarkUnReadDot = (props: {
+      console.log(item?.seenIds, "item.seenId?");
+      const OnlineDot = (props: {
         width: number;
         height: number;
         children?: any;
@@ -93,6 +95,39 @@ const ConvoList = () => {
           </View>
         );
       };
+      const MarkUnReadDot = (props: {
+        width: number;
+        height: number;
+        children?: any;
+      }) => {
+        const { width, height, children } = props;
+
+        return (
+          <View
+            style={{
+              width,
+              height,
+              backgroundColor: themeColor.danger5,
+              borderRadius: width,
+              position: "absolute",
+              top: -(width / 3),
+              left: 0,
+            }}
+          >
+            <Text
+              style={{
+                color: themeColor.white,
+                fontSize: 10,
+                fontWeight: "bold",
+                textAlign: "center",
+                lineHeight: width,
+              }}
+            >
+              {children}
+            </Text>
+          </View>
+        );
+      };
 
       return (
         <View>
@@ -107,12 +142,14 @@ const ConvoList = () => {
             }
             style={style.itemContainerAvatar}
           />
-          {item.unReadCount > 0 ? (
-            <MarkUnReadDot width={16} height={16}>
-              {item.unReadCount}
-            </MarkUnReadDot>
+
+          <OnlineDot width={10} height={10} />
+          {item?.seenIds?.find((item) => item === userStore.userInfo?._id) ? (
+            <></>
           ) : (
-            <MarkUnReadDot width={10} height={10} />
+            <MarkUnReadDot width={12} height={12}>
+              {/* {item.unReadCount} */}
+            </MarkUnReadDot>
           )}
         </View>
       );
@@ -159,6 +196,12 @@ const ConvoList = () => {
     return (
       <TouchableOpacity
         onPress={() => {
+          // console.log(
+          //   item?.seenIds,
+          //   item?.seenIds?.find((item) => item === userStore.userInfo?._id),
+          //   userStore.userInfo?._id,
+          //   "TouchableOpacity-seenIds"
+          // );
           goToMsgChat(
             item,
             userId + "",
@@ -166,6 +209,10 @@ const ConvoList = () => {
             chatListStore,
             setChatListStoreV2
           );
+          return axios.post("api/convo/updateConvoSeenIdsById", {
+            convoId: item._id,
+            userId,
+          });
         }}
       >
         <View style={style.itemContainer}>

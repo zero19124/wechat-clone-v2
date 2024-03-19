@@ -342,7 +342,7 @@ const PrivateChatList = memo(
     //   }),
     //   "2222223232"
     // );
-    console.log(list, "setlistsetlistsetlistsetlist+", list.length);
+    // console.log(list, "setlistsetlistsetlistsetlist+", list.length);
     const reList = useRef<ScrollView>();
     useEffect(() => {
       reList.current?.scrollTo({ y: 2000 });
@@ -364,7 +364,6 @@ const PrivateChatList = memo(
       //   behavior={Platform.OS === "ios" ? "padding" : "height"}
       // >
       <ScrollView
-      
         ref={reList}
         onLayout={(e) => {
           setTimeout(() => {

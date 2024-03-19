@@ -8,8 +8,6 @@ import {
   useState,
 } from "react";
 import { TouchableOpacity, View, Text, TextInput } from "react-native";
-import ChatIcon from "@/icons/tabs/chats.svg";
-import ChatActiveIcon from "@/icons/tabs/chats-active.svg";
 import CirclePlus from "@/icons/circle-plus.svg";
 import AddContactsFilled from "@/icons/chats/add-contacts-filled.svg";
 import ChatFilled from "@/icons/chats/chat-filled.svg";
@@ -43,7 +41,7 @@ const Chats = () => {
   const [isNewRoom, setIsNewRoom] = useState(false);
   const roomName = useRef("");
   const navigate = useNavigation();
-  const { userStore, setUserStore } = useUser();
+  const { userStore } = useUser();
   const [init, setInit] = useState(false);
   const userId = useMemo(() => userStore.userInfo?._id || "", [userStore]);
   const { t } = useTranslation();
@@ -288,12 +286,6 @@ const Chats = () => {
         </View>
       ),
       headerRightContainerStyle: { paddingRight: 12 },
-      tabBarIcon: ({ size, color, focused }) => {
-        if (focused) {
-          return <ChatActiveIcon />;
-        }
-        return <ChatIcon />;
-      },
     });
   }, [userStore]);
   useEffect(() => {

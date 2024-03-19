@@ -81,7 +81,7 @@ export default () => {
 
       if (hasUser) {
         setUserStore({ userInfo: hasUser });
-        console.log("setUserStore");
+        console.log("86-setUserStore");
         return;
       }
       const user = await axios.post(config.apiDomain + "/api/user/register", {
@@ -147,7 +147,6 @@ export default () => {
 
         if (res?.code === 200) {
           const newInfo = { ...userStore, userInfo: res?.data };
-          // setUserStore(newInfo);
           setUserStore({ ...newInfo });
 
           console.log(newInfo, "userStore login");

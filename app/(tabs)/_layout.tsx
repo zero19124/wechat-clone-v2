@@ -1,17 +1,14 @@
 import { Tabs } from "expo-router";
 import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
-import * as light from "@/theme/light";
-
 import ContactsIcon from "@/icons/tabs/contacts.svg";
 import ContactsActiveIcon from "@/icons/tabs/contacts-active.svg";
 import DiscoverActiveIcon from "@/icons/tabs/discover.svg";
 import DiscoverIcon from "@/icons/tabs/discover-active.svg";
 import MeActiveIcon from "@/icons/tabs/me-active.svg";
 import MeIcon from "@/icons/tabs/me.svg";
-
-import { RootSiblingParent } from "react-native-root-siblings";
 import { useTranslation } from "react-i18next";
-
+import ChatIcon from "@/icons/tabs/chats.svg";
+import ChatActiveIcon from "@/icons/tabs/chats-active.svg";
 // import Slot from "expo-router/Slot";
 
 // Import your global CSS file
@@ -21,15 +18,19 @@ import { useContext, useEffect, useState } from "react";
 import SimpleLogin from "@/pages/me/components/SimpleLogin";
 import { useTheme } from "@/theme/useTheme";
 import { PusherContext } from "@/hooks/usePusherProvider";
+import DeviceInfo from "react-native-device-info";
 
 // export default Slot
 
 const Layout = () => {
   console.log("tabs");
   const [friendRed, setFriendRed] = useState(false);
+  const [msgRed, setMsgRed] = useState(false);
   const { t } = useTranslation();
   const { userStore } = useUser();
   const { themeColor } = useTheme();
+  const deviceModel = DeviceInfo.getModel();
+
   if (!userStore.userInfo?._id) {
     // return (
     //   <SafeAreaView style={{ backgroundColor: "yellow", flex: 1 }}>
@@ -41,7 +42,27 @@ const Layout = () => {
     return <Text style={{ fontSize: 12, color }}>{children}</Text>;
   };
   const pusherContext = useContext(PusherContext);
-
+  const newFriendDot = (
+    <View
+      style={{
+        borderRadius: 10,
+        position: "absolute",
+        top: -8,
+        right: -8,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: themeColor.danger5,
+        width: 15,
+        height: 15,
+      }}
+    >
+      <Text
+        style={{ textAlign: "center", color: themeColor.white, fontSize: 12 }}
+      >
+        1
+      </Text>
+    </View>
+  );
   useEffect(() => {
     if (!pusherContext.socket) return;
     // 有新消息就更新会话列表
@@ -49,7 +70,24 @@ const Layout = () => {
       console.log("friend:new-layout");
       setFriendRed(true);
     });
-  }, [pusherContext.socket]);
+    pusherContext.socket?.on("messages:new", (messagesData) => {
+      const data = messagesData.newMsgData;
+      const type = messagesData.type;
+      // only the mes userid not equel current user
+      console.log(
+        deviceModel,
+        userStore.userInfo?._id,
+        "messages:new-layout",
+        data?.user?._id,
+        userStore.userInfo?._id === data?.user?._id
+      );
+      if (userStore.userInfo?._id === data?.user?._id) {
+        return;
+      }
+
+      setMsgRed(true);
+    });
+  }, [pusherContext.socket, userStore]);
   return (
     <Tabs
       initialRouteName="Contacts"
@@ -64,9 +102,34 @@ const Layout = () => {
       <Tabs.Screen
         name="index"
         options={{
-          // headerShown: false,
           tabBarLabel: ({ color }) => {
-            return <TabText color={color}>{"Chats"}</TabText>;
+            return <TabText color={color}>{t("Chats")}</TabText>;
+          },
+          // headerShown: false,
+          tabBarIcon: ({ size, color, focused }) => {
+            if (focused) {
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    setMsgRed(false);
+                    console.log(userStore.userInfo);
+                  }}
+                >
+                  {msgRed && newFriendDot}
+                  <ChatActiveIcon />
+                </TouchableOpacity>
+              );
+            }
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  setMsgRed(false);
+                }}
+              >
+                {msgRed && newFriendDot}
+                <ChatIcon />
+              </TouchableOpacity>
+            );
           },
         }}
       ></Tabs.Screen>
@@ -82,29 +145,25 @@ const Layout = () => {
             const cancelRed = () => {
               setFriendRed(false);
             };
-            const newFriendDot = (
-              <View
-                style={{
-                  borderRadius: 10,
-                  position: "absolute",
-                  top: -8,
-                  right: -8,
-                  backgroundColor: themeColor.danger5,
-                  width: 10,
-                  height: 10,
-                }}
-              ></View>
-            );
+
             if (focused) {
               return (
-                <TouchableOpacity onPress={cancelRed}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setFriendRed(false);
+                  }}
+                >
                   {friendRed && newFriendDot}
                   <ContactsActiveIcon />
                 </TouchableOpacity>
               );
             }
             return (
-              <TouchableOpacity onPress={cancelRed}>
+              <TouchableOpacity
+                onPress={() => {
+                  setFriendRed(false);
+                }}
+              >
                 {friendRed && newFriendDot}
                 <ContactsIcon />
               </TouchableOpacity>
