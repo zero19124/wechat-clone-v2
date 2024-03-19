@@ -2,24 +2,22 @@ import { Text, TouchableOpacity } from "react-native";
 import { getSize } from "utils";
 import { useTranslation } from "react-i18next";
 import { Audio } from "expo-av";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { playSound } from "@/utils/sound";
 
 const VoiceCard = ({ popover, text }) => {
   const [durationMillis, setDurationMillis] = useState(0);
   const { t } = useTranslation();
-  const getStatus = async () => {
+  const [sound, setSound] = useState<Audio.Sound>();
+
+  const getStatus = async (sound: Audio.Sound) => {
     console.log("Loading Sound");
     Audio.setAudioModeAsync({ allowsRecordingIOS: false });
-    const { sound } = await Audio.Sound.createAsync({
-      uri: text,
-    });
     // await sound.unloadAsync();
     // 加载音频文件，这里假设你有一个有效的音频文件URI
-    // await sound.loadAsync({ uri: text + "" });
     // 获取音频状态
-    sound.getStatusAsync().then((status) => {
+    sound?.getStatusAsync().then((status) => {
       // console.log(status, "status11");
       if (status.isLoaded) {
         const tempDurationMillis = status.durationMillis; // 音频总时长，以毫秒为单位
@@ -29,9 +27,24 @@ const VoiceCard = ({ popover, text }) => {
         console.log("音频文件未成功加载");
       }
     });
-    return sound;
   };
-  getStatus();
+  useEffect(() => {
+    (async () => {
+      const { sound } = await Audio.Sound.createAsync({
+        uri: text,
+      });
+
+      setSound(() => {
+        getStatus(sound);
+        return sound;
+      });
+    })();
+    return () => {
+      if (sound) {
+        sound.unloadAsync();
+      }
+    };
+  }, []);
   return (
     <TouchableOpacity
       style={{
@@ -49,14 +62,15 @@ const VoiceCard = ({ popover, text }) => {
       }}
       onPress={async () => {
         try {
+          // await sound?.unloadAsync();
+          // await sound?.loadAsync(text);
           console.log(text, "tempUri");
           // 卸载之前的音频，以防重复播放
-          // 播放音频
-          // const { sound } = await Audio.Sound.createAsync({
+          await sound?.replayAsync();
+          // await Audio.Sound.createAsync({
           //   uri: text,
-          // });
-          // await sound.playAsync();
-          playSound()
+          // }).then(async (res) => await res.sound.playAsync());
+          // playSound()
         } catch (error) {
           // 错误处理
           console.error("播放音频时发生错误", error);

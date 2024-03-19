@@ -6,23 +6,50 @@ import VoiceRecord from "@/icons/keyboard-panel/voice-record.svg";
 import CirclePlus from "@/icons/circle-plus.svg";
 import { getSize } from "utils";
 import AudioRecorder from "@/component/business/AudioRecorder";
-import { useEffect, useState } from "react";
+import {
+  forwardRef,
+  memo,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 
-const ChatInput = ({
-  value,
-  onEndEditing,
-  onVoiceEnd,
-  onChangeText,
-  chatPress,
-  onFocus,
-  emojiPress,
-  plusPress,
-}) => {
+const ChatInput = (
+  {
+    value,
+    onEndEditing,
+    onVoiceEnd,
+    onChangeText,
+    chatPress,
+    onFocus,
+    emojiPress,
+    plusPress,
+  },
+  ref
+) => {
   const [voiceInput, setVoiceInput] = useState(false);
   const [init, setInit] = useState(true);
+  const inputRef = useRef<TextInput>(null);
+
   useEffect(() => {
     setInit(true);
   });
+
+  // 如果需要暴露子组件的特定方法或属性给父组件
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    },
+    clear: () => {
+      if (inputRef.current) {
+        inputRef.current.clear();
+      }
+    },
+    setVoiceInput,
+  }));
   return (
     <View
       style={{
@@ -55,6 +82,7 @@ const ChatInput = ({
         <AudioRecorder onVoiceEnd={onVoiceEnd} />
       ) : (
         <TextInput
+          ref={inputRef}
           value={value}
           selectionColor={themeColor.primary}
           onChangeText={onChangeText}
@@ -92,4 +120,4 @@ const ChatInput = ({
     </View>
   );
 };
-export default ChatInput;
+export default memo(forwardRef(ChatInput));

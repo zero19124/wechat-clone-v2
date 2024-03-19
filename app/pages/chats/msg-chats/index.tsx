@@ -7,6 +7,7 @@ import {
   Platform,
   Pressable,
   Text,
+  TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -15,7 +16,7 @@ import EmojiPicker from "rn-emoji-keyboard";
 import DeviceInfo from "react-native-device-info";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { createRef, useLayoutEffect, useMemo, useRef, useState } from "react";
 import ThreeDot from "@/icons/three-dot.svg";
 import GoBack from "@/icons/common/go-back.svg";
 import FnKeyBoard, { FN_TYPE_MAPS } from "@/component/business/FnKeyBoard";
@@ -230,7 +231,7 @@ const Page = () => {
       headerRightContainerStyle: { paddingRight: 12 },
     } as TNavigationOptions);
   }, []);
-
+  const ChatInputRef = useRef<TextInput>(null);
   console.log("PrivateChatLis-outside-with-input-render");
   return (
     <SafeAreaView
@@ -282,6 +283,7 @@ const Page = () => {
         ></View> */}
         {/* keyboard 内容 */}
         <ChatInput
+          ref={ChatInputRef}
           emojiPress={() => {
             // console.log("333");
             setIsOpen(true);
@@ -344,13 +346,17 @@ const Page = () => {
           disabledCategories={[]}
           defaultHeight={"30%"}
           categoryPosition={"top"}
-          height={30}
           onEmojiSelected={(emojiSelectedData) => {
             // {"emoji": "🤗", "name": "smiling face with open hands",
             //  "slug": "smiling_face_with_open_hands",
             //   "toneEnabled": false, "unicode_version": "1.0"}
             // console.log(emojiSelectedData, "emojiSelectedData");
             setMsg((val: string) => (val += emojiSelectedData.emoji + ""));
+            ChatInputRef.current?.setVoiceInput(false);
+            setTimeout(() => {
+              ChatInputRef.current?.focus();
+            }, 100);
+            console.log(ChatInputRef.current, "ChatInputRef.current");
           }}
           open={isOpen}
           onClose={() => setIsOpen(false)}

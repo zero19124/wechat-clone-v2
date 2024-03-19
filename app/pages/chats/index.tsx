@@ -15,7 +15,6 @@ import AddContactsFilled from "@/icons/chats/add-contacts-filled.svg";
 import ChatFilled from "@/icons/chats/chat-filled.svg";
 import MoneyFilled from "@/icons/chats/money-filled.svg";
 import ScanFilled from "@/icons/chats/scan-filled.svg";
-import * as light from "@/theme/light";
 import { Entypo } from "@expo/vector-icons";
 import ConvoList from "./component/ChatList";
 import { useTranslation } from "react-i18next";
@@ -352,7 +351,8 @@ const Chats = () => {
     console.log(navigate.getState(), "route.name", navigate.getParent()); // 当前路由名称
 
     const unsubscribeBlur = navigate.addListener("focus", (state) => {
-      console.log(state, "route-name-focus");
+      console.log(state, "route-name-focus", userId);
+      getChatList(userId);
     });
     const unsubscribe = navigate.addListener("blur", (blur) => {
       console.log(blur, "route-name-blur");
@@ -438,7 +438,7 @@ const Chats = () => {
           </View>
         </Overlay>
       )}
-      <View style={{ backgroundColor: light.themeColor.white, flex: 1 }}>
+      <View style={{ backgroundColor: themeColor.white, flex: 1 }}>
         <ConvoList />
       </View>
     </>

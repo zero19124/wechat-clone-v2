@@ -364,6 +364,7 @@ const PrivateChatList = memo(
       //   behavior={Platform.OS === "ios" ? "padding" : "height"}
       // >
       <ScrollView
+      
         ref={reList}
         onLayout={(e) => {
           setTimeout(() => {

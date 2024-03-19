@@ -27,9 +27,8 @@ const ConvoList = () => {
   const userId = useMemo(() => userStore.userInfo?._id, [userStore]);
   const style = getStyle(themeColor);
   useEffect(() => {
-    // console.log(chatListStore.chatListState?.length, "chatListStore");
+    console.log(chatListStore.chatListState?.length, "chatListStore");
   }, [chatListStore]);
-  const pusherContext = useContext(PusherContext);
   const deviceModel = DeviceInfo.getModel();
   useFocusEffect(() => {
     if (!userId) return;
@@ -37,11 +36,10 @@ const ConvoList = () => {
   });
 
   useEffect(() => {
-    console.log(onlineUsers, "onlineUsers");
-    console.log(onlineUsers[userStore.userInfo?._id + ""]);
+    // console.log(onlineUsers, "onlineUsers");
+    // console.log(onlineUsers[userStore.userInfo?._id + ""]);
   }, [onlineUsers]);
 
- 
   const renderItem = ({ item }: { item: any }) => {
     // console.log(item._id, item.isGroup, "ConvoList");
     {
@@ -179,13 +177,11 @@ const ConvoList = () => {
   };
 
   return (
-    chatListStore.chatListState && (
-      <FlatList
-        data={chatListStore.chatListState}
-        keyExtractor={(item) => item._id + ""}
-        renderItem={renderItem}
-      />
-    )
+    <FlatList
+      data={chatListStore.chatListState}
+      keyExtractor={(item) => item._id + ""}
+      renderItem={renderItem}
+    />
   );
 };
 
