@@ -2,13 +2,13 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 import * as light from "@/theme/light";
 import ItemCard from "@/component/complex/ItemCard";
 import { useContext, useEffect, useLayoutEffect, useState } from "react";
-import { useNavigation, useRouter } from "expo-router";
+import { useFocusEffect, useNavigation, useRouter } from "expo-router";
 import AddFriendIcon from "@/icons/add-friend.svg";
 import IndexBar from "@/component/business/IndexBar";
 import pinyin from "pinyin";
 import { PortalHost } from "@/component/business/Portal";
 import { tempNavigatorCount } from "@/component/business/IndexBar/style";
-import { cardList } from "./data/contacts-mocks";
+import { cardList, originalList } from "./data/contacts-mocks";
 import { useTheme } from "@/theme/useTheme";
 import config from "@/config/index";
 import { useUser } from "app/store/user";
@@ -18,9 +18,9 @@ import { isNumber } from "@/utils/typeof";
 import { useGetSameApiOfGet } from "@/hooks/useSameApi";
 import { PusherContext } from "@/hooks/usePusherProvider";
 import { useLoadingStore } from "app/store/globalLoading";
+import { isNumeric } from "@/utils/validate";
 const _ = require("lodash");
 const indexList: string[] = [];
-const customIndexList = [1, 2, 3, 4, 5, 6, 8, 9, 10];
 const charCodeOfA = "A".charCodeAt(0);
 // const headerHeight = useHeaderHeight();
 for (let i = 0; i < tempNavigatorCount; i += 1) {
@@ -53,41 +53,51 @@ const Contacts = () => {
         }
         const friendList = friendData[0].friendsArray;
         console.log(friendList, "friendList");
-        setFriendList(friendList);
+        setFriendList([...friendList]);
 
         // console.log(pinyin("岩雀", { style: pinyin.STYLE_NORMAL }), "pinyin");
         // 将数据列表转化为拼音存储，以便于拼音搜索
-
-        friendList.forEach((item, index, arr) => {
+        const newMap = new Map();
+        newMap.set("#", []);
+        // [...originalList, ...friendList].forEach((item, index, arr) => {
+        [...friendList].forEach((item, index, arr) => {
           // 将Item的名称转为拼音数组
           // console.log(1111111111, item);
-          if (!item.act) return;
+          // if (!item.nickname || !item.act) return;
           // console.log(1111111111333);
-          if (isNumber(Number(item.act))) {
-            // console.log(111111);
-            // console.log("pinyinArr");
-            if (listMap.has("#")) {
-              const preData = listMap.get("#");
-              preData.push(item);
-            } else {
-              listMap.set("#", [item]);
-            }
+          // if (item.nickname || item.act) {
+          //   // console.log(111111);
+          //   // console.log("pinyinArr");
+          //   if (listMap.has("#")) {
+          //     const preData = listMap.get("#");
+          //     preData.push(item);
+          //   } else {
+          //     listMap.set("#", [item]);
+          //   }
 
-            const newMap = new Map(listMap);
-            setListMap(newMap);
-            return;
-          }
-          const pinyinArr = pinyin(item.act, { style: pinyin.STYLE_NORMAL });
+          //   const newMap = new Map(listMap);
+          //   setListMap(newMap);
+          //   return;
+          // }
+          const pinyinArr = pinyin(item?.nickname || item.act, {
+            style: pinyin.STYLE_NORMAL,
+          });
+
           const firstPinyin = pinyinArr[0];
           const initial = firstPinyin[0][0];
-          if (listMap.has(initial)) {
-            const pre = listMap.get(initial);
+          console.log(pinyinArr, "pinyinArr", isNumeric(initial), initial);
+          if (isNumeric(initial)) {
+            const pre = newMap.get("#");
             pre.push(item);
             return;
           }
-          const newMap = new Map(listMap);
+          if (newMap.has(initial)) {
+            const pre = newMap.get(initial);
+            pre.push(item);
+            return;
+          }
+          // const newMap = new Map(listMap);
           newMap.set(initial, [item]);
-          setListMap(newMap);
           // 将拼音数组转化为一个字符串，以支持拼音搜索
           // for (let i = 0; i < pinyinArr.length; i++) {
           //   for (let j = 0; j < pinyinArr[i].length; j++) {
@@ -96,6 +106,8 @@ const Contacts = () => {
           // }
           // item.pinyinArrStr = pinyinArrStr;
         });
+        setListMap(newMap);
+
         console.log(listMap, "listMap-------");
       })
       .finally(() => {
@@ -128,6 +140,10 @@ const Contacts = () => {
       ),
     });
   });
+  useFocusEffect(() => {
+    console.log(listMap, "listMap-------");
+  });
+
   return (
     <>
       <View
@@ -220,12 +236,12 @@ const Contacts = () => {
                                 fontSize: 16,
                               }}
                             >
-                              {_item.act}
+                              {_item.nickname || _item.act}
                             </Text>
                             {_item?.desc && (
                               <Text
                                 style={{
-                                  color: light.themeColor.text3,
+                                  color: themeColor.text3,
                                 }}
                               >
                                 {_item?.desc}
