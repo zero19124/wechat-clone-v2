@@ -1,5 +1,11 @@
-import { Tabs } from "expo-router";
-import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import { Tabs, useRouter } from "expo-router";
+import {
+  Pressable,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import ContactsIcon from "@/icons/tabs/contacts.svg";
 import ContactsActiveIcon from "@/icons/tabs/contacts-active.svg";
 import DiscoverActiveIcon from "@/icons/tabs/discover.svg";
@@ -30,7 +36,7 @@ const Layout = () => {
   const { userStore } = useUser();
   const { themeColor } = useTheme();
   const deviceModel = DeviceInfo.getModel();
-
+  const router = useRouter();
   if (!userStore.userInfo?._id) {
     // return (
     //   <SafeAreaView style={{ backgroundColor: "yellow", flex: 1 }}>
@@ -105,30 +111,33 @@ const Layout = () => {
           tabBarLabel: ({ color }) => {
             return <TabText color={color}>{t("Chats")}</TabText>;
           },
+
           // headerShown: false,
           tabBarIcon: ({ size, color, focused }) => {
             if (focused) {
               return (
-                <TouchableOpacity
+                <Pressable
                   onPress={() => {
                     setMsgRed(false);
-                    console.log(userStore.userInfo);
+                    router.push("/(tabs)/");
                   }}
                 >
                   {msgRed && newFriendDot}
                   <ChatActiveIcon />
-                </TouchableOpacity>
+                </Pressable>
               );
             }
             return (
-              <TouchableOpacity
+              <Pressable
                 onPress={() => {
+                  router.push("/(tabs)/");
+
                   setMsgRed(false);
                 }}
               >
                 {msgRed && newFriendDot}
                 <ChatIcon />
-              </TouchableOpacity>
+              </Pressable>
             );
           },
         }}
@@ -151,6 +160,7 @@ const Layout = () => {
                 <TouchableOpacity
                   onPress={() => {
                     setFriendRed(false);
+                    router.push("/(tabs)/contacts");
                   }}
                 >
                   {friendRed && newFriendDot}
@@ -162,6 +172,7 @@ const Layout = () => {
               <TouchableOpacity
                 onPress={() => {
                   setFriendRed(false);
+                  router.push("/(tabs)/contacts");
                 }}
               >
                 {friendRed && newFriendDot}
