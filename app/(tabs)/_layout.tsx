@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { SafeAreaView, Text, View } from "react-native";
+import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import * as light from "@/theme/light";
 
 import ContactsIcon from "@/icons/tabs/contacts.svg";
@@ -17,14 +17,16 @@ import { useTranslation } from "react-i18next";
 // Import your global CSS file
 import "../../global.css";
 import { useUser } from "app/store/user";
-import { useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import SimpleLogin from "@/pages/me/components/SimpleLogin";
 import { useTheme } from "@/theme/useTheme";
+import { PusherContext } from "@/hooks/usePusherProvider";
 
 // export default Slot
 
 const Layout = () => {
   console.log("tabs");
+  const [friendRed, setFriendRed] = useState(false);
   const { t } = useTranslation();
   const { userStore } = useUser();
   const { themeColor } = useTheme();
@@ -38,6 +40,16 @@ const Layout = () => {
   const TabText = ({ children, color }) => {
     return <Text style={{ fontSize: 12, color }}>{children}</Text>;
   };
+  const pusherContext = useContext(PusherContext);
+
+  useEffect(() => {
+    if (!pusherContext.socket) return;
+    // 有新消息就更新会话列表
+    pusherContext.socket?.on("friend:new", (data) => {
+      console.log("friend:new-layout");
+      setFriendRed(true);
+    });
+  }, [pusherContext.socket]);
   return (
     <Tabs
       initialRouteName="Contacts"
@@ -67,10 +79,36 @@ const Layout = () => {
 
           headerTitle: "Contacts",
           tabBarIcon: ({ size, color, focused }) => {
+            const cancelRed = () => {
+              setFriendRed(false);
+            };
+            const newFriendDot = (
+              <View
+                style={{
+                  borderRadius: 10,
+                  position: "absolute",
+                  top: -8,
+                  right: -8,
+                  backgroundColor: themeColor.danger5,
+                  width: 10,
+                  height: 10,
+                }}
+              ></View>
+            );
             if (focused) {
-              return <ContactsActiveIcon />;
+              return (
+                <TouchableOpacity onPress={cancelRed}>
+                  {friendRed && newFriendDot}
+                  <ContactsActiveIcon />
+                </TouchableOpacity>
+              );
             }
-            return <ContactsIcon />;
+            return (
+              <TouchableOpacity onPress={cancelRed}>
+                {friendRed && newFriendDot}
+                <ContactsIcon />
+              </TouchableOpacity>
+            );
           },
         }}
       ></Tabs.Screen>
