@@ -344,7 +344,7 @@ const Chats = () => {
 
     const unsubscribeBlur = navigate.addListener("focus", (state) => {
       console.log(state, "route-name-focus", userId);
-      getChatList(userId);
+      getChatList(userId, "01");
     });
     const unsubscribe = navigate.addListener("blur", (blur) => {
       console.log(blur, "route-name-blur");
@@ -354,7 +354,7 @@ const Chats = () => {
       unsubscribe();
     };
     // 当前路由参数
-  }, [route]);
+  }, [route, userId]);
 
   useEffect(() => {
     // 有新消息就更新会话列表
@@ -369,10 +369,10 @@ const Chats = () => {
         return;
       }
       // console.log(data, "getChatList-convo:update", userId);
-      getChatList(userId);
+      getChatList(userId, "02");
       playSound();
     });
-    getChatList(userId + "");
+    getChatList(userId + "", "03");
 
     if (pusherContext.socket && userId) {
       setInit(true);

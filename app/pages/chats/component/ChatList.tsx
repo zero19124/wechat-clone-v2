@@ -24,16 +24,16 @@ const ConvoList = () => {
   const { onlineUsers } = useContext(PusherContext);
 
   const { themeColor } = useTheme();
-  const { chatListStore, getChatList, setChatListStoreV2 } = useChatList();
+  const { chatListStore, setChatListStoreV2 } = useChatList();
   const userId = useMemo(() => userStore.userInfo?._id, [userStore]);
   const style = getStyle(themeColor);
   useEffect(() => {
-    console.log(chatListStore.chatListState?.length, "chatListStore");
+    console.log(chatListStore.chatListState?.length, "chatListStore-chatlist");
+    console.log(chatListStore.chatListState?.[0], "chatListStore-chatlist");
   }, [chatListStore]);
   const deviceModel = DeviceInfo.getModel();
   useFocusEffect(() => {
     if (!userId) return;
-    // getChatList(userId);
   });
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const ConvoList = () => {
     }
 
     const LeftPart = () => {
-      console.log(item?.seenIds, "item.seenId?");
+      // console.log(item?.seenIds, "item.seenId?");
       const OnlineDot = (props: {
         width: number;
         height: number;

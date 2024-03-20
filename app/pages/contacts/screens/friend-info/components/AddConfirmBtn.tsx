@@ -50,7 +50,7 @@ const AddConfirmBtn = ({ status, friendId, confirm }: TAddConfirmBtnProps) => {
   try {
     const navigate = useNavigation();
     const router = useRouter();
-    const { chatListStore, getChatList, setChatListStoreV2 } = useChatList();
+    const { chatListStore, setChatListStoreV2 } = useChatList();
     const { t } = useTranslation();
     const { themeColor } = useTheme();
     const [realStatus, setRealStatus] = useState(status || "");

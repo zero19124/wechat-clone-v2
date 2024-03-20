@@ -42,7 +42,7 @@ const PrivateChatList = memo(
     const { onPress } = props;
     const { userInfo } = useUser().userStore;
     const { themeColor } = useTheme();
-    const { chatListStore, getChatList } = useChatList();
+    const { chatListStore } = useChatList();
     const deviceModel = DeviceInfo.getModel();
     const [dataOut, setDataOut] = useState<any[]>([]);
     const convoId = useMemo(() => {
@@ -365,6 +365,9 @@ const PrivateChatList = memo(
       // >
       <ScrollView
         ref={reList}
+        contentContainerStyle={{
+          padding: 12,
+        }}
         onLayout={(e) => {
           setTimeout(() => {
             reList.current?.scrollTo({ y: 2000 });

@@ -45,7 +45,7 @@ export default () => {
   const [googleUser, setGoogleUser] = useState();
   const [isInProgress, setIsInProgress] = useState(false);
   const [data, setData] = useState({ psw: "1", act: "1" });
-  const { chatListStore, getChatList, setChatListStoreV2 } = useChatList();
+  const { setChatListStoreV2 } = useChatList();
   const resetAfterOffline = () => {
     setChatListStoreV2({
       chatListStore: [],

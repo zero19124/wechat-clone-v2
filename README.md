@@ -40,6 +40,7 @@ msg recall<br>
 recall only the themself can recall<br>
 transfer<br>
 -accept page<br>
+unread and new msg notification<br>
 
 ### -Location Sharing(real time by socket)<br>
 

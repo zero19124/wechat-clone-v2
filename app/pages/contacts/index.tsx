@@ -108,7 +108,7 @@ const Contacts = () => {
         });
         setListMap(newMap);
 
-        console.log(listMap, "listMap-------");
+        // console.log(listMap, "listMap-------");
       })
       .finally(() => {
         setLoadingStore({ loading: false });
@@ -141,7 +141,7 @@ const Contacts = () => {
     });
   });
   useFocusEffect(() => {
-    console.log(listMap, "listMap-------");
+    // console.log(listMap, "listMap-------");
   });
 
   return (
