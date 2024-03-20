@@ -25,6 +25,7 @@ import SimpleLogin from "@/pages/me/components/SimpleLogin";
 import { useTheme } from "@/theme/useTheme";
 import { PusherContext } from "@/hooks/usePusherProvider";
 import DeviceInfo from "react-native-device-info";
+import eventBus from "@/utils/eventBus";
 
 // export default Slot
 
@@ -76,6 +77,11 @@ const Layout = () => {
       console.log("friend:new-layout");
       setFriendRed(true);
     });
+    eventBus.on("jump-to-msg-page", () => {
+      console.log("jump-to-msg-page-on");
+      setMsgRed(false);
+    });
+
     pusherContext.socket?.on("messages:new", (messagesData) => {
       const data = messagesData.newMsgData;
       const type = messagesData.type;

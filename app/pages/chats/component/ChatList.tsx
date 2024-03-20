@@ -6,6 +6,8 @@ import {
   View,
   StyleSheet,
 } from "react-native";
+import eventBus from "@/utils/eventBus";
+
 import { getSize } from "utils";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useContext, useEffect, useMemo, useState } from "react";
@@ -27,10 +29,10 @@ const ConvoList = () => {
   const { chatListStore, setChatListStoreV2 } = useChatList();
   const userId = useMemo(() => userStore.userInfo?._id, [userStore]);
   const style = getStyle(themeColor);
-  useEffect(() => {
-    console.log(chatListStore.chatListState?.length, "chatListStore-chatlist");
-    console.log(chatListStore.chatListState?.[0], "chatListStore-chatlist");
-  }, [chatListStore]);
+  // useEffect(() => {
+  //   console.log(chatListStore.chatListState?.length, "chatListStore-chatlist");
+  //   console.log(chatListStore.chatListState?.[0], "chatListStore-chatlist");
+  // }, [chatListStore]);
   const deviceModel = DeviceInfo.getModel();
   useFocusEffect(() => {
     if (!userId) return;
@@ -195,13 +197,14 @@ const ConvoList = () => {
     );
     return (
       <TouchableOpacity
-        onPress={() => {
+        onPress={async () => {
           // console.log(
           //   item?.seenIds,
           //   item?.seenIds?.find((item) => item === userStore.userInfo?._id),
           //   userStore.userInfo?._id,
           //   "TouchableOpacity-seenIds"
           // );
+
           goToMsgChat(
             item,
             userId + "",
@@ -209,10 +212,11 @@ const ConvoList = () => {
             chatListStore,
             setChatListStoreV2
           );
-          return axios.post("api/convo/updateConvoSeenIdsById", {
+          await axios.post("api/convo/updateConvoSeenIdsById", {
             convoId: item._id,
             userId,
           });
+          eventBus.emit("jump-to-msg-page");
         }}
       >
         <View style={style.itemContainer}>
