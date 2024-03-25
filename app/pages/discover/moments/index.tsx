@@ -91,7 +91,7 @@ const Moments = () => {
         return {
           uri: image.uri,
           type: image.type,
-          // no fileName property on android 
+          // no fileName property on android
           // name: image.fileName,
           name: image.assetId,
         };
@@ -179,7 +179,7 @@ const Moments = () => {
     });
     navigator.setOptions(navigatorProps as NativeStackNavigationOptions);
   });
-  // after post need refresh  
+  // after post need refresh
   useFocusEffect(
     useCallback(() => {
       getMomentsList();
@@ -199,46 +199,58 @@ const Moments = () => {
     >
       <ScrollView style={{ backgroundColor: themeColor.white, flex: 1 }}>
         <ActionSheet
-          style={{ backgroundColor: themeColor.white, borderRadius: 8 }}
+          style={{
+            flex: 1,
+            backgroundColor: themeColor.white,
+            borderRadius: 8,
+          }}
           visible={visible}
           actions={defaultActions}
           onClose={onClose}
           cancelText={t("Cancel")}
           onCancel={onClose}
         />
-        {momentsList?.map((item, index) => {
-          // console.log(item, "item");
-          return (
-            <View key={index}>
-              <MomentsCard momentData={item} />
-            </View>
-          );
-        })}
+        <Pressable
+          style={{ flex: 1 }}
+          onPress={() => {
+            console.log("KeyboardAvoidingView-moments");
+            setCommentVisible(false);
+          }}
+        >
+          {momentsList?.map((item, index) => {
+            // console.log(item, "item");
+            return (
+              <View key={index}>
+                <MomentsCard momentData={item} />
+              </View>
+            );
+          })}
+        </Pressable>
+        {commentVisible && (
+          <View style={{ backgroundColor: themeColor.fillColor, padding: 4 }}>
+            <TextInput
+              onSubmitEditing={async (event) => {
+                const text = event.nativeEvent.text;
+                curCommentData.current?.sendHandler?.(text).then(() => {
+                  // refresh list
+                  setCommentVisible(false);
+                  getMomentsList();
+                });
+              }}
+              returnKeyType="send"
+              autoFocus
+              selectionColor={themeColor.primary}
+              style={{
+                borderRadius: 4,
+                height: getSize(38),
+                paddingLeft: 8,
+                fontSize: 18,
+                backgroundColor: themeColor.white,
+              }}
+            />
+          </View>
+        )}
       </ScrollView>
-      {commentVisible && (
-        <View style={{ backgroundColor: themeColor.fillColor, padding: 4 }}>
-          <TextInput
-            onSubmitEditing={async (event) => {
-              const text = event.nativeEvent.text;
-              curCommentData.current?.sendHandler?.(text).then(() => {
-                // refresh list
-                setCommentVisible(false);
-                getMomentsList();
-              });
-            }}
-            returnKeyType="send"
-            autoFocus
-            selectionColor={themeColor.primary}
-            style={{
-              borderRadius: 4,
-              height: getSize(38),
-              paddingLeft: 8,
-              fontSize: 18,
-              backgroundColor: themeColor.white,
-            }}
-          />
-        </View>
-      )}
     </KeyboardAvoidingView>
   );
 };

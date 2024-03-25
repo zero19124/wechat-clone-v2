@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { IMomentsCard } from "./MomentsCard";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import HeartOutlineIcon from "@/icons/discover/heart-outline.svg";
 import HeartIcon from "@/icons/discover/heart.svg";
 import CommentOutlineIcon from "@/icons/discover/comment-outline.svg";
@@ -17,17 +17,15 @@ import { useTranslation } from "react-i18next";
 import { useUser } from "app/store/user";
 import { formatDateToString } from "@/utils/date";
 import eventBus from "@/utils/eventBus";
+import { Popover, PopoverInstance } from "@/component/base/Popover";
 const MomentsComment = (props: { momentData: IMomentsCard["momentData"] }) => {
   const { themeColor, commonStyle } = useTheme();
   const { momentData } = props;
   const { t } = useTranslation();
   const { userInfo } = useUser().userStore;
-  const [commentVisible, setCommentVisible] = useState(false);
   const [liked, setLiked] = useState(false);
+  const popover = useRef<PopoverInstance>(null);
 
-  const handleAnimation = () => {
-    setCommentVisible(!commentVisible);
-  };
   useEffect(() => {
     const curLiked = momentData.likes.find(
       (item) => item.likedUserId === userInfo?._id
@@ -42,13 +40,32 @@ const MomentsComment = (props: { momentData: IMomentsCard["momentData"] }) => {
       <Text style={{ color: themeColor.text1 }}>
         {formatDateToString(momentData.createdAt)}
       </Text>
-      {commentVisible && (
+
+      <Popover
+        placement="left"
+        ref={popover}
+        offset={2}
+        theme="dark"
+        showTriangle={false}
+        reference={
+          // <TouchableOpacity
+          //   onPress={() => {
+          //     handleAnimation();
+          //   }}
+          // >
+          <Image
+            style={style.momentsCardBottomImg}
+            source={require("@/assets/icon/discover/two-dot-moments.jpeg")}
+          />
+          // </TouchableOpacity>
+        }
+      >
         <Animated.View
           style={[
             {
-              right: 30,
-              top: 2,
-              position: "absolute",
+              // right: 30,
+              // top: 2,
+              // position: "absolute",
               flexDirection: "row",
               backgroundColor: themeColor.bg4,
               paddingVertical: 4,
@@ -68,10 +85,10 @@ const MomentsComment = (props: { momentData: IMomentsCard["momentData"] }) => {
                 })
                 .then((res) => {
                   eventBus.emit("moments-liked");
+                  setTimeout(() => {
+                    popover.current?.hide();
+                  }, 200);
                 });
-              setTimeout(() => {
-                setCommentVisible(false);
-              }, 300);
             }}
             style={[
               {
@@ -106,20 +123,24 @@ const MomentsComment = (props: { momentData: IMomentsCard["momentData"] }) => {
           {/* divider  end*/}
           <TouchableOpacity
             onPress={() => {
+              popover.current?.hide();
               eventBus?.emit?.("moments-comment", {
                 sendHandler: (comment: string) => {
-                  return axios.post("api/moments/add-moments-comment", {
-                    momentsId: momentData._id,
-                    commentedUserId: userInfo?._id,
-                    commentedUserName: userInfo?.act,
-                    comment,
-                  });
+                  return axios
+                    .post("api/moments/add-moments-comment", {
+                      momentsId: momentData._id,
+                      commentedUserId: userInfo?._id,
+                      commentedUserName: userInfo?.act,
+                      comment,
+                    })
+                    .then(() => {
+                      setTimeout(() => {
+                        popover.current?.hide();
+                      }, 200);
+                      return;
+                    });
                 },
               });
-
-              setTimeout(() => {
-                setCommentVisible(false);
-              }, 300);
             }}
             style={[
               {
@@ -143,18 +164,7 @@ const MomentsComment = (props: { momentData: IMomentsCard["momentData"] }) => {
             </View>
           </TouchableOpacity>
         </Animated.View>
-      )}
-
-      <TouchableOpacity
-        onPress={() => {
-          handleAnimation();
-        }}
-      >
-        <Image
-          style={style.momentsCardBottomImg}
-          source={require("@/assets/icon/discover/two-dot-moments.jpeg")}
-        />
-      </TouchableOpacity>
+      </Popover>
     </View>
   );
 };

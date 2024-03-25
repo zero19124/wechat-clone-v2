@@ -1,8 +1,8 @@
-import type React from 'react';
-import type { StyleProp, ViewStyle } from 'react-native';
-import type { PopoverPlacement as Placement } from 'react-native-popover-view';
+import type React from "react";
+import type { StyleProp, ViewStyle } from "react-native";
+import type { PopoverPlacement as Placement } from "react-native-popover-view";
 
-export type PopoverTheme = 'light' | 'dark';
+export type PopoverTheme = "light" | "dark";
 export type PopoverPlacement = `${Placement}`;
 
 export type PopoverAction = {
@@ -19,6 +19,8 @@ export type PopoverAction = {
 };
 
 export interface PopoverProps {
+  showTriangle?: boolean;
+
   /** 是否显示遮罩层	 */
   overlay?: boolean;
   /** 动画时长，单位毫秒，设置为 0 可以禁用动画	 */

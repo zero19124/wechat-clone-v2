@@ -204,6 +204,7 @@ const ConvoList = () => {
           //   userStore.userInfo?._id,
           //   "TouchableOpacity-seenIds"
           // );
+          eventBus.emit("jump-to-msg-page");
 
           goToMsgChat(
             item,
@@ -216,7 +217,6 @@ const ConvoList = () => {
             convoId: item._id,
             userId,
           });
-          eventBus.emit("jump-to-msg-page");
         }}
       >
         <View style={style.itemContainer}>

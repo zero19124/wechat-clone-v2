@@ -52,7 +52,7 @@ const Contacts = () => {
           return;
         }
         const friendList = friendData[0].friendsArray;
-        console.log(friendList, "friendList");
+        // console.log(friendList, "friendList");
         setFriendList([...friendList]);
 
         // console.log(pinyin("岩雀", { style: pinyin.STYLE_NORMAL }), "pinyin");
@@ -84,7 +84,7 @@ const Contacts = () => {
           });
 
           const firstPinyin = pinyinArr[0];
-          const initial = firstPinyin[0][0];
+          const initial = firstPinyin[0][0].toLocaleLowerCase();
           console.log(pinyinArr, "pinyinArr", isNumeric(initial), initial);
           if (isNumeric(initial)) {
             const pre = newMap.get("#");
@@ -192,7 +192,7 @@ const Contacts = () => {
             const itemList = listMap?.get?.(item.toLocaleLowerCase());
             // 没有则显示到其他
             if (!itemList?.length) return null;
-            console.log(itemList, "itemList");
+            // console.log(itemList, "itemList");
             return (
               <View key={index}>
                 <IndexBar.Anchor key={index} index={item} />
@@ -204,7 +204,7 @@ const Contacts = () => {
                   return (
                     <ItemCard
                       uniqueKey={_item?._id + ""}
-                      key={_item?._id + ""}
+                      key={_item?._id + "" + _item.act}
                       style={{
                         marginTop: 16,
                       }}

@@ -51,6 +51,7 @@ export const createStyle = (theme: DiceUI.Theme, color: PopoverTheme): Styles =>
     arrow: {
       borderTopColor: backgroundColor,
     },
+    // arrow 
     content: {
       backgroundColor: backgroundColor,
       borderRadius: theme.popover_radius,

@@ -114,19 +114,25 @@ const MomentsCard = (props: IMomentsCard) => {
                 }}
               >
                 {momentData.likes.map((like, index) => {
-                  let likedUserName = like.likedUserName;
-                  if (index) {
-                    likedUserName += ",";
-                  }
-                  if (momentData.likes.length > 1 && !index) {
-                    likedUserName += ",";
-                  }
+                  const getName = () => {
+                    let likedUserName = like.likedUserName;
+                    // lastone
+                    if (index + 1 === momentData.likes.length) {
+                      return likedUserName;
+                    }
+
+                    if (momentData.likes.length > 1) {
+                      likedUserName += ",";
+                    }
+
+                    return likedUserName;
+                  };
                   return (
                     <Text
                       key={index}
                       style={[style.momentsCardTextBlue, { fontSize: 14 }]}
                     >
-                      {likedUserName}
+                      {getName()}
                     </Text>
                   );
                 })}

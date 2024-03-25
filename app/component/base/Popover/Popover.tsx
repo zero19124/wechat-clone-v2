@@ -30,6 +30,7 @@ const Popover = forwardRef<PopoverInstance, PopoverProps>((props, ref) => {
     theme = "light",
     closeOnClickAction = true,
     closeOnClickOverlay = true,
+    showTriangle = true,
     actions = [],
   } = props;
   const styles = createStyle(defaultTheme, theme);
@@ -126,7 +127,7 @@ const Popover = forwardRef<PopoverInstance, PopoverProps>((props, ref) => {
           !props.overlay && styles.transparentOverlay,
         ]}
         popoverStyle={[styles.popover, styles.content]}
-        arrowSize={arrowSize}
+        arrowSize={showTriangle ? arrowSize : { width: 0, height: 0 }}
         onOpenStart={props.onOpen}
         onOpenComplete={props.onOpened}
         onCloseStart={props.onClose}
