@@ -10,7 +10,14 @@ export const useCommonNavigateProps = (props: {
   goBackHandler?: () => void;
   rightHandler?: () => void;
 }): TNavigationOptions => {
-  const { title, rightComp, goBackColor, goBackHandler, rightHandler } = props;
+  const {
+    title,
+    rightComp,
+    goBackColor,
+    goBackHandler,
+    rightHandler,
+    ...rest
+  } = props;
   return {
     title: title,
     headerTitleAlign: "center",
@@ -33,5 +40,6 @@ export const useCommonNavigateProps = (props: {
         {rightComp}
       </Pressable>
     ),
+    ...rest,
   };
 };

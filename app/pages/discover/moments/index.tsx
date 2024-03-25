@@ -1,30 +1,22 @@
 import { useFocusEffect, useNavigation } from "expo-router";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
-import {
-  Image,
+  Animated,
   KeyboardAvoidingView,
   Platform,
   Pressable,
   ScrollView,
-  Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import CameraOutline from "@/icons/common/camera-outline.svg";
+
 import { useTranslation } from "react-i18next";
-import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
-import GoBack from "@/component/complex/GoBack";
 import MomentsCard from "./components/MomentsCard";
 import ActionSheet, { ActionSheetAction } from "@/component/base/ActionSheet";
 import { useTheme } from "@/theme/useTheme";
 import Toast from "@/component/base/Toast";
 import * as ImagePicker from "expo-image-picker";
-import { useCommonNavigateProps } from "@/component/complex/CommonNavigateTitle";
 import config from "@/config/index";
 import { useUser } from "app/store/user";
 import { TImageIns, uploadImages } from "@/hooks/useImagePicker";
@@ -32,6 +24,14 @@ import { TextInput } from "react-native-gesture-handler";
 import eventBus from "@/utils/eventBus";
 import { getSize } from "utils";
 import { useLoadingStore } from "app/store/globalLoading";
+import FastImage from "react-native-fast-image";
+import MomentsAvatar from "./components/MomentsAvatar";
+import ParallaxHeader, {
+  HEADER_HEIGHT,
+} from "@/component/complex/ParallaxHeader";
+import constants from "@/utils/constants";
+import GoBack from "@/component/complex/GoBack";
+import { FontAwesome } from "@expo/vector-icons";
 type TMomentsComment = { sendHandler: (comment: string) => Promise<any> };
 const getMock = (type = "img", name = "读书方法") => {
   const Mock = {
@@ -159,6 +159,8 @@ const Moments = () => {
       });
   };
   const curCommentData = useRef<TMomentsComment>();
+  const [scrollY] = useState(new Animated.Value(1));
+
   useEffect(() => {
     eventBus?.on?.("moments-comment", (data: TMomentsComment) => {
       setCommentVisible(true);
@@ -169,35 +171,74 @@ const Moments = () => {
       getMomentsList();
     });
   }, []);
-  useLayoutEffect(() => {
-    const navigatorProps = useCommonNavigateProps({
-      title: t("Moments"),
-      rightComp: () => <CameraOutline />,
-      rightHandler: () => {
-        setVisible(true);
-      },
-    });
-    navigator.setOptions(navigatorProps as NativeStackNavigationOptions);
-  });
+
   // after post need refresh
   useFocusEffect(
     useCallback(() => {
       getMomentsList();
     }, [])
   );
-  // useEffect(() => {
-  //       getMomentsList();
-  // }, []);
+
   return (
     <KeyboardAvoidingView
       style={{
-        // backgroundColor: "yellow",
         flex: 1,
       }}
       keyboardVerticalOffset={100}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <ScrollView style={{ backgroundColor: themeColor.white, flex: 1 }}>
+      <ParallaxHeader
+        scrollY={scrollY}
+        rightHandler={() => {
+          setVisible(true);
+        }}
+      />
+      <ScrollView
+        scrollEventThrottle={16}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: false }
+        )}
+        style={{ backgroundColor: themeColor.white, flex: 1 }}
+      >
+        <View>
+          <FastImage
+            style={{ width: "100%", height: HEADER_HEIGHT }}
+            source={{
+              uri: "https://wechat-server-jhc0.onrender.com/files/1709819462815.jpg",
+            }}
+          />
+          <Animated.View
+            style={{
+              paddingTop: constants.statusBarHeight,
+              paddingBottom: 24,
+              flexDirection: "row",
+              width: "100%",
+              position: "absolute",
+              paddingHorizontal: 24,
+              zIndex: 10,
+              justifyContent: "space-between",
+              alignItems: "center",
+              // opacity: headerOpacity,
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                navigator.goBack();
+              }}
+            >
+              <GoBack color={themeColor.white} />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => {
+                setVisible(true);
+              }}
+            >
+              <FontAwesome name="camera" size={18} color={themeColor.white} />
+            </TouchableOpacity>
+          </Animated.View>
+        </View>
         <ActionSheet
           style={{
             flex: 1,
@@ -217,6 +258,7 @@ const Moments = () => {
             setCommentVisible(false);
           }}
         >
+          <MomentsAvatar />
           {momentsList?.map((item, index) => {
             // console.log(item, "item");
             return (

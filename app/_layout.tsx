@@ -237,6 +237,7 @@ const Layout = () => {
                         <Stack.Screen
                           name="pages/discover/moments/index"
                           options={{
+                            headerShown: false,
                             title: "moments",
                           }}
                         />
