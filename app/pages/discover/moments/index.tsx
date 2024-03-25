@@ -171,7 +171,11 @@ const Moments = () => {
       getMomentsList();
     });
   }, []);
-
+  const headerOpacity = scrollY.interpolate({
+    inputRange: [0, 100],
+    outputRange: [1, 0],
+    extrapolate: "clamp",
+  });
   // after post need refresh
   useFocusEffect(
     useCallback(() => {
@@ -193,6 +197,37 @@ const Moments = () => {
           setVisible(true);
         }}
       />
+      <Animated.View
+        style={{
+          paddingTop: constants.statusBarHeight,
+          paddingBottom: 24,
+          flexDirection: "row",
+          width: "100%",
+          position: "absolute",
+          paddingHorizontal: 24,
+          zIndex: 10,
+          justifyContent: "space-between",
+          alignItems: "center",
+          opacity: headerOpacity,
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => {
+            navigator.goBack();
+          }}
+        >
+          <GoBack color={themeColor.white} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => {
+            setVisible(true);
+          }}
+        >
+          <FontAwesome name="camera" size={18} color={themeColor.white} />
+        </TouchableOpacity>
+      </Animated.View>
+
       <ScrollView
         scrollEventThrottle={16}
         onScroll={Animated.event(
@@ -201,44 +236,14 @@ const Moments = () => {
         )}
         style={{ backgroundColor: themeColor.white, flex: 1 }}
       >
-        <View>
-          <FastImage
-            style={{ width: "100%", height: HEADER_HEIGHT }}
-            source={{
-              uri: "https://wechat-server-jhc0.onrender.com/files/1709819462815.jpg",
-            }}
-          />
-          <Animated.View
-            style={{
-              paddingTop: constants.statusBarHeight,
-              paddingBottom: 24,
-              flexDirection: "row",
-              width: "100%",
-              position: "absolute",
-              paddingHorizontal: 24,
-              zIndex: 10,
-              justifyContent: "space-between",
-              alignItems: "center",
-              // opacity: headerOpacity,
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                navigator.goBack();
-              }}
-            >
-              <GoBack color={themeColor.white} />
-            </TouchableOpacity>
+        {/* bg  */}
+        <FastImage
+          style={{ width: "100%", height: HEADER_HEIGHT }}
+          source={{
+            uri: "https://img1.baidu.com/it/u=713295211,1805964126&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=281",
+          }}
+        />
 
-            <TouchableOpacity
-              onPress={() => {
-                setVisible(true);
-              }}
-            >
-              <FontAwesome name="camera" size={18} color={themeColor.white} />
-            </TouchableOpacity>
-          </Animated.View>
-        </View>
         <ActionSheet
           style={{
             flex: 1,

@@ -16,7 +16,7 @@ const ParallaxHeader: React.FC<{
   const { themeColor } = useTheme();
   const { t } = useTranslation();
   const headerOpacity = scrollY.interpolate({
-    inputRange: [0, SCROLL_THRESHOLD - 80],
+    inputRange: [0, SCROLL_THRESHOLD - 100],
     outputRange: [0, 1],
     extrapolate: "clamp",
   });
@@ -24,11 +24,11 @@ const ParallaxHeader: React.FC<{
     <Animated.View
       style={{
         paddingTop: constants.statusBarHeight,
-        paddingBottom: 24,
+        paddingBottom: 12,
         flexDirection: "row",
         width: "100%",
         position: "absolute",
-        paddingHorizontal: 12,
+        paddingHorizontal: 24,
         zIndex: 10,
         justifyContent: "space-between",
         alignItems: "center",

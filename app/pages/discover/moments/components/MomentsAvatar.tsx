@@ -8,14 +8,23 @@ const MomentsAvatar = () => {
   const { themeColor } = useTheme();
 
   return (
-    <View className=" flex-row absolute -top-12 right-6 justify-center items-center">
-      <Text style={{ fontSize: getSize(18), color: themeColor.white }}>
+    <View
+      className=" flex-row absolute justify-center "
+      style={{ top: -48, right: 8 }}
+    >
+      <Text
+        style={{
+          fontSize: getSize(18),
+          color: themeColor.bg2,
+          paddingTop: 16,
+        }}
+      >
         {userStore.userInfo?.nickname || userStore.userInfo?.act}
       </Text>
       <UserAvatar
         style={{
-          width: getSize(65),
-          height: getSize(65),
+          width: getSize(75),
+          height: getSize(75),
           borderColor: "transparent",
         }}
         source={{ uri: userStore.userInfo?.image }}
