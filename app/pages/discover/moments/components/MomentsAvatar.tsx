@@ -17,6 +17,7 @@ const MomentsAvatar = () => {
           fontSize: getSize(18),
           color: themeColor.bg2,
           paddingTop: 16,
+          marginRight:4,
         }}
       >
         {userStore.userInfo?.nickname || userStore.userInfo?.act}

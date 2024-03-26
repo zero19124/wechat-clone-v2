@@ -18,6 +18,10 @@ const PhoneCalling = (props: {
   const { themeColor } = useTheme();
   const [callingUser, setCallingUser] = useState({ act: "", image: "" });
   useEffect(() => {
+    if (!callUserId) {
+      console.log("callUserId null");
+      return;
+    }
     axios
       .get(config.apiDomain + `/api/user/getUserById?userId=${callUserId}`)
       .then((user) => {
@@ -83,12 +87,12 @@ const PhoneCalling = (props: {
           marginHorizontal: 8,
         }}
       >
-        {callingUser.act} is calling
+        {callingUser?.nickname || callingUser.act} is calling
       </Text>
 
       <View
-        className="justify-center items-center flex-row gap-4 bg-red-50"
-        style={{ backgroundColor: themeColor.overlay4, height: 1 }}
+        className="justify-center items-center flex-row gap-4 "
+        style={{ height: 1 }}
       >
         <HangUpBtn
           width={38}
@@ -96,6 +100,7 @@ const PhoneCalling = (props: {
           sizeOut={26}
           onPress={() => {
             PortalRef.current?.removePortal(portalKey);
+            rejectHandler();
           }}
         />
         <AcceptBtn
@@ -103,6 +108,7 @@ const PhoneCalling = (props: {
           height={38}
           sizeOut={26}
           onPress={() => {
+            answerHandler();
             PortalRef.current?.removePortal(portalKey);
           }}
         />
