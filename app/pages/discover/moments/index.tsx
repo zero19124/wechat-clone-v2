@@ -187,8 +187,9 @@ const Moments = () => {
     <KeyboardAvoidingView
       style={{
         flex: 1,
+        // backgroundColor: "red",
       }}
-      keyboardVerticalOffset={100}
+      keyboardVerticalOffset={1}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <ActionSheet
@@ -247,7 +248,9 @@ const Moments = () => {
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
           { useNativeDriver: false }
         )}
-        style={{ backgroundColor: themeColor.white, flex: 1 }}
+        style={{
+          backgroundColor: themeColor.white,
+        }}
       >
         {/* bg  */}
         <FastImage
