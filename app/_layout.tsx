@@ -31,7 +31,7 @@ import axios from "axios";
 import config from "./config";
 import Overlay from "./component/base/Overlay";
 import Loading from "./component/base/Loading";
-import { useLoading } from "./store/globalLoading";
+// import { useLoading } from "./store/globalLoading";
 import GlobalLoading from "./component/complex/GlobalLoading";
 axios.defaults.baseURL = config.apiDomain; // 配置axios请求的地址
 axios.defaults.headers.post["Content-Type"] = "application/json; charset=utf-8";
@@ -40,6 +40,8 @@ export const PortalRef =
 
 const Layout = () => {
   const navigate = useNavigation();
+  // const { userStore } = useUser();
+
   // set the quickActionItem
 
   console.log(" top-level component");
@@ -263,6 +265,12 @@ const Layout = () => {
                           options={{
                             title: "qrcode",
                             presentation: "fullScreenModal",
+                          }}
+                        />
+                        <Stack.Screen
+                          name="pages/me/screens/lading/index"
+                          options={{
+                            headerShown: false,
                           }}
                         />
                         <Stack.Screen

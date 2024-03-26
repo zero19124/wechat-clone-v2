@@ -1,4 +1,4 @@
-import { useNavigation, useRouter } from "expo-router";
+import { Redirect, useNavigation, useRouter } from "expo-router";
 import {
   useContext,
   useEffect,
@@ -395,6 +395,9 @@ const Chats = () => {
       setInit(true);
     }
   }, [pusherContext.socket, userId]);
+  if (!userStore.userInfo?._id) {
+    return <Redirect href={'/pages/me/screens/lading/'}/>
+  }
   return (
     <>
       {visible && (
