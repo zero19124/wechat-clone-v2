@@ -58,15 +58,15 @@ export const uploadImages = async (
 
   images.forEach(async (image, index) => {
     const type = image.uri.split(".").pop();
-    const compressedImage = await ImageManipulator.manipulateAsync(
-      image.uri,
-      [{ resize: { maxWidth, maxHeight } }],
-      { format: "jpeg", compress: 0.5 }
-    );
+    // const compressedImage = await ImageManipulator.manipulateAsync(
+    //   image.uri,
+    //   [{ resize: { maxWidth, maxHeight } }],
+    //   { format: "jpeg", compress: 0.5 }
+    // );
 
     formData.append(`files`, {
-      // uri: image.uri,
-      uri: compressedImage.uri,
+      uri: image.uri,
+      // uri: compressedImage.uri,
       name: image.name,
       // todo  photo from camera error
       // https://github.com/facebook/react-native/issues/28551

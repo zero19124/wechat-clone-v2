@@ -7,6 +7,7 @@ import AcceptBtn from "../AcceptBtn";
 import { PortalRef } from "app/_layout";
 import axios from "axios";
 import config from "@/config/index";
+import { getSize } from "utils";
 const portalKey = "PhoneCalling";
 const PhoneCalling = (props: {
   callUserId: string;
@@ -79,16 +80,34 @@ const PhoneCalling = (props: {
       key={portalKey}
     >
       <UserAvatar rounded source={{ uri: callingUser.image }} />
-      <Text
+      <View
         style={{
-          color: themeColor.white,
-          fontSize: 18,
+          flexDirection: "row",
           flex: 1,
           marginHorizontal: 8,
         }}
       >
-        {callingUser?.nickname || callingUser.act} is calling
-      </Text>
+        <Text
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={{
+            maxWidth: getSize(100),
+            color: themeColor.white,
+            fontSize: 18,
+          }}
+        >
+          {callingUser?.nickname || callingUser.act}
+        </Text>
+        <Text
+          style={{
+            color: themeColor.white,
+            fontSize: 18,
+            marginLeft: 4,
+          }}
+        >
+          is calling
+        </Text>
+      </View>
 
       <View
         className="justify-center items-center flex-row gap-4 "

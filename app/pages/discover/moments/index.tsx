@@ -32,8 +32,6 @@ import ParallaxHeader, {
 import constants from "@/utils/constants";
 import GoBack from "@/component/complex/GoBack";
 import { FontAwesome } from "@expo/vector-icons";
-import { PortalRef } from "app/_layout";
-import PhoneCalling from "@/component/complex/PhoneCalling";
 type TMomentsComment = { sendHandler: (comment: string) => Promise<any> };
 const getMock = (type = "img", name = "读书方法") => {
   const Mock = {
@@ -130,8 +128,6 @@ const Moments = () => {
     {
       name: t("Choose from Album"),
       callback: () => {
-        PortalRef.current?.addPortal("kkkk", <PhoneCalling />);
-        return;
         setTimeout(async () => {
           await pickImages();
         }, 1200);
