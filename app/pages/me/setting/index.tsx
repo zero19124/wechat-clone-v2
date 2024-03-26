@@ -63,7 +63,7 @@ const Setting = () => {
       </Button>
 
       <View>
-        {process.env.NODE_ENV === "development" && (
+        {
           <>
             <TouchableOpacity
               onPress={async () => {
@@ -75,7 +75,7 @@ const Setting = () => {
             </TouchableOpacity>
             <Text>{config.apiDomain}</Text>
           </>
-        )}
+        }
         <Button
           onPress={() => {
             Toast.info(t("Log out"));

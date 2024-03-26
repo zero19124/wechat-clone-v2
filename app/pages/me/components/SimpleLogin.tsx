@@ -56,6 +56,12 @@ export default () => {
       type: "resetAfterOffline",
     });
   };
+  const goBack = () => {
+    router.back();
+    setTimeout(() => {
+      router.replace("/(tabs)");
+    }, 100);
+  };
   // deviceModel === "iPhone 15"
   //   ? { act: "12", psw: "12" }
   //   : { psw: "1", act: "1" }
@@ -85,7 +91,8 @@ export default () => {
       if (hasUser) {
         setUserStore({ userInfo: hasUser });
         console.log("86-setUserStore");
-        router.replace("/(tabs)");
+
+        goBack();
 
         return;
       }
@@ -96,7 +103,7 @@ export default () => {
       console.log(user, "user");
       setGoogleUser({ userInfo });
       setUserStore(user);
-      router.replace("/(tabs)");
+      goBack();
     } catch (error: any) {
       console.log(error, "error");
 
@@ -190,7 +197,10 @@ export default () => {
       });
   };
   // Network Images
-
+  if (userStore.userInfo?._id) {
+    router.back();
+    return;
+  }
   return (
     <View style={{ padding: 24, flex: 1, backgroundColor: themeColor.white }}>
       {<View style={{ height: "15%" }}></View>}

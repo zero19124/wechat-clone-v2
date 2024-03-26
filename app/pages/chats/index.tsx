@@ -35,7 +35,7 @@ import Button from "@/component/base/Button/Button";
 import { PortalHost } from "@/component/business/Portal";
 import { playSound } from "@/utils/sound";
 import { PortalRef } from "app/_layout";
-import PhoneCalling from "@/component/complex/PhoneCalling";
+import PhoneCalling, { portalKey } from "@/component/complex/PhoneCalling";
 const Chats = () => {
   const pusherContext = useContext(PusherContext);
   const socket = pusherContext.socket;
@@ -306,6 +306,7 @@ const Chats = () => {
             to: from,
             from: to,
           });
+          // PortalRef.current.removePortal(portalKey)
         };
         const answerHandler = () => {
           navigate.navigate("pages/chats/screens/video-call-rec/index", {
@@ -395,9 +396,16 @@ const Chats = () => {
       setInit(true);
     }
   }, [pusherContext.socket, userId]);
-  if (!userStore.userInfo?._id) {
-    return <Redirect href={'/pages/me/screens/lading/'}/>
-  }
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (!userStore.userInfo?._id) {
+        router.replace("/pages/me/screens/lading/");
+
+        // return <Redirect href={'/pages/me/screens/lading/'}/>
+      }
+    }, 200);
+  }, []);
   return (
     <>
       {visible && (

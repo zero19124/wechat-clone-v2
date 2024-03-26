@@ -1,7 +1,7 @@
 import VideoCallBtn from "@/component/complex/VideoCallBtn";
 import { useTheme } from "@/theme/useTheme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Animated, Button, PanResponder, View, Text } from "react-native";
 import { RTCView } from "react-native-webrtc";
@@ -9,6 +9,7 @@ import { getSize } from "utils";
 import VideoCallIcon from "@/icons/keyboard-panel/video-call.svg";
 import HangUpBtn from "@/component/complex/HangUpBtn";
 import Loading from "@/component/base/Loading";
+import { Audio } from "expo-av";
 
 // 播放视频组件
 const Player = ({
@@ -34,6 +35,40 @@ const Player = ({
       },
     })
   ).current;
+  const soundRef = useRef<Audio.Sound | undefined>();
+  useEffect(() => {
+    playSound().then((soundRes) => {
+      soundRef.current = soundRes;
+    });
+    return () => {
+      (async () => {
+        await soundRef.current?.unloadAsync();
+      })();
+    };
+  }, []);
+  const playSound = async (): Promise<Audio.Sound | undefined> => {
+    Audio.setAudioModeAsync({ allowsRecordingIOS: false });
+    const sound = new Audio.Sound();
+
+    try {
+      // 卸载之前的音频，以防重复播放
+
+      await sound.unloadAsync();
+      // 加载音频文件，这里假设你有一个有效的音频文件URI
+      await sound.loadAsync(
+        require("@/assets/mixkit-dial-phone-tone-2862.wav")
+      );
+
+      return sound;
+    } catch (error) {
+      // 错误处理
+      console.error("播放音频时发生错误", error);
+      return sound;
+    }
+  };
+  if (!awaiting) {
+    soundRef.current?.unloadAsync();
+  }
   return (
     <View
       style={{
@@ -85,8 +120,9 @@ const Player = ({
         {type === "caller" && awaiting && (
           <Button
             title="call"
-            onPress={() => {
+            onPress={async () => {
               preCall?.();
+              await soundRef.current?.playAsync();
             }}
           />
         )}

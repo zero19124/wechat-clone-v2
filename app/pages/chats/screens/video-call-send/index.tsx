@@ -153,6 +153,7 @@ const VideoCallSender = () => {
         initRemote();
       } else {
         alert("rejected!");
+        navigator.goBack();
       }
     });
     const localStream = await mediaDevices.getUserMedia({
