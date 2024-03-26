@@ -1,10 +1,12 @@
 import Button from "@/component/base/Button/Button";
+import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { ImageBackground, Text, View, StyleSheet } from "react-native";
 import { getSize } from "utils";
 
 const LandingPage = () => {
   const { t } = useTranslation();
+  const router = useRouter();
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -22,10 +24,20 @@ const LandingPage = () => {
             justifyContent: "space-between",
           }}
         >
-          <Button onPress={() => {}} type="primary">
+          <Button
+            onPress={() => {
+              router.push("/pages/me/components/SimpleLogin");
+            }}
+            type="primary"
+          >
             {t("Login")}
           </Button>
-          <Button onPress={() => {}} type="default">
+          <Button
+            onPress={() => {
+              router.push("/pages/me/screens/register/");
+            }}
+            type="default"
+          >
             {t("Sign Up")}
           </Button>
         </View>

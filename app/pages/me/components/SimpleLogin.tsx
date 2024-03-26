@@ -1,5 +1,5 @@
 import { useUser } from "app/store/user";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import {
   GoogleSignin,
   GoogleSigninButton,
@@ -12,6 +12,7 @@ import {
   Text,
   TouchableOpacity,
   Platform,
+  Keyboard,
 } from "react-native";
 import config from "@/config/index";
 import DeviceInfo from "react-native-device-info";
@@ -23,25 +24,27 @@ import Button from "@/component/base/Button/Button";
 import { useTranslation } from "react-i18next";
 import { useChatList } from "app/store/chatList";
 import { useLoadingStore } from "app/store/globalLoading";
+import {
+  TNavigationOptions,
+  useCommonNavigateProps,
+} from "@/component/complex/CommonNavigateTitle";
+import { useTheme } from "@/theme/useTheme";
+import { getSize } from "utils";
+import eventBus from "@/utils/eventBus";
 
 const style = StyleSheet.create({
   inputStyle: {
-    width: "70%",
-    margin: "auto",
-    marginRight: 12,
-    borderWidth: 1,
-    borderRadius: 8,
     padding: 8,
-    marginBottom: 8,
   },
 });
 export default () => {
+  const navigate = useNavigation();
   const { setUserStore, userStore } = useUser();
   const deviceModel = DeviceInfo.getModel();
   const { t } = useTranslation();
   const router = useRouter();
   const { setLoadingStore } = useLoadingStore();
-
+  const { themeColor } = useTheme();
   const [googleUser, setGoogleUser] = useState();
   const [isInProgress, setIsInProgress] = useState(false);
   const [data, setData] = useState({ psw: "1", act: "1" });
@@ -82,6 +85,8 @@ export default () => {
       if (hasUser) {
         setUserStore({ userInfo: hasUser });
         console.log("86-setUserStore");
+        router.replace("/(tabs)");
+
         return;
       }
       const user = await axios.post(config.apiDomain + "/api/user/register", {
@@ -91,6 +96,7 @@ export default () => {
       console.log(user, "user");
       setGoogleUser({ userInfo });
       setUserStore(user);
+      router.replace("/(tabs)");
     } catch (error: any) {
       console.log(error, "error");
 
@@ -113,11 +119,33 @@ export default () => {
       console.error(error);
     }
   };
+  useLayoutEffect(() => {
+    const navigatorProps = useCommonNavigateProps({
+      rightComp: () => <></>,
+      title: t("Login") as string,
+    });
+    navigate.setOptions({
+      ...navigatorProps,
+      headerStyle: { backgroundColor: themeColor.white },
+      headerShadowVisible: false,
+    } as TNavigationOptions);
+  }, []);
   useEffect(() => {
     GoogleSignin.configure({
       iosClientId:
         "475065706028-11egj47k01ej9juk2o892q5os4gehkbp.apps.googleusercontent.com", // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
       googleServicePlistPath: "", // [iOS] if you renamed your GoogleService-Info file, new name here, e.g. GoogleService-Info-Staging
+    });
+    eventBus.on("log-out", () => {
+      router.replace("/pages/me/screens/lading/");
+      console.log(data, "data");
+
+      signOut();
+      data.act = "";
+      data.psw = "";
+      setData(data);
+      setUserStore((prev) => ({ ...prev, userInfo: {} }));
+      resetAfterOffline();
     });
   }, []);
   const loginHandler = () => {
@@ -131,7 +159,6 @@ export default () => {
     //   setData({ psw: "12", act: "12" });
     // }
     console.log(data, "data-login");
-    setLoadingStore({ loading: true, text: "Login..." });
     fetch(config.apiDomain + "/api/user/register", {
       method: "POST",
       headers: {
@@ -148,7 +175,7 @@ export default () => {
         if (res?.code === 200) {
           const newInfo = { ...userStore, userInfo: res?.data };
           setUserStore({ ...newInfo });
-
+          router.replace("/(tabs)");
           console.log(newInfo, "userStore login");
         } else {
           Toast.fail(res.msg);
@@ -159,99 +186,67 @@ export default () => {
         console.log(e, "register-error");
       })
       .finally(() => {
-        setLoadingStore({ loading: false, text: "" });
+        // setLoadingStore({ loading: false, text: "" });
       });
   };
   // Network Images
 
   return (
-    <View>
-      {userStore?.userInfo?.act ? (
-        <View>
-          {process.env.NODE_ENV === "development" && (
-            <>
-              <TouchableOpacity
-                onPress={async () => {
-                  await Clipboard.setStringAsync(
-                    userStore?.userInfo?._id || ""
-                  );
-                  Toast.success("copied");
-                }}
-              >
-                <Text>userID ===={userStore.userInfo._id} copy userId </Text>
-              </TouchableOpacity>
-              <Text>{config.apiDomain}</Text>
-            </>
-          )}
-          <Button
-            onPress={() => {
-              console.log(data, "data");
-              Toast.fail(t("Log out"));
-              signOut();
-              data.act = "";
-              data.psw = "";
-              setData(data);
-              setUserStore((prev) => ({ ...prev, userInfo: {} }));
-              resetAfterOffline();
-            }}
-          >
-            {t("Log out")}
-          </Button>
-        </View>
-      ) : (
-        <View className="flex items-center">
-          <View className="flex-row justify-between  w-full px-2">
+    <View style={{ padding: 24, flex: 1, backgroundColor: themeColor.white }}>
+      {<View style={{ height: "15%" }}></View>}
+      {
+        <View className="flex items-center gap-4">
+          <View className="flex-row gap-2 mb-2 items-center w-full px-2">
+            <Text style={{ width: getSize(80), fontSize: 16 }}>
+              {t("Account")}
+            </Text>
             <TextInput
+              style={{ fontSize: 18, flex: 1, color: themeColor.text5 }}
               clearButtonMode="always"
               className="w-full"
-              style={style.inputStyle}
+              placeholderTextColor={themeColor.text2}
+              selectionColor={themeColor.primary}
+              placeholder={t("Enter Account")}
               onChangeText={(val) => {
                 data.act = val;
                 setData(data);
               }}
             />
-            <Button
-              size="small"
-              type="primary"
-              onPress={() => {
-                loginHandler();
-                console.log(data, "data", config.apiDomain);
-              }}
-            >
-              {t("Login")}
-            </Button>
           </View>
-          <View className="flex-row  justify-between w-full px-2">
+          <View className="flex-row  gap-2 mb-4 items-center w-full px-2">
+            <Text style={{ width: getSize(80), fontSize: 16 }}>
+              {t("Password")}
+            </Text>
             <TextInput
+              style={{ fontSize: 18, flex: 1 }}
+              selectionColor={themeColor.primary}
+              placeholderTextColor={themeColor.text2}
+              placeholder={t("Enter Password")}
               clearButtonMode="always"
               secureTextEntry={true}
-              style={style.inputStyle}
               onChangeText={(val) => {
                 data.psw = val;
                 setData(data);
               }}
             />
-
-            <Button
-              size="small"
-              onPress={() => {
-                // router.push("/pages/me/components/PushTest");
-                // return;
-                router.push("/pages/me/screens/register/");
-              }}
-            >
-              {t("Register")}
-            </Button>
           </View>
 
-          <View className=" justify-center items-center">
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-around",
-                width: "100%",
+          <View className=" justify-center items-center w-full mt-8">
+            <Button
+              style={{ width: "90%", marginBottom: 24 }}
+              type="primary"
+              onPress={() => {
+                setLoadingStore({ loading: true, text: "Login..." });
+                Keyboard.dismiss();
+                setTimeout(() => {
+                  loginHandler();
+                  console.log(data, "data", config.apiDomain);
+                }, 600);
               }}
-            ></View>
+            >
+              {t("Login")}
+            </Button>
+
             {Platform.OS === "ios" && (
               <GoogleSigninButton
                 className="flex-1"
@@ -266,7 +261,7 @@ export default () => {
             )}
           </View>
         </View>
-      )}
+      }
     </View>
   );
 };

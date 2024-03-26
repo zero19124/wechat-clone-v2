@@ -279,11 +279,18 @@ const Layout = () => {
                             title: "PushTest",
                           }}
                         />
+
                         {/* register  */}
                         <Stack.Screen
                           name="pages/me/screens/register/index"
                           options={{
                             title: "register",
+                          }}
+                        />
+                        <Stack.Screen
+                          name="pages/me/components/SimpleLogin"
+                          options={{
+                            title: "Login",
                           }}
                         />
                         <Stack.Screen

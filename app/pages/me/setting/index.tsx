@@ -1,16 +1,23 @@
-import { Button, Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useEffect, useLayoutEffect } from "react";
-import { useNavigation } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import { useTheme } from "@/theme/useTheme";
 import { TNavigationOptions } from "@/component/complex/CommonNavigateTitle";
+import * as Clipboard from "expo-clipboard";
+import config from "@/config/index";
+import Toast from "@/component/base/Toast";
+import { useUser } from "app/store/user";
+import Button from "@/component/base/Button/Button";
+import eventBus from "@/utils/eventBus";
 
 const Setting = () => {
   const navigator = useNavigation();
   const { t } = useTranslation();
   const { i18n } = useTranslation();
   const { toggleTheme, themeName, themeColor } = useTheme();
-
+  const { setUserStore, userStore } = useUser();
+  const router = useRouter();
   const handleChangeLanguage = (language: string) => {
     i18n.changeLanguage(language);
   };
@@ -33,24 +40,53 @@ const Setting = () => {
   return (
     <View style={{ backgroundColor: themeColor.white, flex: 1 }}>
       <Button
-        color={themeColor.text5}
+        type="default"
         onPress={() => {
           handleChangeLanguage(i18n.language === "cn" ? "en" : "cn");
         }}
-        title={t("change language to chinese")}
-      />
+      >
+        {t("change language to chinese")}
+      </Button>
       <Button
-        color={themeColor.text5}
+        type="default"
         onPress={() => toggleTheme(themeName === "light" ? "dark" : "light")}
-        title={t("change the theme")}
-      />
+      >
+        {t("change the theme")}
+      </Button>
       <Button
-        color={themeColor.text5}
+        type="default"
         onPress={() => {
-          navigator.navigate('pages/map/src/App')
+          navigator.navigate("pages/map/src/App");
         }}
-        title={t("to map")}
-      />
+      >
+        {t("to map")}
+      </Button>
+
+      <View>
+        {process.env.NODE_ENV === "development" && (
+          <>
+            <TouchableOpacity
+              onPress={async () => {
+                await Clipboard.setStringAsync(userStore?.userInfo?._id || "");
+                Toast.success("copied");
+              }}
+            >
+              <Text>userID ===={userStore.userInfo?._id} copy userId </Text>
+            </TouchableOpacity>
+            <Text>{config.apiDomain}</Text>
+          </>
+        )}
+        <Button
+          onPress={() => {
+            Toast.info(t("Log out"));
+            setTimeout(() => {
+              eventBus.emit("log-out");
+            }, 10);
+          }}
+        >
+          {t("Log out")}
+        </Button>
+      </View>
     </View>
   );
 };

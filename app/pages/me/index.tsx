@@ -71,181 +71,183 @@ const Me = () => {
 
   return (
     <SafeAreaView style={{ backgroundColor: themeColor.white, flex: 1 }}>
-      <View
-        className="flex-row"
-        style={{ paddingTop: "16%", paddingBottom: 32 }}
-      >
-        <Image
-          style={{
-            marginLeft: 32,
-            marginRight: 24,
-            width: 60,
-            height: 60,
-            borderRadius: 4,
-          }}
-          source={
-            userInfo?.image
-              ? {
-                  uri: userInfo?.image,
-                }
-              : require("@/assets/avatar-default.jpeg")
-          }
-        />
-        <View className="flex-1">
-          <Text style={{ fontSize: 24, marginBottom: 8 }}>
-            {userInfo?.nickname || userInfo?.act}
-          </Text>
-          <View className="flex-row justify-between items-center">
-            <Text style={{ fontSize: 18, color: themeColor.text3 }}>
-              Wechat Id: {userInfo?.act}
-            </Text>
-            <TouchableOpacity
-              onPress={() => {
-                navigator.navigate("pages/me/screens/my-qrcode/index");
-              }}
-              className="flex-row items-center"
-              style={{ marginRight: 12 }}
-            >
-              <QrCodeIcon style={{ marginRight: 24 }} width={18} />
-              <ArrowRightIcon />
-            </TouchableOpacity>
-          </View>
-          <View
-            className="flex-row justify-center items-center"
+      <ScrollView style={{ backgroundColor: themeColor.fillColor }}>
+        <View
+          className="flex-row"
+          style={{backgroundColor: themeColor.white, paddingTop: "16%", paddingBottom: 32 }}
+        >
+          <Image
             style={{
-              alignSelf: "flex-start",
-              marginTop: 8,
-              paddingHorizontal: 8,
-              borderRadius: 8,
-              borderColor: themeColor.fillColor,
-              borderWidth: 1,
+              marginLeft: 32,
+              marginRight: 24,
+              width: 60,
+              height: 60,
+              borderRadius: 4,
             }}
-          >
-            <PlusIcon width={16} />
-            <Text
-              style={{
-                marginLeft: 4,
-                paddingVertical: 2,
-                color: themeColor.text3,
-              }}
-            >
-              Status
+            source={
+              userInfo?.image
+                ? {
+                    uri: userInfo?.image,
+                  }
+                : require("@/assets/avatar-default.jpeg")
+            }
+          />
+          <View className="flex-1">
+            <Text style={{ fontSize: 24, marginBottom: 8 }}>
+              {userInfo?.nickname || userInfo?.act}
             </Text>
-          </View>
-          <View
-            className="flex-row justify-center items-center"
-            style={{
-              alignSelf: "flex-start",
-              marginTop: 8,
-              paddingLeft: 2,
-              paddingRight: 8,
-              paddingVertical: 2,
-              borderRadius: 8,
-              borderColor: themeColor.fillColor,
-              borderWidth: 1,
-            }}
-          >
-            <View className="flex-row">
-              {avatars.map((avatar, index) => {
-                return (
-                  <Image
-                    key={index}
-                    style={{
-                      width: 16,
-                      marginLeft: index ? -(2 + index * 1.5) : 0,
-                      height: 16,
-                      borderColor: themeColor.white,
-                      borderWidth: 1,
-                      borderRadius: 8,
-                    }}
-                    source={avatar}
-                  />
-                );
-              })}
+            <View className="flex-row justify-between items-center">
+              <Text style={{ fontSize: 18, color: themeColor.text3 }}>
+                Wechat Id: {userInfo?.act}
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  navigator.navigate("pages/me/screens/my-qrcode/index");
+                }}
+                className="flex-row items-center"
+                style={{ marginRight: 12 }}
+              >
+                <QrCodeIcon style={{ marginRight: 24 }} width={18} />
+                <ArrowRightIcon />
+              </TouchableOpacity>
             </View>
-            <Text
+            <View
+              className="flex-row justify-center items-center"
               style={{
-                marginHorizontal: 4,
-                paddingVertical: 2,
-                color: themeColor.text3,
+                alignSelf: "flex-start",
+                marginTop: 8,
+                paddingHorizontal: 8,
+                borderRadius: 8,
+                borderColor: themeColor.fillColor,
+                borderWidth: 1,
               }}
             >
-              and other friends (9)
-            </Text>
-            <RedDot />
+              <PlusIcon width={16} />
+              <Text
+                style={{
+                  marginLeft: 4,
+                  paddingVertical: 2,
+                  color: themeColor.text3,
+                }}
+              >
+                Status
+              </Text>
+            </View>
+            <View
+              className="flex-row justify-center items-center"
+              style={{
+                alignSelf: "flex-start",
+                marginTop: 8,
+                paddingLeft: 2,
+                paddingRight: 8,
+                paddingVertical: 2,
+                borderRadius: 8,
+                borderColor: themeColor.fillColor,
+                borderWidth: 1,
+              }}
+            >
+              <View className="flex-row">
+                {avatars.map((avatar, index) => {
+                  return (
+                    <Image
+                      key={index}
+                      style={{
+                        width: 16,
+                        marginLeft: index ? -(2 + index * 1.5) : 0,
+                        height: 16,
+                        borderColor: themeColor.white,
+                        borderWidth: 1,
+                        borderRadius: 8,
+                      }}
+                      source={avatar}
+                    />
+                  );
+                })}
+              </View>
+              <Text
+                style={{
+                  marginHorizontal: 4,
+                  paddingVertical: 2,
+                  color: themeColor.text3,
+                }}
+              >
+                and other friends (9)
+              </Text>
+              <RedDot />
+            </View>
           </View>
         </View>
-      </View>
-      <SimpleLogin />
 
-      <Divider />
+        <Divider />
 
-      <ItemCard
-        onPress={() => {
-          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-          navigator.navigate("pages/me/screens/wallet/index");
-        }}
-        borderVisible={false}
-        leftComp={() => {
+        <ItemCard
+          onPress={() => {
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+            navigator.navigate("pages/me/screens/wallet/index");
+          }}
+          borderVisible={false}
+          leftComp={() => {
+            return (
+              <PaySuccessOutlineIcon
+                style={{ marginLeft: 24 }}
+                width={24}
+                height={24}
+                fill={themeColor.primary}
+              />
+            );
+          }}
+          text={"Services"}
+        />
+        <Divider />
+
+        {serviceList.map((service) => {
           return (
-            <PaySuccessOutlineIcon
-              style={{ marginLeft: 24 }}
-              width={24}
-              height={24}
-              fill={themeColor.primary}
+            <ItemCard
+              onLongPress={() => {
+                if (service.text === "Cards & Offers") {
+                  fetch(
+                    config.apiDomain +
+                      "/api/wallet/AddMoneyByUserId?userId=" +
+                      userInfo?._id
+                  ).then(() => {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+                  });
+                }
+              }}
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+              }}
+              key={service.text}
+              leftComp={() => {
+                return <View style={{ marginLeft: 24 }}>{service.icon}</View>;
+              }}
+              text={service.text}
             />
           );
-        }}
-        text={"Services"}
-      />
-      <Divider />
-
-      {serviceList.map((service) => {
-        return (
-          <ItemCard
-            onLongPress={() => {
-              if (service.text === "Cards & Offers") {
-                fetch(
-                  config.apiDomain +
-                    "/api/wallet/AddMoneyByUserId?userId=" +
-                    userInfo?._id
-                ).then(() => {
-                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-                });
-              }
-            }}
-            onPress={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-            }}
-            key={service.text}
-            leftComp={() => {
-              return <View style={{ marginLeft: 24 }}>{service.icon}</View>;
-            }}
-            text={service.text}
-          />
-        );
-      })}
-      <Divider />
-      <ItemCard
-        onPress={() => {
-          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-          // Haptics.selectionAsync();
-          navigator.navigate("pages/me/setting/index");
-        }}
-        borderVisible={false}
-        leftComp={() => {
-          return (
-            <SettingIcon
-              style={{ marginLeft: 24 }}
-              width={24}
-              height={24}
-              fill={themeColor.iconBlue}
-            />
-          );
-        }}
-        text={"Setting"}
-      />
+        })}
+        <Divider />
+        <ItemCard
+          onPress={() => {
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+            // Haptics.selectionAsync();
+            navigator.navigate("pages/me/setting/index");
+          }}
+          borderVisible={false}
+          leftComp={() => {
+            return (
+              <SettingIcon
+                style={{ marginLeft: 24 }}
+                width={24}
+                height={24}
+                fill={themeColor.iconBlue}
+              />
+            );
+          }}
+          text={"Setting"}
+        />
+        {/* {process.env.NODE_ENV === "development" && <SimpleLogin />} */}
+      </ScrollView>
     </SafeAreaView>
   );
 };

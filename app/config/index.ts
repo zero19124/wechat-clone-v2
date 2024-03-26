@@ -14,9 +14,9 @@ const env = "dev1";
 // const apiDomain = "http://localhost:4000";
 // const [apiDomain, setApiDomain] = useState("http://localhost:4000");
 // const apiDomain = "http://192.168.200.146:4000";
-// const apiDomain = "http://172.20.10.3:4000";
+const apiDomain = "http://172.20.10.3:4000";
 // bella 
-const apiDomain = "http://192.168.3.10:4000";
+// const apiDomain = "http://192.168.3.10:4000";
 // const apiDomain = "https://wechat-server-jhc0.onrender.com";
 // const devConfig = {
 //   env: env as NativeConfig["Env"],
