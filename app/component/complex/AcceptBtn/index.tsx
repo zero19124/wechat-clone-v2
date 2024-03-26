@@ -11,7 +11,7 @@ const sizeMap: Record<string, any> = {
   big: { size: getSize(58) },
   normal: { size: getSize(42) },
 };
-const HangUpBtn = ({
+const AcceptBtn = ({
   type = "normal",
   text = "",
   height = "",
@@ -26,7 +26,7 @@ const HangUpBtn = ({
     <View style={{ alignItems: "center" }}>
       <TouchableOpacity
         style={{
-          backgroundColor: themeColor.magenta6,
+          backgroundColor: themeColor.primary,
           width: width || getSize(75),
           height: height || getSize(75),
           alignItems: "center",
@@ -38,11 +38,11 @@ const HangUpBtn = ({
         <MaterialCommunityIcons
           size={sizeOut || size}
           color={themeColor.white}
-          name="phone-hangup"
+          name="phone"
         />
       </TouchableOpacity>
       <Text style={{ fontSize: 30, color: themeColor.white }}>{text}</Text>
     </View>
   );
 };
-export default HangUpBtn;
+export default AcceptBtn;

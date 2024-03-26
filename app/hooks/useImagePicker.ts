@@ -2,6 +2,7 @@ import * as ImagePicker from "expo-image-picker";
 import config from "../config";
 import Toast from "@/component/base/Toast";
 import { Platform } from "react-native";
+import ImageManipulator from "expo-image-manipulator";
 import { useLoadingStore } from "app/store/globalLoading";
 export type TImageIns = {
   uri: string;
@@ -43,6 +44,9 @@ export const pickImages = async ({
     return [];
   }
 };
+// 压缩图片的最大宽度和高度
+const maxWidth = 800;
+const maxHeight = 800;
 export const uploadImages = async (
   images: TImageIns[],
   type: "img" | "audio/mpeg" | "video" = "img"
@@ -52,11 +56,17 @@ export const uploadImages = async (
   const formData = new FormData();
   console.log(images.length, "images.length-uploadImages");
 
-  images.forEach((image, index) => {
+  images.forEach(async (image, index) => {
     const type = image.uri.split(".").pop();
+    const compressedImage = await ImageManipulator.manipulateAsync(
+      image.uri,
+      [{ resize: { maxWidth, maxHeight } }],
+      { format: "jpeg", compress: 0.5 }
+    );
+
     formData.append(`files`, {
       // uri: image.uri,
-      uri: image.uri,
+      uri: compressedImage.uri,
       name: image.name,
       // todo  photo from camera error
       // https://github.com/facebook/react-native/issues/28551

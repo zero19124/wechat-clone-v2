@@ -8,8 +8,8 @@ import {
   ScrollView,
   TouchableOpacity,
   View,
+  Text,
 } from "react-native";
-import CameraOutline from "@/icons/common/camera-outline.svg";
 
 import { useTranslation } from "react-i18next";
 import MomentsCard from "./components/MomentsCard";
@@ -19,7 +19,7 @@ import Toast from "@/component/base/Toast";
 import * as ImagePicker from "expo-image-picker";
 import config from "@/config/index";
 import { useUser } from "app/store/user";
-import { TImageIns, uploadImages } from "@/hooks/useImagePicker";
+import { uploadImages } from "@/hooks/useImagePicker";
 import { TextInput } from "react-native-gesture-handler";
 import eventBus from "@/utils/eventBus";
 import { getSize } from "utils";
@@ -32,6 +32,8 @@ import ParallaxHeader, {
 import constants from "@/utils/constants";
 import GoBack from "@/component/complex/GoBack";
 import { FontAwesome } from "@expo/vector-icons";
+import { PortalRef } from "app/_layout";
+import PhoneCalling from "@/component/complex/PhoneCalling";
 type TMomentsComment = { sendHandler: (comment: string) => Promise<any> };
 const getMock = (type = "img", name = "读书方法") => {
   const Mock = {
@@ -128,9 +130,11 @@ const Moments = () => {
     {
       name: t("Choose from Album"),
       callback: () => {
+        PortalRef.current?.addPortal("kkkk", <PhoneCalling />);
+        return;
         setTimeout(async () => {
           await pickImages();
-        }, 600);
+        }, 1200);
       },
     },
   ];
@@ -191,6 +195,19 @@ const Moments = () => {
       keyboardVerticalOffset={100}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+      <ActionSheet
+        style={{
+          // flex: 1,
+          backgroundColor: themeColor.white,
+          borderRadius: 8,
+        }}
+        visible={visible}
+        actions={defaultActions}
+        onClose={onClose}
+        cancelText={t("Cancel")}
+        onCancel={onClose}
+      />
+
       <ParallaxHeader
         scrollY={scrollY}
         rightHandler={() => {
@@ -244,18 +261,6 @@ const Moments = () => {
           }}
         />
 
-        <ActionSheet
-          style={{
-            flex: 1,
-            backgroundColor: themeColor.white,
-            borderRadius: 8,
-          }}
-          visible={visible}
-          actions={defaultActions}
-          onClose={onClose}
-          cancelText={t("Cancel")}
-          onCancel={onClose}
-        />
         <Pressable
           style={{ flex: 1 }}
           onPress={() => {

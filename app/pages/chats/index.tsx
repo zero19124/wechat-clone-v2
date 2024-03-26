@@ -34,6 +34,8 @@ import Overlay from "@/component/base/Overlay";
 import Button from "@/component/base/Button/Button";
 import { PortalHost } from "@/component/business/Portal";
 import { playSound } from "@/utils/sound";
+import { PortalRef } from "app/_layout";
+import PhoneCalling from "@/component/complex/PhoneCalling";
 const Chats = () => {
   const pusherContext = useContext(PusherContext);
   const socket = pusherContext.socket;
@@ -298,6 +300,37 @@ const Chats = () => {
       async (preCallData: { to: string; from: string }) => {
         console.log("pre-call", preCallData);
         const { to, from } = preCallData;
+        const rejectHandler = () => {
+          socket?.emit("pre-call-answer", {
+            answer: false,
+            to: from,
+            from: to,
+          });
+        };
+        const answerHandler = () => {
+          navigate.navigate("pages/chats/screens/video-call-rec/index", {
+            answer: true,
+            to,
+            from,
+          });
+          // pre-call-answer 需要交换 to=被叫人 from=发起人
+          setTimeout(() => {
+            socket?.emit("pre-call-answer", {
+              answer: true,
+              to: from,
+              from: to,
+            });
+          }, 400);
+        };
+        PortalRef.current?.addPortal(
+          "PhoneCalling",
+          <PhoneCalling
+            callUserId={from}
+            rejectHandler={rejectHandler}
+            answerHandler={answerHandler}
+          />
+        );
+        return;
         await Dialog.confirm({
           overlay: true,
           cancelButtonText: "拒接",
@@ -306,28 +339,12 @@ const Chats = () => {
           message: "to：" + preCallData?.to,
         })
           .then(() => {
-            navigate.navigate("pages/chats/screens/video-call-rec/index", {
-              answer: true,
-              to,
-              from,
-            });
-            // pre-call-answer 需要交换 to=被叫人 from=发起人
-            setTimeout(() => {
-              socket?.emit("pre-call-answer", {
-                answer: true,
-                to: from,
-                from: to,
-              });
-            }, 400);
+            answerHandler();
 
             // on confirm
           })
           .catch(() => {
-            socket?.emit("pre-call-answer", {
-              answer: false,
-              to: from,
-              from: to,
-            });
+            rejectHandler();
 
             // on cancel
           });
