@@ -24,7 +24,7 @@
     "@types/react": "~18.2.14",
     "axios": "^1.6.7",
     "babel-plugin-module-resolver": "^5.0.0",
-    "eas-cli": "^7.4.0",
+    "eas-cli": "^7.6.1",
     "easyqrcode-react-native": "^4.0.11",
     "eventemitter3": "^5.0.1",
     "expo": "^49.0.23",

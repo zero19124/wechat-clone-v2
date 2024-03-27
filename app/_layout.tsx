@@ -28,7 +28,7 @@ import { View, Text, LogBox } from "react-native";
 import { PusherContext } from "@/hooks/usePusherProvider";
 import setShortCut from "lib/setShortCut";
 import axios from "axios";
-import config from "./config";
+import config from "@/config/index";
 import Overlay from "./component/base/Overlay";
 import Loading from "./component/base/Loading";
 // import { useLoading } from "./store/globalLoading";

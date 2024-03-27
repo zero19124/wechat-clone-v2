@@ -12,6 +12,7 @@ https://github.com/zero19124/wechat-clone-v2
 
 ## preview
 
+![Alt Text](./demo/demo0.jpg)
 ![Alt Text](./demo/demo1.jpg)
 ![Alt Text](./demo/demo2.jpg)
 ![Alt Text](./demo/demo3.jpg)
