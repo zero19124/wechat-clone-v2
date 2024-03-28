@@ -7,7 +7,7 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "i18n": "npm run i18next-scanner",
+    "i18n": " i18next-scanner",
     "extract": "i18next-parser --config i18n-parser.config.js"
   },
   "dependencies": {

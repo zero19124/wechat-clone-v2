@@ -3,8 +3,8 @@ var chalk = require("chalk");
 
 module.exports = {
   input: [
-    "app/**/*.{js,jsx,tsx}",
-    "./app/**/*.{js,jsx,tsx}",
+    "app/**/*.{js,jsx,tsx,ts}",
+    "./app/**/*.{js,jsx,tsx,ts}",
     // Use ! to filter out files or directories
     "!app/**/*.spec.{js,jsx}",
     "!app/i18n/**",
@@ -14,6 +14,7 @@ module.exports = {
   options: {
     compatibilityJSON: "v3",
     debug: true,
+
     func: {
       list: ["i18next.t", "i18n.t", "useTranslation.t", "useTranslation", "t"],
       extensions: [".js", ".jsx", ".tsx", ".ts"],
@@ -22,10 +23,12 @@ module.exports = {
       component: "Trans",
       i18nKey: "i18nKey",
       defaultsKey: "defaults",
-      extensions: [".js", ".jsx"],
-      fallbackKey: function (ns, value) {
-        return value;
-      },
+      extensions: [".js", ".jsx", ".tsx"],
+      fallbackKey: true,
+      // fallbackKey: function (ns, value) {
+      //   console.log("fallbackKey", value, ns);
+      //   return value;
+      // },
       acorn: {
         ecmaVersion: 2020,
         sourceType: "module", // defaults to 'module'
@@ -37,6 +40,7 @@ module.exports = {
     defaultLng: "en",
     defaultNs: "resource",
     defaultValue: "",
+    fallbackKey: true,
     resource: {
       loadPath: "i18n/{{lng}}/{{ns}}.json",
       savePath: "i18n/{{lng}}/{{ns}}.json",
@@ -70,6 +74,10 @@ module.exports = {
         ++count;
       }
     );
+    parser.parseFuncFromString(content, function (key, options) {
+      options.defaultValue = key; // use key as the value
+      parser.set(key, options);
+    });
 
     if (count > 0) {
       console.log(
