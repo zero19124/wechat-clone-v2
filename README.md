@@ -96,6 +96,7 @@ theme<br>
 ### others
 
 1 quick action<br>
+i18n auto generation<br>
 
 ### 2 img detect qrcode<br>
 

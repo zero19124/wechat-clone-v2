@@ -425,7 +425,7 @@ const Chats = () => {
             <Text style={{ textAlign: "center", marginHorizontal: 24 }}>
               {isNewRoom
                 ? "Enter the RoomName and create new room"
-                : t("Enter the RoomName")}
+                : t("Enter the RoomNamedd222")}
             </Text>
             <TextInput
               autoFocus

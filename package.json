@@ -7,6 +7,7 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
+    "i18n": "npm run i18next-scanner",
     "extract": "i18next-parser --config i18n-parser.config.js"
   },
   "dependencies": {
@@ -100,7 +101,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
-    "babel-preset-expo": "^9.5.0"
+    "babel-preset-expo": "^9.5.0",
+    "i18next-scanner": "^4.4.0"
   },
   "private": true
 }

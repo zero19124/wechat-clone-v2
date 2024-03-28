@@ -66,3 +66,7 @@ when keyboad open the chatlist should be set diff height
             "e.nativeEvent.layout.height"
           );
         }}
+
+
+ i18n
+ https://www.i18next.com/how-to/extracting-translations       
