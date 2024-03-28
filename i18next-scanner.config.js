@@ -36,7 +36,7 @@ module.exports = {
     ns: ["locale", "resource"],
     defaultLng: "en",
     defaultNs: "resource",
-    defaultValue: "__STRING_NOT_TRANSLATED__",
+    defaultValue: "",
     resource: {
       loadPath: "i18n/{{lng}}/{{ns}}.json",
       savePath: "i18n/{{lng}}/{{ns}}.json",
