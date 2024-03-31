@@ -1,5 +1,5 @@
 import { useChatList } from "app/store/chatList";
-import config from "../config";
+
 import { useNavigation } from "expo-router";
 import Toast from "@/component/base/Toast";
 

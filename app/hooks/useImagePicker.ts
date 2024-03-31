@@ -1,9 +1,9 @@
 import * as ImagePicker from "expo-image-picker";
-import config from "../config";
 import Toast from "@/component/base/Toast";
 import { Platform } from "react-native";
 import ImageManipulator from "expo-image-manipulator";
 import { useLoadingStore } from "app/store/globalLoading";
+import { useConfigState } from "app/store/globalConfig";
 export type TImageIns = {
   uri: string;
   type: "image" | "video" | undefined | "audio/mpeg";
@@ -16,6 +16,7 @@ export const pickImages = async ({
   beforeUploaded = () => {},
 } = {}) => {
   startPicking();
+
   let result = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ImagePicker.MediaTypeOptions.Images,
     allowsMultipleSelection: true,
@@ -52,12 +53,12 @@ export const uploadImages = async (
   type: "img" | "audio/mpeg" | "video" = "img"
 ) => {
   // const { setLoadingStore } = useLoadingStore();
+  const { config } = useConfigState();
 
   const formData = new FormData();
   console.log(images.length, "images.length-uploadImages");
 
   images.forEach(async (image, index) => {
-    
     const type = image.uri.split(".").pop();
     // const compressedImage = await ImageManipulator.manipulateAsync(
     //   image.uri,

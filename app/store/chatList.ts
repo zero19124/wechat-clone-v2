@@ -1,7 +1,8 @@
 import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
-import config from "../config";
+
 import DeviceInfo from "react-native-device-info";
 import { useLoadingStore } from "./globalLoading";
+import { useConfigState } from "./globalConfig";
 
 export interface IUser {
   __v: number;
@@ -27,6 +28,7 @@ export const chatListState = atom<IConvo>({
 
 export const useChatList = () => {
   const { globalLoading, setLoadingStore } = useLoadingStore();
+  const { config } = useConfigState();
 
   const deviceModel = DeviceInfo.getModel();
   const setChatListStoreV2 = (val: any) => {

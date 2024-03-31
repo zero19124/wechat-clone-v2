@@ -1,6 +1,9 @@
-import config from "../config";
+import { useConfigState } from "app/store/globalConfig";
+
 
 const useGetSameApiOfGet = () => {
+  const { config } = useConfigState();
+
   const getFriendRequestListByUserId = (userId: string) => {
     return fetch(
       config.apiDomain +

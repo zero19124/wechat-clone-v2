@@ -16,7 +16,7 @@ const Setting = () => {
   const { config, setConfig } = useConfigState();
   const navigator = useNavigation();
   const { t } = useTranslation();
-  const { toggleTheme, themeName, themeColor } = useTheme();
+  const { setThemeName, themeName, themeColor } = useTheme();
   const { setUserStore, userStore } = useUser();
   const router = useRouter();
 
@@ -57,7 +57,13 @@ const Setting = () => {
       </Button>
       <Button
         type="default"
-        onPress={() => toggleTheme(themeName === "light" ? "dark" : "light")}
+        onPress={() => {
+          console.log("toggleTheme", themeName);
+          setThemeName((preName) => {
+            console.log(preName, "preName");
+            return preName === "light" ? "dark" : "light";
+          });
+        }}
       >
         {t("change the theme")}
       </Button>

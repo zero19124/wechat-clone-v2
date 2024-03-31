@@ -300,7 +300,7 @@ const AudioRecorder = ({ onVoiceEnd }) => {
                           return;
                         }}
                       >
-                        {t("播放录音")}
+                        {t("play voice")}
                       </Button>
                     }
                     <Button

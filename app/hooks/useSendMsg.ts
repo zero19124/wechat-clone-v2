@@ -1,8 +1,11 @@
 import { useUser } from "app/store/user";
-import config from "../config";
+
 import Toast from "@/component/base/Toast";
+import { useConfigState } from "app/store/globalConfig";
 
 const useSendMsg = () => {
+  const { config } = useConfigState();
+
   const sendMsgHandler = ({
     val,
     type,

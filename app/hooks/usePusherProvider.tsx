@@ -2,8 +2,9 @@ import { createContext, useEffect, useState } from "react";
 
 import io, { Socket } from "socket.io-client";
 import { useUser, userState } from "app/store/user";
-import config from "../config";
+
 import { useChatList } from "app/store/chatList";
+import { useConfigState } from "app/store/globalConfig";
 export const PusherContext = createContext(
   {} as {
     onlineUsers: { [key: string]: string };
@@ -15,6 +16,7 @@ export const PusherProvider = ({ children }) => {
   const { userStore } = useUser();
   const [onlineUsers, setOnlineUsers] = useState({});
   const [socket, setSocket] = useState<Socket>();
+  const { config } = useConfigState();
 
   useEffect(() => {
     const userId = userStore.userInfo?._id;

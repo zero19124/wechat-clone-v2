@@ -1,4 +1,4 @@
-import { useState, useContext, createContext } from "react";
+import { useState, useContext, createContext, useEffect } from "react";
 import * as light from "./light";
 import * as dark from "./dark";
 export type TThemeType = {
@@ -55,13 +55,16 @@ export const useTheme = () => {
   const { setTheme, ...themes } = state;
   const toggleTheme = (theme: TThemeName) => {
     setThemeName(theme);
-    setTheme(theme === "light" ? light : dark);
-    console.log(themeName, "state", themes.themeColor.white);
+    // console.log(themeName, "state", theme, themes.themeColor.white);
   };
+  useEffect(() => {
+    setTheme(themeName === "light" ? light : dark);
+  }, [themeName]);
 
   return {
     ...themes,
     themeName,
+    setThemeName,
     toggleTheme,
     commonStyle: getCommonStyle(themes.themeColor),
   };

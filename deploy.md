@@ -96,3 +96,10 @@ eas node
         "buildType": "apk"
       }
     },
+
+ apple act
+ 18376639110@163.com   
+
+
+ upload
+ https://dashboard.diawi.com/apps
