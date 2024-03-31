@@ -39,7 +39,6 @@ import PhoneCalling, { portalKey } from "@/component/complex/PhoneCalling";
 import { useConfigState } from "app/store/globalConfig";
 const Chats = () => {
   const { config } = useConfigState();
-
   const pusherContext = useContext(PusherContext);
   const socket = pusherContext.socket;
   const [visible, setVisible] = useState(false);

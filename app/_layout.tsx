@@ -31,8 +31,6 @@ import Loading from "./component/base/Loading";
 // import { useLoading } from "./store/globalLoading";
 import GlobalLoading from "./component/complex/GlobalLoading";
 
-
-
 export const PortalRef =
   React.createRef<PortalService>() as MutableRefObject<PortalService>;
 
@@ -135,9 +133,9 @@ const Layout = () => {
 
   return (
     <ThemeProvider>
-      <PortalProvider>
-        <InitializePortalRef />
-        <RecoilRoot>
+      <RecoilRoot>
+        <PortalProvider>
+          <InitializePortalRef />
           <PusherProvider>
             <I18nextProvider i18n={i18n}>
               <BottomSheetModalProvider>
@@ -323,8 +321,8 @@ const Layout = () => {
               </BottomSheetModalProvider>
             </I18nextProvider>
           </PusherProvider>
-        </RecoilRoot>
-      </PortalProvider>
+        </PortalProvider>
+      </RecoilRoot>
     </ThemeProvider>
   );
 };
