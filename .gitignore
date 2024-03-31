@@ -40,6 +40,7 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 app/config/
+app/_layout.tsx
 # Expo
 .expo
 dist/
