@@ -14,7 +14,7 @@ import {
   Platform,
   Keyboard,
 } from "react-native";
-import config from "@/config/index";
+
 import DeviceInfo from "react-native-device-info";
 import Toast from "@/component/base/Toast";
 import * as Clipboard from "expo-clipboard";
@@ -31,6 +31,7 @@ import {
 import { useTheme } from "@/theme/useTheme";
 import { getSize } from "utils";
 import eventBus from "@/utils/eventBus";
+import { useConfigState } from "app/store/globalConfig";
 
 const style = StyleSheet.create({
   inputStyle: {
@@ -39,6 +40,8 @@ const style = StyleSheet.create({
 });
 export default () => {
   const navigate = useNavigation();
+  const { config } = useConfigState();
+
   const { setUserStore, userStore } = useUser();
   const deviceModel = DeviceInfo.getModel();
   const { t } = useTranslation();

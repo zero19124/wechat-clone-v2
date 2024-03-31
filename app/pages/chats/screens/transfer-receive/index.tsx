@@ -6,7 +6,7 @@ import {
   TNavigationOptions,
   useCommonNavigateProps,
 } from "@/component/complex/CommonNavigateTitle";
-import config from "@/config/index";
+
 import useSendMsg from "@/hooks/useSendMsg";
 import { useTheme } from "@/theme/useTheme";
 import { useChatList } from "app/store/chatList";
@@ -25,7 +25,10 @@ import {
 } from "react-native";
 import { getSize } from "utils";
 import { getToday } from "@/utils/date";
+import { useConfigState } from "app/store/globalConfig";
 const TransferReceive = () => {
+  const { config } = useConfigState();
+
   const { userStore } = useUser();
   const { themeColor } = useTheme();
   const { t } = useTranslation();

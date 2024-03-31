@@ -10,7 +10,7 @@ import { PortalHost } from "@/component/business/Portal";
 import { tempNavigatorCount } from "@/component/business/IndexBar/style";
 import { cardList, originalList } from "./data/contacts-mocks";
 import { useTheme } from "@/theme/useTheme";
-import config from "@/config/index";
+
 import { useUser } from "app/store/user";
 import SearchBar from "@/component/complex/SearchBar";
 import UserAvatar from "@/component/complex/UserAvatar";
@@ -19,6 +19,7 @@ import { useGetSameApiOfGet } from "@/hooks/useSameApi";
 import { PusherContext } from "@/hooks/usePusherProvider";
 import { useLoadingStore } from "app/store/globalLoading";
 import { isNumeric } from "@/utils/validate";
+import { useConfigState } from "app/store/globalConfig";
 const _ = require("lodash");
 const indexList: string[] = [];
 const charCodeOfA = "A".charCodeAt(0);
@@ -28,6 +29,8 @@ for (let i = 0; i < tempNavigatorCount; i += 1) {
 }
 indexList.push("#");
 const Contacts = () => {
+  const { config } = useConfigState();
+
   const { setLoadingStore } = useLoadingStore();
   const [friendList, setFriendList] = useState([]);
   const [listMap, setListMap] = useState(new Map());

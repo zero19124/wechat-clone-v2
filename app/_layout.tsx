@@ -15,11 +15,9 @@ import * as MediaLibrary from "expo-media-library";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import * as Notifications from "expo-notifications";
 import { MutableRefObject, useContext, useEffect } from "react";
-import {
-  I18nextProvider,
-  initReactI18next,
-  useTranslation,
-} from "react-i18next";
+import { I18nextProvider, initReactI18next } from "react-i18next";
+import cnResource from "../i18n/cn/resource.json";
+import enResource from "../i18n/en/resource.json";
 import i18n from "i18next";
 import io from "socket.io-client";
 import React from "react";
@@ -28,13 +26,13 @@ import { View, Text, LogBox } from "react-native";
 import { PusherContext } from "@/hooks/usePusherProvider";
 import setShortCut from "lib/setShortCut";
 import axios from "axios";
-import config from "@/config/index";
 import Overlay from "./component/base/Overlay";
 import Loading from "./component/base/Loading";
 // import { useLoading } from "./store/globalLoading";
 import GlobalLoading from "./component/complex/GlobalLoading";
-axios.defaults.baseURL = config.apiDomain; // 配置axios请求的地址
-axios.defaults.headers.post["Content-Type"] = "application/json; charset=utf-8";
+
+
+
 export const PortalRef =
   React.createRef<PortalService>() as MutableRefObject<PortalService>;
 
@@ -67,8 +65,7 @@ const Layout = () => {
         Me: "Me",
         moments: "Moments",
         setting: "setting",
-        "change the theme": "change the theme",
-        "change language to chinese": "change language to chinese",
+        ...(cnResource as any),
       },
     },
     cn: {
@@ -76,15 +73,14 @@ const Layout = () => {
         "Receive Money": "收钱码",
         like: "赞",
         comment: "评论",
-        Chats: "微信",
+        // Chats: "微信",
         Contacts: "通讯录",
         Discover: "发现",
         Me: "我",
         greeting: "Bonjour!",
         setting: "设置",
         moments: "朋友圈",
-        "change the theme": "切换主题",
-        "change language to chinese": "切换到英文",
+        ...(enResource as any),
       },
     },
   };

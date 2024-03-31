@@ -25,6 +25,9 @@ const LandingPage = () => {
           }}
         >
           <Button
+            onLongPress={() => {
+              router.push("/pages/me/setting/");
+            }}
             onPress={() => {
               router.push("/pages/me/components/SimpleLogin");
             }}

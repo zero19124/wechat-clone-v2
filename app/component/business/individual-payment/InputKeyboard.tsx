@@ -20,15 +20,19 @@ import {
 import PaymentKeyBoard from "./component/PaymentInput";
 import AmountText from "app/component/complex/AmountText";
 import { useTheme } from "@/theme/useTheme";
-import config from "../../../config";
+
+
 import { useUser } from "app/store/user";
 import { useTranslation } from "react-i18next";
 import Toast from "@/component/base/Toast";
+import { useConfigState } from "app/store/globalConfig";
 const defaultPayTo = () => {
   return "Pay to Bella (***)";
 };
 
 const InputKeyboard = (props) => {
+  const { config } = useConfigState();
+
   const { onChange, onDelete, amount, type, recipientId } = props;
   console.log("InputKeyboard", new Date().getTime(), type);
   const userInfo = useUser().userStore.userInfo;

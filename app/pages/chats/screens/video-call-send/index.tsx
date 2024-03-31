@@ -21,7 +21,7 @@ import {
   RTCIceCandidate,
   mediaDevices,
 } from "react-native-webrtc";
-import config from "@/config/index";
+
 import { useUser } from "app/store/user";
 import { PusherContext } from "@/hooks/usePusherProvider";
 import { useNavigation } from "expo-router";

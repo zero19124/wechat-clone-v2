@@ -14,14 +14,17 @@ import SearchIcon from "@/icons/common/search.svg";
 import { useTheme } from "@/theme/useTheme";
 import { Toast } from "@/component/base/Toast";
 import _ from "lodash";
-import config from "@/config/index";
+
 import BottomWidthDivider from "@/component/complex/BottomWidthDivider";
 import ItemCard from "@/component/complex/ItemCard";
 import UserAvatar from "@/component/complex/UserAvatar";
 import { useUser } from "app/store/user";
 import { useLoadingStore } from "app/store/globalLoading";
+import { useConfigState } from "app/store/globalConfig";
 const AddContactsSearch = () => {
   const navigate = useNavigation();
+  const { config } = useConfigState();
+
   const { userInfo } = useUser().userStore;
   const [text, setText] = useState("");
   const [showResult, setShowResult] = useState(false);

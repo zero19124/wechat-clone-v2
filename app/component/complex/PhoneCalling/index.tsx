@@ -6,9 +6,10 @@ import HangUpBtn from "../HangUpBtn";
 import AcceptBtn from "../AcceptBtn";
 import { PortalRef } from "app/_layout";
 import axios from "axios";
-import config from "@/config/index";
+
 import { getSize } from "utils";
 import { Audio } from "expo-av";
+import { useConfigState } from "app/store/globalConfig";
 
 export const portalKey = "PhoneCalling";
 const PhoneCalling = (props: {
@@ -16,6 +17,8 @@ const PhoneCalling = (props: {
   rejectHandler: () => void;
   answerHandler: () => void;
 }) => {
+  const { config } = useConfigState();
+
   const { callUserId, answerHandler, rejectHandler } = props;
   const translateY = useRef(new Animated.Value(0)).current;
   const { themeColor } = useTheme();

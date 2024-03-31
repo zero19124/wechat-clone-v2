@@ -24,9 +24,12 @@ import ItemCard from "@/component/complex/ItemCard";
 import UserAvatar from "@/component/complex/UserAvatar";
 import { useTheme } from "@/theme/useTheme";
 import { useTranslation } from "react-i18next";
-import config from "../../../config";
+import { useConfigState } from "app/store/globalConfig";
+
 
 const Page = () => {
+  const { config } = useConfigState();
+
   const [amountValue, setAmountValue] = useState("");
   const navigation = useNavigation();
   const { themeColor } = useTheme();

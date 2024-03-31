@@ -57,6 +57,7 @@ export const uploadImages = async (
   console.log(images.length, "images.length-uploadImages");
 
   images.forEach(async (image, index) => {
+    
     const type = image.uri.split(".").pop();
     // const compressedImage = await ImageManipulator.manipulateAsync(
     //   image.uri,

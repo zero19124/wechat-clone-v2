@@ -28,16 +28,19 @@ import { useTranslation } from "react-i18next";
 import { useTheme } from "@/theme/useTheme";
 import Dialog from "@/component/base/Dialog";
 import axios from "axios";
-import config from "@/config/index";
+
 import { useChatList } from "app/store/chatList";
 import DeviceInfo from "react-native-device-info";
 import modelLog from "@/utils/modelLog";
 import { PusherContext } from "@/hooks/usePusherProvider";
 import { useLoadingStore } from "app/store/globalLoading";
+import { useConfigState } from "app/store/globalConfig";
 const PrivateChatList = memo(
   (props: {
     // flatListRef: React.MutableRefObject<FlatList<any> | undefined>;
   }) => {
+  const { config } = useConfigState();
+
     const { t } = useTranslation();
     const { onPress } = props;
     const { userInfo } = useUser().userStore;

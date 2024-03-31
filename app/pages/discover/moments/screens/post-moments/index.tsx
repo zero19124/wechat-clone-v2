@@ -17,10 +17,11 @@ import {
   View,
 } from "react-native";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import config from "@/config/index";
+
 import { useUser } from "app/store/user";
 import { useState } from "react";
 import MomentsImg from "../../components/MomentsIms";
+import { useConfigState } from "app/store/globalConfig";
 const PostMoments = () => {
   // return <Text>3</Text>
   const { t } = useTranslation();
@@ -29,6 +30,7 @@ const PostMoments = () => {
     uploadedImgs: string[];
     type: string;
   }>();
+  const { config } = useConfigState();
 
   const [contentText, setContentText] = useState("");
   const { themeColor } = useTheme();

@@ -3,7 +3,7 @@ import {
   useCommonNavigateProps,
 } from "@/component/complex/CommonNavigateTitle";
 import UserAvatar from "@/component/complex/UserAvatar";
-import config from "@/config/index";
+
 import { useUser } from "app/store/user";
 import { useFocusEffect, useNavigation } from "expo-router";
 import { useGetSameApiOfGet } from "@/hooks/useSameApi";

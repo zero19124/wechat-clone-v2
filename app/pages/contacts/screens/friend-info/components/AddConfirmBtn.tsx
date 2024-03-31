@@ -9,7 +9,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { useGetSameApiOfGet } from "@/hooks/useSameApi";
 import { useUser } from "app/store/user";
 import { useState } from "react";
-import config from "@/config/index";
+
 import { goToMsgChat } from "@/hooks/useSameRouter";
 import { useChatList } from "app/store/chatList";
 type TAddConfirmBtnProps = {

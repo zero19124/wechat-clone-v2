@@ -81,7 +81,6 @@ const Layout = () => {
       console.log("jump-to-msg-page-on");
       setMsgRed(false);
     });
-
     pusherContext.socket?.on("messages:new", (messagesData) => {
       const data = messagesData.newMsgData;
       const type = messagesData.type;

@@ -8,16 +8,19 @@ const ipAlert = async () => {
   // alert(ip);
   // setApiDomainnpm install react@latest react-dom@latest
 };
-const prodUrl = "https://wechat-server-jhc0.onrender.com";
 ipAlert();
 const env = "dev1";
 // const apiDomain = "http://localhost:4000";
 // const [apiDomain, setApiDomain] = useState("http://localhost:4000");
 // const apiDomain = "http://192.168.200.146:4000";
-const apiDomain =
-  process.env.NODE_ENV === "development"
-    ? "http://172.20.10.3:4000"
-    : "prodUrl";
+const apiDomain = "https://wechat-server-jhc0.onrender.com";
+// const prodUrl = "https://wechat-server-jhc0.onrender.com";
+
+// const apiDomain =
+//   process.env.NODE_ENV === "development"
+//     // ? prodUrl
+//     ? "http://172.20.10.3:4000"
+//     : prodUrl;
 // bella
 // const apiDomain = "http://192.168.3.10:4000";
 // const apiDomain = "https://wechat-server-jhc0.onrender.com";

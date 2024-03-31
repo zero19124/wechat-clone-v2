@@ -24,18 +24,13 @@ import ItemCard from "@/component/complex/ItemCard";
 import SimpleLogin from "./components/SimpleLogin";
 import { useUser } from "app/store/user";
 import { useNavigation } from "expo-router";
-import config from "@/config/index";
+
 import { useEffect, useState } from "react";
-import MapView, { Marker } from "react-native-maps";
-import { StyleSheet } from "react-native";
-import * as Location from "expo-location";
-import UserAvatar from "@/component/complex/UserAvatar";
-import { Popover } from "@/component/base/Popover";
-import { useTranslation } from "react-i18next";
-import { useChatList } from "app/store/chatList";
+import { useConfigState } from "app/store/globalConfig";
 
 const Me = () => {
   // return <PusherTester />;
+  const { config } = useConfigState();
 
   const avatars = [
     require("@/assets/bella.jpeg"),

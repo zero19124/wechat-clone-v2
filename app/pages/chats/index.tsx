@@ -27,7 +27,7 @@ import AppText from "./screens/code-scanner/index";
 import Dialog from "@/component/base/Dialog";
 import { PusherContext } from "@/hooks/usePusherProvider";
 import axios from "axios";
-import config from "@/config/index";
+
 import { useUser } from "app/store/user";
 import { useChatList } from "app/store/chatList";
 import Overlay from "@/component/base/Overlay";
@@ -36,7 +36,10 @@ import { PortalHost } from "@/component/business/Portal";
 import { playSound } from "@/utils/sound";
 import { PortalRef } from "app/_layout";
 import PhoneCalling, { portalKey } from "@/component/complex/PhoneCalling";
+import { useConfigState } from "app/store/globalConfig";
 const Chats = () => {
+  const { config } = useConfigState();
+
   const pusherContext = useContext(PusherContext);
   const socket = pusherContext.socket;
   const [visible, setVisible] = useState(false);

@@ -8,7 +8,7 @@ import {
 import { useNavigation } from "expo-router";
 import ThreeDot from "@/icons/three-dot.svg";
 import { useUser } from "app/store/user";
-import config from "@/config/index";
+
 import { ScrollView } from "react-native";
 import Toast from "@/component/base/Toast";
 import i18n from "i18next";
@@ -18,8 +18,11 @@ import MoneyOutline from "@/icons/chats/money-outline.svg";
 import WalletOutline from "@/icons/chats/wallet-outline.svg";
 import Loading from "@/component/base/Loading";
 import { getSize } from "utils";
+import { useConfigState } from "app/store/globalConfig";
 
 const Wallet = () => {
+  const { config } = useConfigState();
+
   const navigate = useNavigation();
   const { userStore } = useUser();
   const { t } = useTranslation();

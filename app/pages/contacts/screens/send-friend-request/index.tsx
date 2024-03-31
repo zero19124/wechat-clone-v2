@@ -4,7 +4,7 @@ import {
   TNavigationOptions,
   useCommonNavigateProps,
 } from "@/component/complex/CommonNavigateTitle";
-import config from "@/config/index";
+
 import { useTheme } from "@/theme/useTheme";
 import { useUser } from "app/store/user";
 import ArrowRightIcon from "@/icons/common/arrow-right.svg";
@@ -21,11 +21,14 @@ import {
 import { getSize } from "utils";
 import BottomWidthDivider from "@/component/complex/BottomWidthDivider";
 import { useLoadingStore } from "app/store/globalLoading";
+import { useConfigState } from "app/store/globalConfig";
 const FriendInfoConfirm = () => {
   const name = "Send Friend Request";
   const navigate = useNavigation();
   const { themeColor } = useTheme();
   const { t } = useTranslation();
+  const { config } = useConfigState();
+
   const { userStore } = useUser();
   const { setLoadingStore } = useLoadingStore();
 

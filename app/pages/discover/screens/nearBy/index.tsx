@@ -1,5 +1,5 @@
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
-import config from "@/config/index";
+
 import { useEffect, useRef, useState } from "react";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
@@ -13,6 +13,7 @@ import { useTheme } from "@/theme/useTheme";
 import { useUser } from "app/store/user";
 import Toast from "@/component/base/Toast";
 import { useLoadingStore } from "app/store/globalLoading";
+import { useConfigState } from "app/store/globalConfig";
 
 const NearByView = ({
   type = "normal",
@@ -26,6 +27,7 @@ const NearByView = ({
   //   latitude: 22.48,
   // };
   const { setLoadingStore } = useLoadingStore();
+  const { config } = useConfigState();
 
   const { t } = useTranslation();
   const navigator = useNavigation();

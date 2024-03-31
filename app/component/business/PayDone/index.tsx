@@ -9,9 +9,11 @@ import { useChatList } from "app/store/chatList";
 import Toast from "@/component/base/Toast";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "expo-router";
-import config from "@/config/index";
+
 import { useLoadingStore } from "app/store/globalLoading";
 const PayDone = () => {
+
+
   const navigator = useNavigation();
   const { amount } = useLocalSearchParams();
   const { userInfo } = useUser().userStore;

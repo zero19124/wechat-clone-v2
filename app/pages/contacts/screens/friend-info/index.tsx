@@ -11,13 +11,16 @@ import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import { Fontisto } from "@expo/vector-icons";
 import BottomWidthDivider from "@/component/complex/BottomWidthDivider";
 import UserAvatar from "@/component/complex/UserAvatar";
-import config from "@/config/index";
+
 import AddConfirmBtn from "./components/AddConfirmBtn";
 import { useTheme } from "@/theme/useTheme";
 import { useUser } from "app/store/user";
+import { useConfigState } from "app/store/globalConfig";
 const FriendInfo = () => {
   const navigate = useNavigation();
   const { t } = useTranslation();
+  const { config } = useConfigState();
+
   const { themeColor } = useTheme();
   const [user, setUser] = useState();
   const { userInfo } = useUser().userStore;

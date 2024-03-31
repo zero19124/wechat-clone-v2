@@ -14,7 +14,6 @@ module.exports = {
   options: {
     compatibilityJSON: "v3",
     debug: true,
-
     func: {
       list: ["i18next.t", "i18n.t", "useTranslation.t", "useTranslation", "t"],
       extensions: [".js", ".jsx", ".tsx", ".ts"],

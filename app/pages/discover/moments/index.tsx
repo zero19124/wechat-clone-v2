@@ -17,7 +17,7 @@ import ActionSheet, { ActionSheetAction } from "@/component/base/ActionSheet";
 import { useTheme } from "@/theme/useTheme";
 import Toast from "@/component/base/Toast";
 import * as ImagePicker from "expo-image-picker";
-import config from "@/config/index";
+
 import { useUser } from "app/store/user";
 import { uploadImages } from "@/hooks/useImagePicker";
 import { TextInput } from "react-native-gesture-handler";
@@ -32,6 +32,7 @@ import ParallaxHeader, {
 import constants from "@/utils/constants";
 import GoBack from "@/component/complex/GoBack";
 import { FontAwesome } from "@expo/vector-icons";
+import { useConfigState } from "app/store/globalConfig";
 type TMomentsComment = { sendHandler: (comment: string) => Promise<any> };
 const getMock = (type = "img", name = "读书方法") => {
   const Mock = {
@@ -71,6 +72,8 @@ const Moments = () => {
   const navigator = useNavigation();
   const { t } = useTranslation();
   const { userStore } = useUser();
+  const { config } = useConfigState();
+
   const { themeColor } = useTheme();
   const [momentsList, setMomentsList] = useState([]);
   const [visible, setVisible] = useState(false);

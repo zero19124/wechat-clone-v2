@@ -4,14 +4,10 @@ import { useForm, Controller } from "react-hook-form";
 import * as ImagePicker from "expo-image-picker";
 import * as MediaLibrary from "expo-media-library";
 import UserAvatar from "@/component/complex/UserAvatar";
-import Form, { FormInstance } from "@/component/base/Form";
-import Cell from "@/component/base/Cell";
 import Button from "@/component/base/Button/Button";
-import Input from "@/component/base/Input";
 import Radio from "@/component/base/Radio";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
-import config from "@/config/index";
 import { useNavigation, useRouter } from "expo-router";
 import Toast from "@/component/base/Toast";
 import { uploadImages } from "@/hooks/useImagePicker";
@@ -20,6 +16,7 @@ import {
   useCommonNavigateProps,
 } from "@/component/complex/CommonNavigateTitle";
 import { useTheme } from "@/theme/useTheme";
+import { useConfigState } from "app/store/globalConfig";
 
 const defaultValues = {
   account: "",
@@ -32,6 +29,8 @@ const defaultValues = {
 };
 
 const RegisterScreen: React.FC = () => {
+  const { config } = useConfigState();
+
   const {
     control,
     handleSubmit,

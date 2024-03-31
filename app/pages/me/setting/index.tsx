@@ -5,19 +5,22 @@ import { useNavigation, useRouter } from "expo-router";
 import { useTheme } from "@/theme/useTheme";
 import { TNavigationOptions } from "@/component/complex/CommonNavigateTitle";
 import * as Clipboard from "expo-clipboard";
-import config from "@/config/index";
+
 import Toast from "@/component/base/Toast";
 import { useUser } from "app/store/user";
 import Button from "@/component/base/Button/Button";
 import eventBus from "@/utils/eventBus";
+import { useConfigState } from "app/store/globalConfig";
 
 const Setting = () => {
+  const { config, setConfig } = useConfigState();
   const navigator = useNavigation();
   const { t } = useTranslation();
-  const { i18n } = useTranslation();
   const { toggleTheme, themeName, themeColor } = useTheme();
   const { setUserStore, userStore } = useUser();
   const router = useRouter();
+
+  const { i18n } = useTranslation();
   const handleChangeLanguage = (language: string) => {
     i18n.changeLanguage(language);
   };
@@ -34,18 +37,23 @@ const Setting = () => {
       headerStyle: { backgroundColor: themeColor.white },
     } as TNavigationOptions);
   });
-  useEffect(() => {
-    console.log(222, themeColor.white);
-  });
+
   return (
-    <View style={{ backgroundColor: themeColor.white, flex: 1 }}>
+    <View
+      style={{
+        backgroundColor: themeColor.white,
+        flex: 1,
+        gap: 8,
+        padding: 12,
+      }}
+    >
       <Button
         type="default"
         onPress={() => {
           handleChangeLanguage(i18n.language === "cn" ? "en" : "cn");
         }}
       >
-        {t("change language to chinese")}
+        {t("change language")}
       </Button>
       <Button
         type="default"
@@ -63,6 +71,38 @@ const Setting = () => {
       </Button>
 
       <View>
+        <Text>apiDomain: {config.apiDomain}</Text>
+        <View className="flex-row">
+          <Button
+            type="default"
+            onPress={() => {
+              setConfig({ apiDomain: "http://172.20.10.3:4000" });
+            }}
+          >
+            {t("home 172")}
+          </Button>
+          <Button
+            type="default"
+            onPress={() => {
+              setConfig({ apiDomain: "http://192.168.3.10:4000" });
+            }}
+          >
+            {t("bella 192")}
+          </Button>
+          <Button
+            type="default"
+            onPress={() => {
+              setConfig({
+                apiDomain: "https://wechat-server-jhc0.onrender.com",
+              });
+            }}
+          >
+            {t("prod url")}
+          </Button>
+        </View>
+      </View>
+
+      <View>
         {
           <>
             <TouchableOpacity
@@ -73,7 +113,6 @@ const Setting = () => {
             >
               <Text>userID ===={userStore.userInfo?._id} copy userId </Text>
             </TouchableOpacity>
-            <Text>{config.apiDomain}</Text>
           </>
         }
         <Button
